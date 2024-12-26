@@ -1,0 +1,6 @@
+name: EtCetera
+version: '1.0-SNAPSHOT'
+main: org.swlab.etcetera.EtCetera
+api-version: '1.20'
+commands:
+  nbt검사:
