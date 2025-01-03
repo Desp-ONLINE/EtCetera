@@ -1,5 +1,9 @@
 package org.swlab.etcetera.Listener;
 
+import dev.lone.itemsadder.api.ItemsAdder;
+import net.Indyuce.mmocore.api.event.PlayerEnterCastingModeEvent;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -9,6 +13,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 
 public class BasicListener implements Listener{
@@ -72,6 +77,10 @@ public class BasicListener implements Listener{
         if(!e.getPlayer().isOp()){
             e.setCancelled(true);
         }
+    }
+    @EventHandler
+    public void onEnterCastingMode(PlayerEnterCastingModeEvent e){
+        e.setCancelled(true);
     }
 
 

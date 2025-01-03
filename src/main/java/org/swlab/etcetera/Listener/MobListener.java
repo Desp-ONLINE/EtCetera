@@ -3,8 +3,13 @@ package org.swlab.etcetera.Listener;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.core.mobs.ActiveMob;
 import io.lumine.mythic.core.mobs.MobExecutor;
+import me.pikamug.quests.Quests;
+import me.pikamug.quests.player.BukkitQuester;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
+import net.Indyuce.mmocore.api.event.PlayerEnterCastingModeEvent;
+import net.Indyuce.mmocore.api.event.PlayerExperienceGainEvent;
 import net.Indyuce.mmocore.api.player.PlayerData;
+import net.Indyuce.mmocore.api.quest.PlayerQuests;
 import net.Indyuce.mmocore.experience.EXPSource;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -39,12 +44,17 @@ public class MobListener implements Listener {
             return;
         }
         int monsterLevel = (int) mythicMobInstance.getLevel();
+//        BukkitQuester bukkitQuester = new BukkitQuester();
+//        Quests quests = new Quests();
+//        quests.getQuester("asdg").getCompletedQuests();
 
 
         System.out.println(playerLevel);
         System.out.println(monsterLevel);
 
-        playerData.giveExperience(1, EXPSource.SOURCE);
+//        playerData.giveExperience(100, EXPSource.SOURCE);
         // 레벨 차가 6 이상이면 경험치를 지급하지 않음 !
     }
+
+
 }

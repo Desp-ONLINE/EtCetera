@@ -1,5 +1,6 @@
 package org.swlab.etcetera;
 
+import com.binggre.mongoLibraryPlugin.MongoLibraryPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.swlab.etcetera.Commands.*;
@@ -19,7 +20,6 @@ public final class EtCetera extends JavaPlugin {
         // Plugin startup logic
         registerEvents();
         registerCommands();
-
     }
 
     @Override
@@ -32,5 +32,8 @@ public final class EtCetera extends JavaPlugin {
     }
     public void registerCommands(){
         getCommand("nbt검사").setExecutor(new CheckNbtTag());
+
     }
 }
+
+//

@@ -1,0 +1,11 @@
+{
+  "beforeWeapon": "직업무기_1크루세이더0",
+  "afterWeapon": "직업무기_1크루세이더1",
+  "successPercentage": 80,
+  "destructionPercentage": 10,
+  "conditions": {
+    "level": 5,
+    "proceedQuest": "퀘스트이름",
+    "material": "SerialzedInventory"
+  }
+}
