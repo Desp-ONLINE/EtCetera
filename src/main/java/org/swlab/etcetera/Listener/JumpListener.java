@@ -25,6 +25,9 @@ public class JumpListener implements Listener{
     @EventHandler
     public void onJump(PlayerToggleSneakEvent e){
         Player p = e.getPlayer();
+        if(p.getGameMode()==GameMode.CREATIVE){
+            return;
+        }
         if(!p.isOnGround()){
 //            e.setCancelled(true);
             if(!p.isOp()){
