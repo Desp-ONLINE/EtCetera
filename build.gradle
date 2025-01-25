@@ -24,10 +24,11 @@ repositories {
 dependencies {
     compileOnly "io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT"
     compileOnly("de.tr7zw:item-nbt-api-plugin:2.14.0")
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
 
 }
 
-def targetJavaVersion = 17
+def targetJavaVersion = 21
 java {
     def javaVersion = JavaVersion.toVersion(targetJavaVersion)
     sourceCompatibility = javaVersion

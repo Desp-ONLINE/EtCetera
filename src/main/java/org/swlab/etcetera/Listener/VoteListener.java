@@ -23,7 +23,7 @@ public class VoteListener implements Listener {
         VoteRewards voteRewards = new VoteRewards();
         Inventory inventory = voteRewards.getInventory();
         @Nullable ItemStack[] contents = inventory.getContents();
-        List<@Nullable ItemStack> rewards = Arrays.stream(contents).toList();
+        List<ItemStack> rewards = Arrays.stream(contents).toList();
         MailAPI mailAPI = MMOMail.getInstance().getMailAPI();
         Mail mail = mailAPI.createMail(username, "sadg", 0, rewards);
         mailAPI.sendMail(username, mail);

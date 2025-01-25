@@ -4,3 +4,4 @@ main: org.swlab.etcetera.EtCetera
 api-version: '1.20'
 commands:
   nbt검사:
+  spawn:

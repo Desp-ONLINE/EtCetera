@@ -1,6 +1,9 @@
 package org.swlab.etcetera;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Effect;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.swlab.etcetera.Commands.CheckNbtTag;
@@ -9,7 +12,7 @@ import org.swlab.etcetera.Listener.JumpListener;
 
 public final class EtCetera extends JavaPlugin {
 
-    public boolean isDoubleJumpAllowed = false;
+    public String channelType = "";
 //    public boolean isLobbyServer = false;
 
     @Override
@@ -19,7 +22,7 @@ public final class EtCetera extends JavaPlugin {
         config.addDefault("doubleJump", false);
         config.options().copyDefaults(true);
         saveConfig();
-        isDoubleJumpAllowed = config.getBoolean("doubleJump");
+        channelType = config.getString("channelType");
         registerEvents();
         registerCommands();
 
@@ -31,9 +34,11 @@ public final class EtCetera extends JavaPlugin {
     }
 
     public void registerEvents() {
-        if (isDoubleJumpAllowed) {
+        if (channelType.equals("lobby")) {
             Bukkit.getPluginManager().registerEvents(new JumpListener(), this);
-            System.out.println("asdgasdgasdg");
+//            World world = Bukkit.getWorld("world");
+//            Location loc = new Location(world, 159.574, 4, -737.484);
+//            world.playEffect(loc, Effect.REDSTONE_TORCH_BURNOUT, 2003);
         }
         Bukkit.getPluginManager().registerEvents(new BasicListener(), this);
     }
