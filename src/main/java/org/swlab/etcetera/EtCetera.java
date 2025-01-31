@@ -9,11 +9,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.swlab.etcetera.Commands.CheckNbtTag;
 import org.swlab.etcetera.Commands.SpawnCommand;
 import org.swlab.etcetera.Listener.BasicListener;
+import org.swlab.etcetera.Listener.EquipListener;
 import org.swlab.etcetera.Listener.JumpListener;
 
 public final class EtCetera extends JavaPlugin {
 
     public static String channelType = "";
+    public static EtCetera instance;
+
+    public static EtCetera getInstance() {
+        return instance;
+    }
 
     @Override
     public void onEnable() {
@@ -42,6 +48,7 @@ public final class EtCetera extends JavaPlugin {
             Bukkit.getPluginManager().registerEvents(new JumpListener(), this);
         }
         Bukkit.getPluginManager().registerEvents(new BasicListener(), this);
+        Bukkit.getPluginManager().registerEvents(new EquipListener(), this);
     }
 
     public void registerCommands() {
