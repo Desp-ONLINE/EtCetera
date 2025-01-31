@@ -7,6 +7,7 @@ import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.swlab.etcetera.Commands.CheckNbtTag;
+import org.swlab.etcetera.Commands.SpawnCommand;
 import org.swlab.etcetera.Listener.BasicListener;
 import org.swlab.etcetera.Listener.JumpListener;
 
@@ -45,5 +46,6 @@ public final class EtCetera extends JavaPlugin {
 
     public void registerCommands() {
         getCommand("nbt검사").setExecutor(new CheckNbtTag());
+        getCommand("spawn").setExecutor(new SpawnCommand());
     }
 }
