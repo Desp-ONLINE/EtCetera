@@ -14,18 +14,15 @@ import org.swlab.etcetera.Listener.JumpListener;
 public final class EtCetera extends JavaPlugin {
 
     public static String channelType = "";
-    public static int channelNumber = 0;
 
     @Override
     public void onEnable() {
         // Plugin startup logic
         FileConfiguration config = getConfig();
         config.addDefault("channelType", "lobby");
-        config.addDefault("channelNumber", 0);
         config.options().copyDefaults(true);
         saveConfig();
         channelType = config.getString("channelType");
-        channelNumber = config.getInt("channelNumber");
         registerEvents();
         registerCommands();
 
@@ -33,9 +30,6 @@ public final class EtCetera extends JavaPlugin {
 
     public static String getChannelType() {
         return channelType;
-    }
-    public static int getChannelNumber(){
-        return channelNumber;
     }
 
     @Override
