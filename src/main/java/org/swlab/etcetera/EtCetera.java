@@ -9,15 +9,24 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.swlab.etcetera.Commands.CheckNbtTag;
 import org.swlab.etcetera.Commands.SpawnCommand;
 import org.swlab.etcetera.Listener.BasicListener;
+import org.swlab.etcetera.Listener.CrateListener;
+import org.swlab.etcetera.Listener.EquipListener;
 import org.swlab.etcetera.Listener.JumpListener;
+import su.nightexpress.excellentcrates.crate.impl.Crate;
 
 public final class EtCetera extends JavaPlugin {
 
     public static String channelType = "";
     public static int channelNumber = 0;
+    public static EtCetera instance;
+
+    public static EtCetera getInstance() {
+        return instance;
+    }
 
     @Override
     public void onEnable() {
+        instance = this;
         // Plugin startup logic
         FileConfiguration config = getConfig();
         config.addDefault("channelType", "lobby");
@@ -47,8 +56,10 @@ public final class EtCetera extends JavaPlugin {
     public void registerEvents() {
         if (channelType.equals("lobby")) {
             Bukkit.getPluginManager().registerEvents(new JumpListener(), this);
+            Bukkit.getPluginManager().registerEvents(new CrateListener(), this);
         }
         Bukkit.getPluginManager().registerEvents(new BasicListener(), this);
+        Bukkit.getPluginManager().registerEvents(new EquipListener(), this);
     }
 
     public void registerCommands() {
