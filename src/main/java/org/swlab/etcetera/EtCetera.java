@@ -8,10 +8,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.swlab.etcetera.Commands.CheckNbtTag;
 import org.swlab.etcetera.Commands.SpawnCommand;
-import org.swlab.etcetera.Listener.BasicListener;
-import org.swlab.etcetera.Listener.CrateListener;
-import org.swlab.etcetera.Listener.EquipListener;
-import org.swlab.etcetera.Listener.JumpListener;
+import org.swlab.etcetera.Listener.*;
 import su.nightexpress.excellentcrates.crate.impl.Crate;
 
 public final class EtCetera extends JavaPlugin {
@@ -60,6 +57,7 @@ public final class EtCetera extends JavaPlugin {
         }
         Bukkit.getPluginManager().registerEvents(new BasicListener(), this);
         Bukkit.getPluginManager().registerEvents(new EquipListener(), this);
+        Bukkit.getPluginManager().registerEvents(new RespawnListener(), this);
     }
 
     public void registerCommands() {

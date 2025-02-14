@@ -76,10 +76,7 @@ public class BasicListener implements Listener{
             e.setCancelled(true);
         }
     }
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent e){
 
-    }
 
 
 }
