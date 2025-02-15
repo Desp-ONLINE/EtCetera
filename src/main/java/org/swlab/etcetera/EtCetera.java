@@ -3,7 +3,6 @@ package org.swlab.etcetera;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.desp.merge.Merge;
 import org.swlab.etcetera.Commands.*;
 import org.swlab.etcetera.Listener.*;
 
@@ -55,6 +54,7 @@ public final class EtCetera extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new EquipListener(), this);
         Bukkit.getPluginManager().registerEvents(new RespawnListener(), this);
         Bukkit.getPluginManager().registerEvents(new LevelUpListener(), this);
+        Bukkit.getPluginManager().registerEvents(new ClassChangeListener(), this);
     }
 
     public void registerCommands() {
@@ -69,5 +69,6 @@ public final class EtCetera extends JavaPlugin {
         getCommand("전리품").setExecutor(new RewardSellCommand());
         getCommand("판도라").setExecutor(new PandoraCommand());
         getCommand("스텟").setExecutor(new StatCommand());
+        getCommand("직업").setExecutor(new ClassSelectCommand());
     }
 }
