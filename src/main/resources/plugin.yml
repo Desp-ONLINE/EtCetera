@@ -22,3 +22,5 @@ commands:
     aliases: ["wjsflvna", "전리품판매", "wjsflvnavksao", "상점", "상점가", "tkdwja", "tkdwjark"]
   판도라:
     aliases: ["vksehfk", "특수무기", "xmrtnanrl"]
+  스텟:
+    aliases: ["스탯", "tmxot", "tmxpt"]
