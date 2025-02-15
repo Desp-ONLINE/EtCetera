@@ -23,4 +23,4 @@ commands:
   판도라:
     aliases: ["vksehfk", "특수무기", "xmrtnanrl"]
   스텟:
-    aliases: ["스탯", "tmxot", "tmxpt"]
+    aliases: ["스탯", "tmxot", "tmxpt", "stat"]
