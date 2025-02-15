@@ -1,15 +1,11 @@
 package org.swlab.etcetera;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Effect;
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.swlab.etcetera.Commands.CheckNbtTag;
-import org.swlab.etcetera.Commands.SpawnCommand;
+import org.desp.merge.Merge;
+import org.swlab.etcetera.Commands.*;
 import org.swlab.etcetera.Listener.*;
-import su.nightexpress.excellentcrates.crate.impl.Crate;
 
 public final class EtCetera extends JavaPlugin {
 
@@ -61,7 +57,15 @@ public final class EtCetera extends JavaPlugin {
     }
 
     public void registerCommands() {
-        getCommand("nbt검사").setExecutor(new CheckNbtTag());
+        getCommand("nbt검사").setExecutor(new CheckNBTTagCommand());
         getCommand("spawn").setExecutor(new SpawnCommand());
+        getCommand("광산").setExecutor(new MineWarpCommand());
+        getCommand("던전").setExecutor(new DungeonCommand());
+        getCommand("쓰레기통").setExecutor(new TrashcanCommand());
+        getCommand("장비").setExecutor(new AccCommand());
+        getCommand("강화").setExecutor(new ReinforceCommand());
+        getCommand("합성").setExecutor(new MergeCommand());
+        getCommand("전리품").setExecutor(new RewardSellCommand());
+        getCommand("판도라").setExecutor(new PandoraCommand());
     }
 }

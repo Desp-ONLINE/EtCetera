@@ -5,4 +5,20 @@ api-version: '1.20'
 commands:
   nbt검사:
   spawn:
-    aliases: ["로비", "넴주", "스폰"]
+    aliases: ["로비", "넴주", "스폰", "lobby"]
+  광산:
+    aliases: ["채광", "채광장", "rhkdtks", "corhkdwkd"]
+  던전:
+    aliases: ["사냥", "사냥터", "ejswjs", "tksid", "tksidxj"]
+  쓰레기통:
+    aliases: ["Tmfprlxhd"]
+  장비:
+    aliases: ["장비창", "wkdql", "wkdqlckd", "acc"]
+  강화:
+    aliases: ["rkdghk"]
+  합성:
+    aliases: ["gkqtjd"]
+  전리품:
+    aliases: ["wjsflvna", "전리품판매", "wjsflvnavksao", "상점", "상점가", "tkdwja", "tkdwjark"]
+  판도라:
+    aliases: ["vksehfk", "특수무기", "xmrtnanrl"]
