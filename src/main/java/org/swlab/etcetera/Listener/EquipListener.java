@@ -26,6 +26,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.swlab.etcetera.EtCetera;
+import org.swlab.etcetera.Util.CommandUtil;
 
 import java.util.Set;
 
@@ -47,7 +48,6 @@ public class EquipListener implements Listener {
             if (meta == null) {
                 e.getPlayer().getInventory().setLeggings(new ItemStack(Material.AIR));
                 e.getPlayer().getInventory().setBoots(new ItemStack(Material.AIR));
-                System.out.println("탈착함");
                 return;
             }
             int customModelData = meta.getCustomModelData();
@@ -57,6 +57,7 @@ public class EquipListener implements Listener {
                 LeatherArmorMeta bootsMeta = (LeatherArmorMeta) boots.getItemMeta();
                 bootsMeta.setColor(color);
                 bootsMeta.setCustomModelData(customModelData);
+                bootsMeta.setUnbreakable(true);
                 boots.setItemMeta(bootsMeta);
                 e.getPlayer().getInventory().setBoots(boots);
             }
@@ -65,6 +66,7 @@ public class EquipListener implements Listener {
                 LeatherArmorMeta leggingsMeta = (LeatherArmorMeta) leggings.getItemMeta();
                 leggingsMeta.setColor(color);
                 leggingsMeta.setCustomModelData(customModelData);
+                leggingsMeta.setUnbreakable(true);
                 leggings.setItemMeta(leggingsMeta);
                 e.getPlayer().getInventory().setLeggings(leggings);
             }
@@ -78,7 +80,7 @@ public class EquipListener implements Listener {
             if (e.getSlot() >= 36 && e.getSlot() <= 39) {
                 e.setCancelled(true);
                 player.sendMessage("§c 장비창을 통한 장/탈착만 가능합니다.");
-                Bukkit.dispatchCommand(player, "mmoinventory");
+                CommandUtil.runCommandAsOP(player, "mmoinventory");
             }
         }
 
@@ -108,7 +110,7 @@ public class EquipListener implements Listener {
             if (isArmor(item.getType())) {
                 event.setCancelled(true);
                 player.sendMessage("§c 장비창을 통한 장착만 가능합니다.");
-                Bukkit.dispatchCommand(player, "mmoinventory");
+                CommandUtil.runCommandAsOP(player, "mmoinventory");
             }
         }
     }

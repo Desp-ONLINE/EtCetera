@@ -55,6 +55,7 @@ public final class EtCetera extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new RespawnListener(), this);
         Bukkit.getPluginManager().registerEvents(new LevelUpListener(), this);
         Bukkit.getPluginManager().registerEvents(new ClassChangeListener(), this);
+        Bukkit.getPluginManager().registerEvents(new TempListener(), this);
     }
 
     public void registerCommands() {

@@ -3,6 +3,8 @@ package org.swlab.etcetera.Listener;
 import io.lumine.mythic.bukkit.adapters.BukkitPlayer;
 import io.lumine.mythic.bukkit.events.MythicPlayerAttackEvent;
 import io.lumine.mythic.bukkit.events.MythicProjectileHitEvent;
+import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,6 +17,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.*;
 import org.swlab.etcetera.EtCetera;
+import org.swlab.etcetera.Util.CommandUtil;
 
 public class BasicListener implements Listener {
     @EventHandler
@@ -60,6 +63,17 @@ public class BasicListener implements Listener {
 
         }
 
+    }
+    @EventHandler
+    public void onJoin(PlayerJoinEvent e){
+//        e.setJoinMessage("§a[!] §e"+e.getPlayer().getName()+"§f 님께서 서버에 접속하셨습니다!");
+        e.setJoinMessage("");
+        CommandUtil.runCommandAsOP(e.getPlayer(), "spawn");
+    }
+    @EventHandler
+    public void onQuit(PlayerQuitEvent e){
+//        e.setQuitMessage("§c[!] §e"+e.getPlayer().getName()+"§f 님께서 서버에서 퇴장하셨습니다.");
+        e.setQuitMessage("");
     }
 
 
