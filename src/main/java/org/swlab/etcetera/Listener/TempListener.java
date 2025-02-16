@@ -1,7 +1,4 @@
 package org.swlab.etcetera.Listener;
-
-import io.lumine.mythichud.MythicHUDPlugin;
-import io.lumine.mythichud.api.MythicHUD;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.event.EventHandler;

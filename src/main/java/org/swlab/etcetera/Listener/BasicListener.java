@@ -27,6 +27,11 @@ public class BasicListener implements Listener {
             e.setCancelled(true);
             return;
         }
+        if(e.getCause() == EntityDamageEvent.DamageCause.SUFFOCATION) {
+            if(!(e.getEntity() instanceof Player)){
+                e.getEntity().remove();
+            }
+        }
     }
 
     @EventHandler
@@ -130,6 +135,7 @@ public class BasicListener implements Listener {
             e.setCancelled(true);
         }
     }
+
 
 
 }

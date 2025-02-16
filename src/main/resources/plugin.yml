@@ -26,3 +26,5 @@ commands:
     aliases: ["스탯", "tmxot", "tmxpt", "stat"]
   직업:
     aliases: ["직업변경", "클래스", "wlrdjq","zmffotm","wlrdjqqusrud"]
+  낚시:
+    aliases: ["skRtl, skrtl, 낙시"]
