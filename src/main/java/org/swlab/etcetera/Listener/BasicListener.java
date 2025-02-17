@@ -3,12 +3,15 @@ package org.swlab.etcetera.Listener;
 import io.lumine.mythic.bukkit.adapters.BukkitPlayer;
 import io.lumine.mythic.bukkit.events.MythicPlayerAttackEvent;
 import io.lumine.mythic.bukkit.events.MythicProjectileHitEvent;
+import net.Indyuce.mmocore.api.MMOCoreAPI;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -18,6 +21,11 @@ import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.*;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Util.CommandUtil;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import static org.bukkit.Material.WARPED_DOOR;
 
 public class BasicListener implements Listener {
     @EventHandler
@@ -34,6 +42,9 @@ public class BasicListener implements Listener {
             if(!(e.getEntity() instanceof Player)){
                 e.getEntity().remove();
             }
+        }
+        if(e.getEntity().getWorld().getName().equals("world") && EtCetera.getChannelType().equals("lobby") && e.getEntity() instanceof Player){
+            e.setCancelled(true);
         }
     }
 
@@ -69,6 +80,8 @@ public class BasicListener implements Listener {
 //        e.setJoinMessage("§a[!] §e"+e.getPlayer().getName()+"§f 님께서 서버에 접속하셨습니다!");
         e.setJoinMessage("");
         CommandUtil.runCommandAsOP(e.getPlayer(), "spawn");
+        MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
+        mmoCoreAPI.getPlayerData(e.getPlayer()).setClassPoints(999);
     }
     @EventHandler
     public void onQuit(PlayerQuitEvent e){
@@ -102,7 +115,12 @@ public class BasicListener implements Listener {
     @EventHandler
     public void cancelInteractItem(PlayerInteractEvent e) {
         if (!e.getPlayer().isOp()) {
-            e.setCancelled(true);
+            if(e.getClickedBlock()==null){
+                return;
+            }
+            if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getClickedBlock().getType().isInteractable()){
+                e.setCancelled(true);
+            }
         }
     }
 
@@ -131,13 +149,6 @@ public class BasicListener implements Listener {
 
     @EventHandler
     public void cancelBlockPlace(BlockPlaceEvent e) {
-        if (!e.getPlayer().isOp()) {
-            e.setCancelled(true);
-        }
-    }
-
-    @EventHandler
-    public void cancelBlockBreak(BlockBreakEvent e) {
         if (!e.getPlayer().isOp()) {
             e.setCancelled(true);
         }
