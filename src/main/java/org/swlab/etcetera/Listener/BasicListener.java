@@ -6,17 +6,16 @@ import io.lumine.mythic.bukkit.events.MythicProjectileHitEvent;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.*;
 import org.swlab.etcetera.EtCetera;
@@ -121,6 +120,13 @@ public class BasicListener implements Listener {
             if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getClickedBlock().getType().isInteractable()){
                 e.setCancelled(true);
             }
+        }
+    }
+    @EventHandler
+    public void dontStomp(EntityChangeBlockEvent e){
+        Block block = e.getBlock();
+        if(block.getType() == Material.FARMLAND && e.getEntity() != null){
+            e.setCancelled(true);
         }
     }
 

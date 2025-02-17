@@ -1,5 +1,8 @@
 package org.swlab.etcetera.Listener;
 
+import fr.skytasul.quests.BeautyQuests;
+import fr.skytasul.quests.api.QuestsAPI;
+import fr.skytasul.quests.api.quests.Quest;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -19,6 +22,13 @@ public class CrateListener implements Listener {
     @EventHandler
     public void onCrateOpen(CrateOpenEvent e){
         Player player = e.getPlayer();
+        QuestsAPI api = QuestsAPI.getAPI();
+        Quest quest = api.getQuestsManager().getQuest(9);
+        if(!BeautyQuests.getInstance().getPlayersManager().getAccount(player).hasQuestDatas(quest)){
+            player.sendMessage("§c  9번 메인 퀘스트를 먼저 클리어하세요!");
+            e.setCancelled(true);
+            return;
+        }
 //        System.out.println("canOpen.contains(p) = " + canOpen.contains(player));
         if(canOpen.contains(player)){
             e.setCancelled(true);
