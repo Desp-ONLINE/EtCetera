@@ -6,6 +6,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.swlab.etcetera.Commands.*;
 import org.swlab.etcetera.Listener.*;
 
+import java.awt.*;
+
 public final class EtCetera extends JavaPlugin {
 
     public static String channelType = "";
@@ -57,6 +59,7 @@ public final class EtCetera extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ClassChangeListener(), this);
         Bukkit.getPluginManager().registerEvents(new TempListener(), this);
         Bukkit.getPluginManager().registerEvents(new LevelUpListener(), this);
+        Bukkit.getPluginManager().registerEvents(new DialogSendListener(), this);
     }
 
     public void registerCommands() {
