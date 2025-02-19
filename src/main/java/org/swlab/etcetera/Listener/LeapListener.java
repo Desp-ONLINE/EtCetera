@@ -8,6 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.*;
 import org.bukkit.util.Vector;
 import org.swlab.etcetera.EtCetera;
+import org.swlab.etcetera.Util.CommandUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,6 +42,11 @@ public class LeapListener implements Listener {
             long EXPIRATION_TIME = 60000; // 60초
             lastJumpTime.entrySet().removeIf(entry -> (currentTimeMillis - entry.getValue()) > EXPIRATION_TIME);
             e.setCancelled(true);
+        }
+        if(p.isSneaking()){
+            e.setCancelled(true);
+            CommandUtil.runCommandAsOP(p, "gui open 메뉴");
+            return;
         }
 
     }

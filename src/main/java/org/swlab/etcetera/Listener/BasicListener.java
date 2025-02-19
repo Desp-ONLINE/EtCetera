@@ -42,7 +42,8 @@ public class BasicListener implements Listener {
                 e.getEntity().remove();
             }
         }
-        if(e.getEntity().getWorld().getName().equals("world") && EtCetera.getChannelType().equals("lobby") && e.getEntity() instanceof Player){
+        //로비채널에서 world에선 데미지 입는거 cancel
+        if((e.getEntity().getWorld().getName().equals("world") || e.getEntity().getWorld().getName().equals("fishing")) && EtCetera.getChannelType().equals("lobby") && e.getEntity() instanceof Player){
             e.setCancelled(true);
         }
     }

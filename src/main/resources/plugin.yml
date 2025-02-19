@@ -34,3 +34,5 @@ commands:
     aliases: [ "q", "ㅂ", "znptmxm" ]
   마을:
     aliases: ["village", "akdmf", "빌리지"]
+  메뉴:
+    aliases: ["menu", "apsb"]
