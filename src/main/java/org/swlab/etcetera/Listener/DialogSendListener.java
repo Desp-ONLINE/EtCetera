@@ -3,6 +3,7 @@ package org.swlab.etcetera.Listener;
 import fr.skytasul.quests.api.events.DialogSendEvent;
 import fr.skytasul.quests.api.events.DialogSendMessageEvent;
 import io.lumine.mythic.bukkit.adapters.BukkitPlayer;
+import io.lumine.mythic.bukkit.events.MythicMobLootDropEvent;
 import io.lumine.mythic.bukkit.events.MythicProjectileHitEvent;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
 import org.bukkit.Material;
@@ -20,7 +21,7 @@ import org.swlab.etcetera.Util.CommandUtil;
 
 public class DialogSendListener implements Listener {
     @EventHandler
-    public void cancelInstantAttack(DialogSendMessageEvent e) {
+    public void onQuestdialog(DialogSendMessageEvent e) {
 
         Player player = e.getPlayer();
         String name1 = e.getDialog().getNpc().getNpc().getName();

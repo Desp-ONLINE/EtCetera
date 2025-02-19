@@ -6,8 +6,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.swlab.etcetera.Commands.*;
 import org.swlab.etcetera.Listener.*;
 
-import java.awt.*;
-
 public final class EtCetera extends JavaPlugin {
 
     public static String channelType = "";
@@ -49,9 +47,9 @@ public final class EtCetera extends JavaPlugin {
 
     public void registerEvents() {
         if (channelType.equals("lobby")) {
-            Bukkit.getPluginManager().registerEvents(new JumpListener(), this);
             Bukkit.getPluginManager().registerEvents(new CrateListener(), this);
         }
+        Bukkit.getPluginManager().registerEvents(new LeapListener(), this);
         Bukkit.getPluginManager().registerEvents(new BasicListener(), this);
         Bukkit.getPluginManager().registerEvents(new EquipListener(), this);
         Bukkit.getPluginManager().registerEvents(new RespawnListener(), this);
@@ -78,5 +76,6 @@ public final class EtCetera extends JavaPlugin {
         getCommand("낚시").setExecutor(new FishingCommand());
         getCommand("기본템").setExecutor(new BasicWeaponCommand());
         getCommand("퀘스트").setExecutor(new QuestCommand());
+        getCommand("마을").setExecutor(new VillageCommand());
     }
 }
