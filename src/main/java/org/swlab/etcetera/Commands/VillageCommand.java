@@ -38,6 +38,7 @@ public class VillageCommand implements CommandExecutor {
                     }
                     CommandUtil.runCommandAsOP(player, "채널 워프 lobby 워프 이동 엘븐하임_입구");
                 }
+                return false;
             case "칼리마":
                 if(EtCetera.getChannelType().equals("lobby")){
                     if(level <= 45){
@@ -53,6 +54,7 @@ public class VillageCommand implements CommandExecutor {
                     }
                     CommandUtil.runCommandAsOP(player, "채널 워프 lobby 워프 이동 칼리마_입구");
                 }
+                return false;
             case "인페리움":
                 if(EtCetera.getChannelType().equals("lobby")){
                     if(level <= 70){
@@ -68,6 +70,7 @@ public class VillageCommand implements CommandExecutor {
                     }
                     CommandUtil.runCommandAsOP(player, "채널 워프 lobby 워프 이동 인페리움_입구");
                 }
+                return false;
         }
         return false;
     }
