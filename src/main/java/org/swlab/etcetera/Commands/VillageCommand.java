@@ -16,7 +16,10 @@ public class VillageCommand implements CommandExecutor {
         MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
         int level = mmoCoreAPI.getPlayerData(player).getLevel();
         if(args.length == 0) {
-            player.sendMessage("");
+            CommandUtil.runCommandAsOP(player, "gui open 마을");
+            return false;
+        }
+        if(!player.isOp()){
             return false;
         }
         switch (args[0]){
