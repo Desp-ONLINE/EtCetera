@@ -3,6 +3,8 @@ package org.swlab.etcetera.Listener;
 import io.lumine.mythic.bukkit.adapters.BukkitPlayer;
 import io.lumine.mythic.bukkit.events.MythicPlayerAttackEvent;
 import io.lumine.mythic.bukkit.events.MythicProjectileHitEvent;
+import io.lumine.mythic.lib.api.event.skill.PlayerCastSkillEvent;
+import io.lumine.mythic.lib.api.event.skill.SkillCastEvent;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -74,6 +76,12 @@ public class BasicListener implements Listener {
 
         }
 
+    }
+    @EventHandler
+    public void skillOnVillage(PlayerCastSkillEvent e){
+        if(EtCetera.getInstance().getChannelType().equals("lobby") && (e.getPlayer().getWorld().getName().equals("world") || e.getPlayer().getWorld().getName().equals("fishing"))){
+            e.setCancelled(true);
+        }
     }
     @EventHandler
     public void onJoin(PlayerJoinEvent e){
