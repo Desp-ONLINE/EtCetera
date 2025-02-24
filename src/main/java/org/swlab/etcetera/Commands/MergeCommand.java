@@ -1,5 +1,7 @@
 package org.swlab.etcetera.Commands;
 
+import fr.skytasul.quests.BeautyQuests;
+import fr.skytasul.quests.structure.QuestImplementation;
 import net.Indyuce.mmocore.MMOCore;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
 import org.bukkit.command.Command;
@@ -14,9 +16,9 @@ public class MergeCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         Player player = (Player) sender;
-        MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
-        if(mmoCoreAPI.getPlayerData(player).getLevel() <= 45){
-            player.sendMessage("§c  45레벨 이상만 사용 가능합니다.");
+        QuestImplementation quest = BeautyQuests.getInstance().getQuestsManager().getQuest(32);
+        if(!BeautyQuests.getInstance().getPlayersManager().getAccount(player).hasQuestDatas(quest)){
+            player.sendMessage("§c  32번째 메인퀘스트를 완료해야합니다!");
             return true;
         }
         if(EtCetera.getChannelType().equals("lobby")){

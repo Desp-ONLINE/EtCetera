@@ -4,12 +4,16 @@ import net.Indyuce.mmocore.api.MMOCoreAPI;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Util.CommandUtil;
 
-public class VillageCommand implements CommandExecutor {
+import java.util.ArrayList;
+import java.util.List;
+
+public class VillageCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         Player player = (Player) sender;
@@ -73,5 +77,27 @@ public class VillageCommand implements CommandExecutor {
                 return false;
         }
         return false;
+    }
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args){
+        List<String> villageList = new ArrayList<>();
+        if(args.length == 1){
+            Player player = (Player) sender;
+            MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
+            int level = mmoCoreAPI.getPlayerData(player).getLevel();
+            if(level >= 20){
+                villageList.add("엘븐하임");
+            }
+            if(level >= 45){
+                villageList.add("칼리마");
+            }
+            if(level >= 70){
+                villageList.add("인페리움");
+            }
+            if(level<20){
+                villageList.add("이동 가능 마을이 없습니다!");
+            }
+        }
+        return villageList;
     }
 }
