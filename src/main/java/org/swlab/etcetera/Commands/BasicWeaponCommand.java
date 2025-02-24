@@ -1,6 +1,11 @@
 package org.swlab.etcetera.Commands;
 
 import fr.phoenixdevt.mmoprofiles.bukkit.MMOProfiles;
+import io.lumine.mythic.lib.api.player.MMOPlayerData;
+import io.lumine.mythic.lib.api.stat.StatInstance;
+import io.lumine.mythic.lib.api.stat.StatMap;
+import io.lumine.mythic.lib.api.stat.modifier.StatModifier;
+import io.lumine.mythic.lib.player.modifier.ModifierType;
 import net.Indyuce.mmocore.MMOCore;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
 import net.Indyuce.mmocore.api.player.profess.PlayerClass;
@@ -25,6 +30,9 @@ public class BasicWeaponCommand implements CommandExecutor {
         player.getInventory().addItem(basicArmor);
         player.getInventory().addItem(basicWeapon);
         mmoCoreAPI.getPlayerData(player).setClassPoints(999);
+        StatModifier statModifier = new StatModifier("asd", "skill-damage", 10.3, ModifierType.FLAT);
+        statModifier.register(MMOPlayerData.get(player.getUniqueId()));
         return true;
+
     }
 }

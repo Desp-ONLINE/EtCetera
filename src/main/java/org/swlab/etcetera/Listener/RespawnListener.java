@@ -1,5 +1,8 @@
 package org.swlab.etcetera.Listener;
 
+import com.binggre.mmodungeon.api.MMODungeonAPI;
+import com.binggre.mmodungeon.repository.DungeonRepository;
+import com.binggre.mmodungeon.repository.PlayerRepository;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -13,9 +16,12 @@ public class RespawnListener implements Listener {
 
     @EventHandler
     public void onRespawn(PlayerRespawnEvent e) {
-        System.out.println("ASDGadsgasdg");
         if(EtCetera.getChannelType().equals("lobby")){
             World world = Bukkit.getWorld("world");
+            if(e.getPlayer().getWorld().equals(Bukkit.getWorld("raid"))){
+                System.out.println("ASDgadsg");
+                return;
+            }
             Location location = new Location(world, -21.475, 37.0000, -737.459, -90.7f, 1.9f);
             Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
                 @Override
