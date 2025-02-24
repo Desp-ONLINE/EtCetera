@@ -19,7 +19,6 @@ public class RespawnListener implements Listener {
         if(EtCetera.getChannelType().equals("lobby")){
             World world = Bukkit.getWorld("world");
             if(e.getPlayer().getWorld().equals(Bukkit.getWorld("raid"))){
-                System.out.println("ASDgadsg");
                 return;
             }
             Location location = new Location(world, -21.475, 37.0000, -737.459, -90.7f, 1.9f);
