@@ -19,7 +19,7 @@ commands:
   합성:
     aliases: ["gkqtjd"]
   전리품:
-    aliases: ["wjsflvna", "전리품판매", "wjsflvnavksao", "상점", "상점가", "tkdwja", "tkdwjark"]
+    aliases: ["wjsflvna", "전리품판매", "wjsflvnavksao", "상점", "상점가", "tkdwja", "tkdwjark", "후원상점", "캐시상점", "루비상점","fnqltkdwja", "zotltkdwja", "gndnjstkdwja"]
   판도라:
     aliases: ["vksehfk", "특수무기", "xmrtnanrl"]
   스텟:
@@ -36,3 +36,9 @@ commands:
     aliases: ["village", "akdmf", "빌리지"]
   메뉴:
     aliases: ["menu", "apsb"]
+  후원:
+    aliases: ["gndnjs"]
+  메일함:
+    aliases: ["apdlfgka"]
+  시장:
+    aliases: ["tlwkd","rudaowkd","경매장"]

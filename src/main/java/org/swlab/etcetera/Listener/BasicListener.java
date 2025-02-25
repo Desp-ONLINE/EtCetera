@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -110,6 +111,9 @@ public class BasicListener implements Listener {
                 e.setCancelled(true);
                 return;
             }
+            Player player = (Player) e.getDamager();
+            double damage = e.getDamage();
+            player.sendTitle("", "§f                                                                   ᎈ §c"+damage, 5, 10, 5);
         }
     }
 

@@ -1,5 +1,6 @@
 package org.swlab.etcetera;
 
+import com.vexsoftware.votifier.model.Vote;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -48,6 +49,7 @@ public final class EtCetera extends JavaPlugin {
     public void registerEvents() {
         if (channelType.equals("lobby")) {
             Bukkit.getPluginManager().registerEvents(new CrateListener(), this);
+            Bukkit.getPluginManager().registerEvents(new VoteListener(), this);
         }
         Bukkit.getPluginManager().registerEvents(new LeapListener(), this);
         Bukkit.getPluginManager().registerEvents(new BasicListener(), this);
@@ -79,5 +81,8 @@ public final class EtCetera extends JavaPlugin {
         getCommand("마을").setExecutor(new VillageCommand());
         getCommand("마을").setTabCompleter(new VillageCommand());
         getCommand("메뉴").setExecutor(new MenuCommand());
+        getCommand("후원").setExecutor(new DonationCommand());
+        getCommand("메일함").setExecutor(new MailBoxCommand());
+        getCommand("시장").setExecutor(new MarketCommand());
     }
 }
