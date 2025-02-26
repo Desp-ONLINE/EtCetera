@@ -5,7 +5,7 @@ api-version: '1.20'
 commands:
   nbt검사:
   spawn:
-    aliases: ["로비", "넴주", "스폰", "lobby"]
+    aliases: ["로비", "넴주", "스폰", "lobby", "tmvhs"]
   광산:
     aliases: ["채광", "채광장", "rhkdtks", "corhkdwkd"]
   던전:
@@ -44,3 +44,7 @@ commands:
     aliases: ["tlwkd","rudaowkd","경매장"]
   추천:
     aliases: ["cncjs"]
+  디스코드:
+    aliases: ["eltmzhem", "elzh", "디코"]
+  엔더상자:
+    aliases: ["dpsejtkdwk"]
