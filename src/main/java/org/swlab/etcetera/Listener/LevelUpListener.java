@@ -20,10 +20,10 @@ import org.swlab.etcetera.Util.CommandUtil;
 
 public class LevelUpListener implements Listener {
 
-
     @EventHandler
     public void onLevelup(PlayerLevelUpEvent e){
         e.getPlayer().setHealth(e.getPlayer().getMaxHealth());
+        MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
+        mmoCoreAPI.getPlayerData(e.getPlayer()).giveAttributePoints(1);
     }
-
 }

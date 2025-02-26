@@ -42,3 +42,5 @@ commands:
     aliases: ["apdlfgka"]
   시장:
     aliases: ["tlwkd","rudaowkd","경매장"]
+  추천:
+    aliases: ["cncjs"]

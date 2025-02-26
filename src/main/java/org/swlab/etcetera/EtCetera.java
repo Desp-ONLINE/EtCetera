@@ -58,7 +58,6 @@ public final class EtCetera extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new LevelUpListener(), this);
         Bukkit.getPluginManager().registerEvents(new ClassChangeListener(), this);
         Bukkit.getPluginManager().registerEvents(new TempListener(), this);
-        Bukkit.getPluginManager().registerEvents(new LevelUpListener(), this);
         Bukkit.getPluginManager().registerEvents(new DialogSendListener(), this);
     }
 
@@ -84,5 +83,6 @@ public final class EtCetera extends JavaPlugin {
         getCommand("후원").setExecutor(new DonationCommand());
         getCommand("메일함").setExecutor(new MailBoxCommand());
         getCommand("시장").setExecutor(new MarketCommand());
+        getCommand("추천").setExecutor(new VoteCommand());
     }
 }

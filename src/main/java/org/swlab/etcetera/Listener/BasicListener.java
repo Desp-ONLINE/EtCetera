@@ -16,6 +16,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
@@ -99,7 +100,7 @@ public class BasicListener implements Listener {
     }
 
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void cancelInstantAttack(EntityDamageByEntityEvent e) {
         if (EtCetera.getChannelType().equals("dungeon")) {
             if (e.getDamager() instanceof Player && e.getEntity() instanceof Player) {
@@ -112,7 +113,7 @@ public class BasicListener implements Listener {
                 return;
             }
             Player player = (Player) e.getDamager();
-            double damage = e.getDamage();
+            double damage = Math.round(e.getDamage());
             player.sendTitle("", "§f                                                                   ᎈ §c"+damage, 5, 10, 5);
         }
     }
@@ -176,6 +177,12 @@ public class BasicListener implements Listener {
     @EventHandler
     public void cancelItemConsume(PlayerItemConsumeEvent e) {
         if (!e.getPlayer().isOp()) {
+            e.setCancelled(true);
+        }
+    }
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent e){
+        if(!e.getPlayer().isOp()){
             e.setCancelled(true);
         }
     }

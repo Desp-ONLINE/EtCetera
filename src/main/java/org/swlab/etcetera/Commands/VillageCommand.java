@@ -29,14 +29,14 @@ public class VillageCommand implements CommandExecutor, TabCompleter {
         switch (args[0]){
             case "엘븐하임":
                 if(EtCetera.getChannelType().equals("lobby")){
-                    if(level <= 20){
+                    if(level < 20){
                         player.sendMessage("§c  20레벨 미만은 엘븐하임에 출입할 수 없습니다.");
                         return false;
                     }
                     CommandUtil.runCommandAsOP(player, "워프 이동 엘븐하임_입구");
                 }
                 else {
-                    if(level <= 20){
+                    if(level < 20){
                         player.sendMessage("§c  20레벨 미만은 엘븐하임에 출입할 수 없습니다.");
                         return false;
                     }
@@ -45,14 +45,14 @@ public class VillageCommand implements CommandExecutor, TabCompleter {
                 return false;
             case "칼리마":
                 if(EtCetera.getChannelType().equals("lobby")){
-                    if(level <= 45){
+                    if(level < 45){
                         player.sendMessage("§c  45레벨 미만은 칼리마에 출입할 수 없습니다.");
                         return false;
                     }
                     CommandUtil.runCommandAsOP(player, "워프 이동 칼리마_입구");
                 }
                 else {
-                    if(level <= 45){
+                    if(level < 45){
                         player.sendMessage("§c  45레벨 미만은 칼리마에 출입할 수 없습니다.");
                         return false;
                     }
@@ -61,14 +61,14 @@ public class VillageCommand implements CommandExecutor, TabCompleter {
                 return false;
             case "인페리움":
                 if(EtCetera.getChannelType().equals("lobby")){
-                    if(level <= 70){
+                    if(level < 70){
                         player.sendMessage("§c  70레벨 미만은 인페리움에 출입할 수 없습니다.");
                         return false;
                     }
                     CommandUtil.runCommandAsOP(player, "워프 이동 인페리움_입구");
                 }
                 else {
-                    if(level <= 70){
+                    if(level < 70){
                         player.sendMessage("§c  70레벨 미만은 인페리움에 출입할 수 없습니다.");
                         return false;
                     }
