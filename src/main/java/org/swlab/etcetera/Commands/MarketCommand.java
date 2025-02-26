@@ -24,20 +24,25 @@ public class MarketCommand implements CommandExecutor {
         switch (strings[0]){
             case "판매":
                 List<String> lore = player.getInventory().getItemInMainHand().getItemMeta().getLore();
-                if(lore == null){
+                if (lore == null) {
                     player.sendMessage("§c 이 아이템은 판매할 수 없습니다.");
                     return false;
                 }
-                if(lore.contains("§6    거래: §c불가")){
+                if (lore.contains("§6    거래: §c불가")) {
                     player.sendMessage("§c 이 아이템은 판매할 수 없습니다.");
                     return false;
                 }
-                if(strings.length == 1){
+                if (strings.length == 1) {
                     player.sendMessage("§c 가격을 입력하세요. §7§o(/시장 판매 <가격>)");
                     return false;
                 }
-                CommandUtil.runCommandAsOP(player,"ah sell "+strings[1]);
+                CommandUtil.runCommandAsOP(player, "ah sell " + strings[1]);
+                return false;
+            case "수령":
+                CommandUtil.runCommandAsOP(player, "ah claim");
+                return false;
         }
+
         return false;
     }
 }
