@@ -1,5 +1,8 @@
 package org.swlab.etcetera;
 
+import com.binggre.velocitysocketclient.VelocityClient;
+import com.binggre.velocitysocketclient.listener.VelocitySocketListener;
+import com.binggre.velocitysocketclient.socket.SocketClient;
 import com.vexsoftware.votifier.model.Vote;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -57,7 +60,6 @@ public final class EtCetera extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new RespawnListener(), this);
         Bukkit.getPluginManager().registerEvents(new LevelUpListener(), this);
         Bukkit.getPluginManager().registerEvents(new ClassChangeListener(), this);
-        Bukkit.getPluginManager().registerEvents(new TempListener(), this);
         Bukkit.getPluginManager().registerEvents(new DialogSendListener(), this);
     }
 
