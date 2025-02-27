@@ -88,5 +88,6 @@ public final class EtCetera extends JavaPlugin {
         getCommand("추천").setExecutor(new VoteCommand());
         getCommand("디스코드").setExecutor(new DiscordCommand());
         getCommand("엔더상자").setExecutor(new EnderchestCommand());
+        getCommand("창고").setExecutor(new ChestCommand());
     }
 }
