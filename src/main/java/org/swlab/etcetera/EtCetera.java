@@ -1,8 +1,5 @@
 package org.swlab.etcetera;
 
-import com.binggre.velocitysocketclient.VelocityClient;
-import com.binggre.velocitysocketclient.listener.VelocitySocketListener;
-import com.binggre.velocitysocketclient.socket.SocketClient;
 import com.vexsoftware.votifier.model.Vote;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -53,6 +50,7 @@ public final class EtCetera extends JavaPlugin {
         if (channelType.equals("lobby")) {
             Bukkit.getPluginManager().registerEvents(new CrateListener(), this);
             Bukkit.getPluginManager().registerEvents(new VoteListener(), this);
+            Bukkit.getPluginManager().registerEvents(new DungeonFailListener(), this);
         }
         Bukkit.getPluginManager().registerEvents(new LeapListener(), this);
         Bukkit.getPluginManager().registerEvents(new BasicListener(), this);
@@ -89,5 +87,6 @@ public final class EtCetera extends JavaPlugin {
         getCommand("디스코드").setExecutor(new DiscordCommand());
         getCommand("엔더상자").setExecutor(new EnderchestCommand());
         getCommand("창고").setExecutor(new ChestCommand());
+        getCommand("파티").setExecutor(new PartyCommand());
     }
 }
