@@ -1,27 +1,31 @@
 package org.swlab.etcetera.Commands;
 
+import net.Indyuce.mmocore.api.MMOCoreAPI;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Util.CommandUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class MarketCommand implements CommandExecutor {
+public class MarketCommand implements CommandExecutor{
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         Player player = (Player) commandSender;
-        if(!EtCetera.getChannelType().equals("lobby")){
+        if (!EtCetera.getChannelType().equals("lobby")) {
             CommandUtil.runCommandAsOP(player, "채널 워프 lobby 시장");
         }
-        if(strings.length == 0){
-            CommandUtil.runCommandAsOP(player,"ah");
+        if (strings.length == 0) {
+            CommandUtil.runCommandAsOP(player, "ah");
+            player.sendMessage("§7 > 대금 수령은 §6/시장 수령 §7명령어를 이용해주세요.");
             return false;
         }
-        switch (strings[0]){
+        switch (strings[0]) {
             case "판매":
                 List<String> lore = player.getInventory().getItemInMainHand().getItemMeta().getLore();
                 if (lore == null) {
@@ -42,7 +46,6 @@ public class MarketCommand implements CommandExecutor {
                 CommandUtil.runCommandAsOP(player, "ah claim");
                 return false;
         }
-
         return false;
     }
 }

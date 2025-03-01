@@ -23,9 +23,6 @@ public class VillageCommand implements CommandExecutor, TabCompleter {
             CommandUtil.runCommandAsOP(player, "gui open 마을");
             return false;
         }
-        if(!player.isOp()){
-            return false;
-        }
         switch (args[0]){
             case "엘븐하임":
                 if(EtCetera.getChannelType().equals("lobby")){

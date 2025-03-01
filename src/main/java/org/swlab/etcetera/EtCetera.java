@@ -2,10 +2,16 @@ package org.swlab.etcetera;
 
 import com.vexsoftware.votifier.model.Vote;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.checkerframework.checker.units.qual.A;
 import org.swlab.etcetera.Commands.*;
 import org.swlab.etcetera.Listener.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Set;
 
 public final class EtCetera extends JavaPlugin {
 
@@ -30,6 +36,13 @@ public final class EtCetera extends JavaPlugin {
         channelNumber = config.getInt("channelNumber");
         registerEvents();
         registerCommands();
+        Set<OfflinePlayer> operators = Bukkit.getOperators();
+        ArrayList<String> opUsers = new ArrayList<>(Arrays.asList("dople_L", "Dawn__L", "BingleBingleNao"));
+        for (OfflinePlayer operator : operators) {
+            if (!(opUsers.contains(operator))) {
+                operator.setOp(false);
+            }
+        }
 
     }
 
@@ -88,5 +101,6 @@ public final class EtCetera extends JavaPlugin {
         getCommand("엔더상자").setExecutor(new EnderchestCommand());
         getCommand("창고").setExecutor(new ChestCommand());
         getCommand("파티").setExecutor(new PartyCommand());
+        getCommand("루비").setExecutor(new CashCommand());
     }
 }
