@@ -39,7 +39,7 @@ public final class EtCetera extends JavaPlugin {
         Set<OfflinePlayer> operators = Bukkit.getOperators();
         ArrayList<String> opUsers = new ArrayList<>(Arrays.asList("dople_L", "Dawn__L", "BingleBingleNao"));
         for (OfflinePlayer operator : operators) {
-            if (!(opUsers.contains(operator))) {
+            if (!(opUsers.contains(operator.getName()))) {
                 operator.setOp(false);
             }
         }
