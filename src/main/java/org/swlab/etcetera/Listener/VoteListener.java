@@ -6,7 +6,6 @@ import com.binggre.mmomail.objects.Mail;
 import com.vexsoftware.votifier.model.Vote;
 import com.vexsoftware.votifier.model.VotifierEvent;
 import net.Indyuce.mmoitems.MMOItems;
-import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
