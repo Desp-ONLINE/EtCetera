@@ -6,6 +6,7 @@ import com.binggre.mmomail.objects.Mail;
 import com.vexsoftware.votifier.model.Vote;
 import com.vexsoftware.votifier.model.VotifierEvent;
 import net.Indyuce.mmoitems.MMOItems;
+import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -28,13 +29,13 @@ public class VoteListener implements Listener {
         Player player = Bukkit.getPlayer(username);
         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(username);
         if (player == null) {
-            boolean activate = IDEPassAPI.getPlayer(offlinePlayer.getUniqueId().toString()).isActivate();
+//            boolean activate = IDEPassAPI.getPlayer(offlinePlayer.getUniqueId().toString()).isActivate();
             ItemStack voteCoin = MMOItems.plugin.getItem("MISCELLANEOUS", "기타_추천코인");
             ItemStack ruby = MMOItems.plugin.getItem("CONSUMABLE", "기타_루비");
-            if (activate) {
-                voteCoin.setAmount(2);
-                ruby.setAmount(2);
-            }
+//            if (activate) {
+//                voteCoin.setAmount(2);
+//                ruby.setAmount(2);
+//            }
             List<ItemStack> items = new ArrayList<>();
             items.add(voteCoin);
             items.add(ruby);
@@ -44,7 +45,6 @@ public class VoteListener implements Listener {
             Bukkit.broadcastMessage("  §f" + username + "§a님께서 서버를 추천하여 보상을 지급받았습니다! §7§o(/추천)");
             return;
         }
-//        player.sendMessage("§a  추천 보상이 정상 지급되었습니다! §7§o( /메일함 )");
         boolean activate = IDEPassAPI.getPlayer(player.getUniqueId().toString()).isActivate();
         ItemStack voteCoin = MMOItems.plugin.getItem("MISCELLANEOUS", "기타_추천코인");
         ItemStack ruby = MMOItems.plugin.getItem("CONSUMABLE", "기타_루비");
