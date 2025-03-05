@@ -13,10 +13,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -123,9 +120,17 @@ public class BasicListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void cancelInstantAttack(EntityDamageByEntityEvent e) {
+        MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
+        double damage = e.getDamage();
         if (EtCetera.getChannelType().equals("dungeon")) {
             if (e.getDamager() instanceof Player && e.getEntity() instanceof Player) {
                 e.setCancelled(true);
+            }
+        }
+        if(e.getDamager() instanceof Cow && e.getEntity() instanceof Player){
+            String className = mmoCoreAPI.getPlayerData((Player) e.getEntity()).getProfess().getId();
+            if(className.equals("크루세이더")){
+                e.setDamage(damage-damage*10/100);
             }
         }
         if (e.getDamager() instanceof Player) {
@@ -138,11 +143,21 @@ public class BasicListener implements Listener {
                 LivingEntity livingEntity = (LivingEntity) e.getEntity();
                 PotionEffect potionEffect = livingEntity.getPotionEffect(PotionEffectType.BAD_OMEN);
                 if(potionEffect != null){
-                    e.setDamage(e.getDamage()+e.getDamage()*potionEffect.getAmplifier()/100);
+                    e.setDamage(damage+damage*potionEffect.getAmplifier()/100);
                 }
             }
-            double damage = Math.round(e.getDamage());
-            player.sendTitle("", "§f                                                                   ᎈ §c"+damage, 5, 10, 5);
+            if(e.getEntity() instanceof Zombie){
+                if(mmoCoreAPI.getPlayerData((Player)e.getDamager()).getProfess().getId().equals("파우스트")){
+                    e.setDamage(damage-damage*10/100);
+                }
+            }
+            if(e.getEntity() instanceof Cow){
+                if(mmoCoreAPI.getPlayerData((Player)e.getDamager()).getProfess().getId().equals("인페르노")){
+                    e.setDamage(damage+damage*5/100);
+                }
+            }
+            double fixedDamage = Math.round(e.getDamage());
+            player.sendTitle("", "§f                                                                   ᎈ §c"+fixedDamage, 5, 10, 5);
         }
     }
 

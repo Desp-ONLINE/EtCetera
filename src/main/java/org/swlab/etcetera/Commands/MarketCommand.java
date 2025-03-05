@@ -23,6 +23,7 @@ public class MarketCommand implements CommandExecutor{
         if (strings.length == 0) {
             CommandUtil.runCommandAsOP(player, "ah");
             player.sendMessage("§7 > 대금 수령은 §6/시장 수령 §7명령어를 이용해주세요.");
+            player.sendMessage("§c ※ 고의적으로 시장에 시세보다 훨씬 낮은 가격으로 거래하는 사항은 제재 대상입니다.");
             return false;
         }
         switch (strings[0]) {
