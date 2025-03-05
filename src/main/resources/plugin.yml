@@ -54,3 +54,7 @@ commands:
     aliases: ["vkxl"]
   루비:
     aliases: ["zotl", "fnql"]
+  잠수:
+    aliases: ["wkatn"]
+  잠수포인트:
+    aliases: ["wkatnvhdlsxm"]

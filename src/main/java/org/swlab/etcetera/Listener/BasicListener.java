@@ -14,6 +14,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -26,6 +27,8 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Util.CommandUtil;
 
@@ -131,6 +134,13 @@ public class BasicListener implements Listener {
                 return;
             }
             Player player = (Player) e.getDamager();
+            if(e.getEntity() instanceof LivingEntity){
+                LivingEntity livingEntity = (LivingEntity) e.getEntity();
+                PotionEffect potionEffect = livingEntity.getPotionEffect(PotionEffectType.BAD_OMEN);
+                if(potionEffect != null){
+                    e.setDamage(e.getDamage()+e.getDamage()*potionEffect.getAmplifier()/100);
+                }
+            }
             double damage = Math.round(e.getDamage());
             player.sendTitle("", "§f                                                                   ᎈ §c"+damage, 5, 10, 5);
         }
