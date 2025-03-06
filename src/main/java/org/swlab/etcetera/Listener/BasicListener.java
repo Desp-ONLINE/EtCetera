@@ -148,7 +148,7 @@ public class BasicListener implements Listener {
             }
             if(e.getEntity() instanceof Zombie){
                 if(mmoCoreAPI.getPlayerData((Player)e.getDamager()).getProfess().getId().equals("파우스트")){
-                    e.setDamage(damage-damage*10/100);
+                    e.setDamage(damage+damage*10/100);
                 }
             }
             if(e.getEntity() instanceof Cow){
