@@ -152,6 +152,11 @@ public class BasicListener implements Listener {
                     e.setDamage(damage + damage * 5 / 100);
                 }
             }
+            if(e.getEntity() instanceof Player){
+                if (mmoCoreAPI.getPlayerData((Player) e.getDamager()).getProfess().getId().equals("제피르")) {
+                    e.setDamage(damage + damage * 10 / 100);
+                }
+            }
             double fixedDamage = Math.round(e.getDamage());
             player.sendTitle("", "§f                                                                   ᎈ §c" + fixedDamage, 5, 10, 5);
         }
