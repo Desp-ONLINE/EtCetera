@@ -17,10 +17,7 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPhysicsEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.*;
@@ -160,6 +157,14 @@ public class BasicListener implements Listener {
             double fixedDamage = Math.round(e.getDamage());
             player.sendTitle("", "§f                                                                   ᎈ §c" + fixedDamage, 5, 10, 5);
         }
+    }
+    @EventHandler
+    public void onFireTick(BlockIgniteEvent e){
+        e.setCancelled(true);
+    }
+    @EventHandler
+    public void onBlockExplode(BlockExplodeEvent e){
+        e.setCancelled(true);
     }
 
     @EventHandler
