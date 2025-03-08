@@ -45,21 +45,21 @@ public class BasicListener implements Listener {
             e.setCancelled(true);
             return;
         }
-        if(e.getCause() == EntityDamageEvent.DamageCause.SUFFOCATION) {
-            if(!(e.getEntity() instanceof Player)){
+        if (e.getCause() == EntityDamageEvent.DamageCause.SUFFOCATION) {
+            if (!(e.getEntity() instanceof Player)) {
                 e.getEntity().remove();
             }
         }
         //로비채널에서 world에선 데미지 입는거 cancel
-        if((e.getEntity().getWorld().getName().equals("world") || e.getEntity().getWorld().getName().equals("fishing")) && EtCetera.getChannelType().equals("lobby") && e.getEntity() instanceof Player){
+        if ((e.getEntity().getWorld().getName().equals("world") || e.getEntity().getWorld().getName().equals("fishing")) && EtCetera.getChannelType().equals("lobby") && e.getEntity() instanceof Player) {
             e.setCancelled(true);
         }
     }
 
     @EventHandler
-    public void onFishingRodHitPlayer(PlayerFishEvent e){
-        if(e.getCaught() != null){
-            if(e.getCaught() instanceof Player){
+    public void onFishingRodHitPlayer(PlayerFishEvent e) {
+        if (e.getCaught() != null) {
+            if (e.getCaught() instanceof Player) {
                 e.getPlayer().sendMessage("§c 낚싯대로 사람을 낚지 마세요! 인생을 낚으세요!");
                 return;
             }
@@ -70,11 +70,6 @@ public class BasicListener implements Listener {
     public void cancelPlayerDebuff(MythicProjectileHitEvent e) {
         if (EtCetera.getChannelType().equals("dungeon")) {
             if (e.getProjectile().getData().getCaster().getEntity() instanceof BukkitPlayer) {
-//            System.out.println("+==========================");
-//            System.out.println("e.getEntity().isPlayer() = " + e.getEntity().isPlayer());
-//            System.out.println("e.getEntity().getName() = " + e.getEntity().getName());
-//            System.out.println("e.getEntity() = " + e.getEntity());
-//            System.out.println("++==========================");
                 if (e.getEntity().isPlayer()) {
                     e.setCancelled(true);
                 }
@@ -89,30 +84,31 @@ public class BasicListener implements Listener {
                     }
                 }
             }
-
         }
-
     }
+
     @EventHandler
-    public void skillOnVillage(PlayerCastSkillEvent e){
-        if(EtCetera.getInstance().getChannelType().equals("lobby") && (e.getPlayer().getWorld().getName().equals("world") || e.getPlayer().getWorld().getName().equals("fishing"))){
+    public void skillOnVillage(PlayerCastSkillEvent e) {
+        if (EtCetera.getInstance().getChannelType().equals("lobby") && (e.getPlayer().getWorld().getName().equals("world") || e.getPlayer().getWorld().getName().equals("fishing"))) {
             e.setCancelled(true);
         }
     }
-//    @EventHandler
+
+    //    @EventHandler
 //    public void onsellitem(AuctionPostAdminRemoveEvent e){
 //        Player player = e.getPlayer();
 //    }
     @EventHandler
-    public void onJoin(PlayerJoinEvent e){
+    public void onJoin(PlayerJoinEvent e) {
 //        e.setJoinMessage("§a[!] §e"+e.getPlayer().getName()+"§f 님께서 서버에 접속하셨습니다!");
         e.setJoinMessage("");
         CommandUtil.runCommandAsOP(e.getPlayer(), "spawn");
         MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
         mmoCoreAPI.getPlayerData(e.getPlayer()).setClassPoints(999);
     }
+
     @EventHandler
-    public void onQuit(PlayerQuitEvent e){
+    public void onQuit(PlayerQuitEvent e) {
 //        e.setQuitMessage("§c[!] §e"+e.getPlayer().getName()+"§f 님께서 서버에서 퇴장하셨습니다.");
         e.setQuitMessage("");
     }
@@ -127,10 +123,10 @@ public class BasicListener implements Listener {
                 e.setCancelled(true);
             }
         }
-        if(e.getDamager() instanceof Cow && e.getEntity() instanceof Player){
+        if (e.getDamager() instanceof Cow && e.getEntity() instanceof Player) {
             String className = mmoCoreAPI.getPlayerData((Player) e.getEntity()).getProfess().getId();
-            if(className.equals("크루세이더")){
-                e.setDamage(damage-damage*10/100);
+            if (className.equals("크루세이더")) {
+                e.setDamage(damage - damage * 10 / 100);
             }
         }
         if (e.getDamager() instanceof Player) {
@@ -139,25 +135,25 @@ public class BasicListener implements Listener {
                 return;
             }
             Player player = (Player) e.getDamager();
-            if(e.getEntity() instanceof LivingEntity){
+            if (e.getEntity() instanceof LivingEntity) {
                 LivingEntity livingEntity = (LivingEntity) e.getEntity();
                 PotionEffect potionEffect = livingEntity.getPotionEffect(PotionEffectType.BAD_OMEN);
-                if(potionEffect != null){
-                    e.setDamage(damage+damage*potionEffect.getAmplifier()/100);
+                if (potionEffect != null) {
+                    e.setDamage(damage + damage * potionEffect.getAmplifier() / 100);
                 }
             }
-            if(e.getEntity() instanceof Zombie){
-                if(mmoCoreAPI.getPlayerData((Player)e.getDamager()).getProfess().getId().equals("파우스트")){
-                    e.setDamage(damage+damage*10/100);
+            if (e.getEntity() instanceof Zombie) {
+                if (mmoCoreAPI.getPlayerData((Player) e.getDamager()).getProfess().getId().equals("파우스트")) {
+                    e.setDamage(damage + damage * 10 / 100);
                 }
             }
-            if(e.getEntity() instanceof Cow){
-                if(mmoCoreAPI.getPlayerData((Player)e.getDamager()).getProfess().getId().equals("인페르노")){
-                    e.setDamage(damage+damage*5/100);
+            if (e.getEntity() instanceof Cow) {
+                if (mmoCoreAPI.getPlayerData((Player) e.getDamager()).getProfess().getId().equals("인페르노")) {
+                    e.setDamage(damage + damage * 5 / 100);
                 }
             }
             double fixedDamage = Math.round(e.getDamage());
-            player.sendTitle("", "§f                                                                   ᎈ §c"+fixedDamage, 5, 10, 5);
+            player.sendTitle("", "§f                                                                   ᎈ §c" + fixedDamage, 5, 10, 5);
         }
     }
 
@@ -171,18 +167,19 @@ public class BasicListener implements Listener {
     @EventHandler
     public void cancelInteractItem(PlayerInteractEvent e) {
         if (!e.getPlayer().isOp()) {
-            if(e.getClickedBlock()==null){
+            if (e.getClickedBlock() == null) {
                 return;
             }
-            if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getClickedBlock().getType().isInteractable()){
+            if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getClickedBlock().getType().isInteractable()) {
                 e.setCancelled(true);
             }
         }
     }
+
     @EventHandler
-    public void dontStomp(EntityChangeBlockEvent e){
+    public void dontStomp(EntityChangeBlockEvent e) {
         Block block = e.getBlock();
-        if(block.getType() == Material.FARMLAND && e.getEntity() != null){
+        if (block.getType() == Material.FARMLAND && e.getEntity() != null) {
             e.setCancelled(true);
         }
     }
@@ -223,13 +220,13 @@ public class BasicListener implements Listener {
             e.setCancelled(true);
         }
     }
+
     @EventHandler
-    public void onBlockBreak(BlockBreakEvent e){
-        if(!e.getPlayer().isOp()){
+    public void onBlockBreak(BlockBreakEvent e) {
+        if (!e.getPlayer().isOp()) {
             e.setCancelled(true);
         }
     }
-
 
 
 }

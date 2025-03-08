@@ -12,7 +12,7 @@ public class ClassSelectCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         Player player = (Player) sender;
-        CommandUtil.runCommandAsOP(player, "class");
+        CommandUtil.runCommandAsOP(player, "gui open 전직");
         return true;
     }
 }
