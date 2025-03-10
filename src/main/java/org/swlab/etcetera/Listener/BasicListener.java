@@ -99,6 +99,12 @@ public class BasicListener implements Listener {
     public void onJoin(PlayerJoinEvent e) {
 //        e.setJoinMessage("§a[!] §e"+e.getPlayer().getName()+"§f 님께서 서버에 접속하셨습니다!");
         e.setJoinMessage("");
+        Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                e.getPlayer().clearActivePotionEffects();
+            }
+        },20L);
         CommandUtil.runCommandAsOP(e.getPlayer(), "spawn");
         MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
         mmoCoreAPI.getPlayerData(e.getPlayer()).setClassPoints(999);
