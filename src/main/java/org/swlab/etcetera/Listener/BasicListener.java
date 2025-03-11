@@ -73,12 +73,17 @@ public class BasicListener implements Listener {
             }
         }
         if (EtCetera.getChannelType().equals("lobby")) {
-            String worldName = "타격방지월드이름";
+            String worldName = "pvp";
             if (!e.getEntity().getWorld().getName().equals(worldName)) {
                 if (e.getProjectile().getData().getCaster().getEntity() instanceof BukkitPlayer) {
                     if (e.getEntity().isPlayer()) {
                         e.setCancelled(true);
                     }
+                }
+            }
+            if(e.getEntity().getWorld().getName().equals(worldName)){
+                if(e.getEntity().getLocation().getY() >= 18){
+                    e.setCancelled(true);
                 }
             }
         }
@@ -108,6 +113,7 @@ public class BasicListener implements Listener {
         CommandUtil.runCommandAsOP(e.getPlayer(), "spawn");
         MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
         mmoCoreAPI.getPlayerData(e.getPlayer()).setClassPoints(999);
+        e.getPlayer().setNoDamageTicks(0);
     }
 
     @EventHandler
@@ -132,36 +138,36 @@ public class BasicListener implements Listener {
                 e.setDamage(damage - damage * 10 / 100);
             }
         }
-        if (e.getDamager() instanceof Player) {
+        if (e.getDamager() instanceof Player attacker) {
             if (e.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) { // 기본공격 캔슬
                 e.setCancelled(true);
                 return;
             }
-            Player player = (Player) e.getDamager();
-            if (e.getEntity() instanceof LivingEntity) {
-                LivingEntity livingEntity = (LivingEntity) e.getEntity();
-                PotionEffect potionEffect = livingEntity.getPotionEffect(PotionEffectType.BAD_OMEN);
+            if (e.getEntity() instanceof LivingEntity victim) {
+                PotionEffect potionEffect = victim.getPotionEffect(PotionEffectType.BAD_OMEN);
                 if (potionEffect != null) {
                     e.setDamage(damage + damage * (potionEffect.getAmplifier()+1) / 100);
                 }
             }
             if (e.getEntity() instanceof Zombie) {
-                if (mmoCoreAPI.getPlayerData((Player) e.getDamager()).getProfess().getId().equals("파우스트")) {
+                if (mmoCoreAPI.getPlayerData(attacker).getProfess().getId().equals("파우스트")) {
                     e.setDamage(damage + damage * 10 / 100);
                 }
             }
             if (e.getEntity() instanceof Cow) {
-                if (mmoCoreAPI.getPlayerData((Player) e.getDamager()).getProfess().getId().equals("인페르노")) {
+                if (mmoCoreAPI.getPlayerData(attacker).getProfess().getId().equals("인페르노")) {
                     e.setDamage(damage + damage * 5 / 100);
                 }
             }
-            if(e.getEntity() instanceof Player){
-                if (mmoCoreAPI.getPlayerData((Player) e.getDamager()).getProfess().getId().equals("제피르")) {
-                    e.setDamage(damage + damage * 10 / 100);
+            if(e.getEntity() instanceof Player victim){
+                if (mmoCoreAPI.getPlayerData(attacker).getProfess().getId().equals("제피르")) {
+                    damage = damage + damage * 10 / 100;
+                    e.setDamage(damage);
                 }
+                e.setDamage(damage - damage * 40 / 100);
             }
             double fixedDamage = Math.round(e.getDamage());
-            player.sendTitle("", "§f                                                                   ᎈ §c" + fixedDamage, 5, 10, 5);
+            attacker.sendTitle("", "§f                                                                   ᎈ §c" + fixedDamage, 5, 10, 5);
         }
     }
     @EventHandler

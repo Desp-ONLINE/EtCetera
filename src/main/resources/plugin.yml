@@ -58,3 +58,5 @@ commands:
     aliases: ["wkatn"]
   잠수포인트:
     aliases: ["wkatnvhdlsxm"]
+  PVP:
+    aliases: ["피비피", "pk"]
