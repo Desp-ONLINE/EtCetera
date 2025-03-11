@@ -41,6 +41,10 @@ public class MarketCommand implements CommandExecutor{
                     player.sendMessage("§c 가격을 입력하세요. §7§o(/시장 판매 <가격>)");
                     return false;
                 }
+                if(strings.length == 3){
+                    CommandUtil.runCommandAsOP(player, "ah sell " + strings[1] +" "+strings[3]);
+                    return false;
+                }
                 CommandUtil.runCommandAsOP(player, "ah sell " + strings[1]);
                 return false;
             case "수령":
