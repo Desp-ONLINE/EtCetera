@@ -38,15 +38,23 @@ public class MarketCommand implements CommandExecutor{
                     return false;
                 }
                 if (strings.length == 1) {
-                    player.sendMessage("§c 가격을 입력하세요. §7§o(/시장 판매 <가격>)");
+                    player.sendMessage("§c 가격을 입력하세요. §7§o(/시장 판매 <가격> <개수> : 개수는 입력하지 않으면 손에 든 아이템의 전부를 판매합니다.) ");
                     return false;
                 }
                 if(strings.length == 3){
                     try{
-                        double v = Double.parseDouble(strings[3]);
-                        CommandUtil.runCommandAsOP(player, "ah sell " + strings[1] +" "+v);
+                        double v = Double.parseDouble(strings[2]);
+                        Integer i = Integer.valueOf((int) v);
+                        CommandUtil.runCommandAsOP(player, "ah sell " + strings[1] +" "+i);
+                        System.out.println("시장판매됨");
+                        System.out.println("시장판매됨");
+                        System.out.println("시장판매됨");
+                        System.out.println("시장판매됨");
+                        System.out.println("시장판매됨");
+                        System.out.println("시장판매됨");
+                        System.out.println("시장판매됨");
                     } catch (NumberFormatException e) {
-                        player.sendMessage("§c/시장 판매 <금액> <갯수>: 갯수 입력이 잘못되었습니다.");
+                        player.sendMessage("§c/시장 판매 <금액> <개수>: 개수 입력이 잘못되었습니다.");
                     }
                     return false;
                 }
