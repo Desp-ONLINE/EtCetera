@@ -42,7 +42,12 @@ public class MarketCommand implements CommandExecutor{
                     return false;
                 }
                 if(strings.length == 3){
-                    CommandUtil.runCommandAsOP(player, "ah sell " + strings[1] +" "+strings[3]);
+                    try{
+                        double v = Double.parseDouble(strings[3]);
+                        CommandUtil.runCommandAsOP(player, "ah sell " + strings[1] +" "+v);
+                    } catch (NumberFormatException e) {
+                        player.sendMessage("§c/시장 판매 <금액> <갯수>: 갯수 입력이 잘못되었습니다.");
+                    }
                     return false;
                 }
                 CommandUtil.runCommandAsOP(player, "ah sell " + strings[1]);
