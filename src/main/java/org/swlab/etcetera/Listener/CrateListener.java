@@ -35,19 +35,38 @@ public class CrateListener implements Listener {
             player.sendMessage("§c  5초 간격으로 오픈할 수 있습니다.");
             return;
         }
-        if(!(MMOItems.getID(player.getInventory().getItemInMainHand()).equals("기타_판도라의열쇠"))){
-            e.setCancelled(true);
-            player.sendMessage("§c  판도라의 열쇠를 손에 들고 시도하세요.");
-            return;
-        }
-        int amount = player.getInventory().getItemInMainHand().getAmount();
-        player.getInventory().getItemInMainHand().setAmount(amount-1);
-        canOpen.add(player);
-        Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
-            @Override
-            public void run() {
-                canOpen.remove(player);
+        System.out.println("e.getCrate().getId() = " + e.getCrate().getId());
+        if(e.getCrate().getId().equals("common")){
+            if(!(MMOItems.getID(player.getInventory().getItemInMainHand()).equals("기타_판도라의열쇠_일반"))){
+                e.setCancelled(true);
+                player.sendMessage("§c  일반 등급 판도라의 열쇠를 손에 들고 시도하세요.");
+                return;
             }
-        }, 100L);
+            int amount = player.getInventory().getItemInMainHand().getAmount();
+            player.getInventory().getItemInMainHand().setAmount(amount-1);
+            canOpen.add(player);
+            Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    canOpen.remove(player);
+                }
+            }, 100L);
+        }
+        if(e.getCrate().getId().equals("legendary")){
+            if(!(MMOItems.getID(player.getInventory().getItemInMainHand()).equals("기타_판도라의열쇠"))){
+                e.setCancelled(true);
+                player.sendMessage("§c  판도라의 열쇠를 손에 들고 시도하세요.");
+                return;
+            }
+            int amount = player.getInventory().getItemInMainHand().getAmount();
+            player.getInventory().getItemInMainHand().setAmount(amount-1);
+            canOpen.add(player);
+            Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    canOpen.remove(player);
+                }
+            }, 100L);
+        }
     }
 }
