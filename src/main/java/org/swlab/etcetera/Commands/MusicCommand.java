@@ -12,28 +12,7 @@ public class MusicCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         Player player = (Player) sender;
-        if(EtCetera.getChannelType().equals("lobby")){
-            if(strings.length == 0){
-                player.sendMessage("§a /음악 [켜기/끄기]");
-            } else {
-                if(strings[0].equals("켜기")){
-                    CommandUtil.runCommandAsOP(player, "music on");
-                    return false;
-                }
-                else if(strings[0].equals("끄기")){
-                    CommandUtil.runCommandAsOP(player, "music off");
-                    return false;
-                }
-                else {
-                    player.sendMessage("§a /음악 [켜기/끄기]");
-                    return false;
-                }
-            }
-            return true;
-        }
-        else{
-            player.sendMessage("§c 현재 로비에서만 쓸 수 있습니다.");
-            return true;
-        }
+        player.sendMessage("§c 마인크래프트 설정에서 플레이어 소리를 줄여주세요!");
+        return false;
     }
 }
