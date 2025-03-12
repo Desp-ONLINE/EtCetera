@@ -3,9 +3,17 @@ package org.swlab.etcetera.Listener;
 import fr.maxlego08.zauctionhouse.api.event.events.AuctionPostAdminRemoveEvent;
 import fr.maxlego08.zauctionhouse.api.event.events.AuctionSellEvent;
 import fr.maxlego08.zauctionhouse.api.event.events.AuctionTransactionEvent;
+import fr.skytasul.quests.integrations.mobs.MythicMobs;
+import io.lumine.mythic.api.adapters.AbstractEntity;
+import io.lumine.mythic.api.adapters.AbstractPlayer;
+import io.lumine.mythic.api.skills.SkillCaster;
+import io.lumine.mythic.api.skills.targeters.ISkillTargeter;
 import io.lumine.mythic.bukkit.adapters.BukkitPlayer;
+import io.lumine.mythic.bukkit.events.MythicDamageEvent;
 import io.lumine.mythic.bukkit.events.MythicPlayerAttackEvent;
 import io.lumine.mythic.bukkit.events.MythicProjectileHitEvent;
+import io.lumine.mythic.bukkit.events.MythicTargeterLoadEvent;
+import io.lumine.mythic.core.skills.placeholders.all.TargetEntityTypePlaceholder;
 import io.lumine.mythic.lib.api.event.skill.PlayerCastSkillEvent;
 import io.lumine.mythic.lib.api.event.skill.SkillCastEvent;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
@@ -28,6 +36,7 @@ import org.swlab.etcetera.Util.CommandUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Optional;
 
 import static org.bukkit.Material.WARPED_DOOR;
 
@@ -54,6 +63,21 @@ public class BasicListener implements Listener {
     }
 
     @EventHandler
+    public void onMythicHitEvent(MythicDamageEvent e){
+        if(!e.getTarget().getWorld().getName().equals("raid")){
+            return;
+        }
+        SkillCaster caster = e.getCaster();
+        AbstractEntity target = e.getTarget();
+        if(caster.getEntity().isPlayer() && target.isPlayer()){
+            MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
+            if (mmoCoreAPI.isInSameParty((Player) caster.getEntity().getBukkitEntity(), (Player) target.getBukkitEntity())){
+                e.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
     public void onFishingRodHitPlayer(PlayerFishEvent e) {
         if (e.getCaught() != null) {
             if (e.getCaught() instanceof Player) {
@@ -63,8 +87,19 @@ public class BasicListener implements Listener {
         }
     }
 
+
+
     @EventHandler
     public void cancelPlayerDebuff(MythicProjectileHitEvent e) {
+        if(e.getProjectile().getData().getCaster().getEntity().isPlayer()) {
+            if(e.getEntity().isPlayer()){
+                MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
+                if(mmoCoreAPI.isInSameParty((Player) e.getProjectile().getData().getCaster().getEntity().asPlayer().getBukkitEntity(), (Player) e.getEntity().asPlayer().getBukkitEntity())){
+                    e.setCancelled(true);
+                }
+            }
+        }
+
         if (EtCetera.getChannelType().equals("dungeon")) {
             if (e.getProjectile().getData().getCaster().getEntity() instanceof BukkitPlayer) {
                 if (e.getEntity().isPlayer()) {
@@ -88,6 +123,7 @@ public class BasicListener implements Listener {
             }
         }
     }
+
 
     @EventHandler
     public void skillOnVillage(PlayerCastSkillEvent e) {
