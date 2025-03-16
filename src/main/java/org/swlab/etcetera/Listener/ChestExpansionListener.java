@@ -52,6 +52,7 @@ public class ChestExpansionListener implements Listener {
                 return;
 
             }
+
             if (id.equals(VOTE_CHEST_EXPAND_ITEM_ID)) {
                 if(!player.hasPermission("mmochest.3")){
                     ConsoleCommandSender consoleSender = Bukkit.getConsoleSender();
