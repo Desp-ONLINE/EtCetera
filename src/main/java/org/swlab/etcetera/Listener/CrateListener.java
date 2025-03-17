@@ -36,23 +36,92 @@ public class CrateListener implements Listener {
             return;
         }
         System.out.println("e.getCrate().getId() = " + e.getCrate().getId());
-//        if(e.getCrate().getId().equals("common")){
-//            if(!(MMOItems.getID(player.getInventory().getItemInMainHand()).equals("기타_판도라의열쇠_일반"))){
-//                e.setCancelled(true);
-//                player.sendMessage("§c  일반 등급 판도라의 열쇠를 손에 들고 시도하세요.");
-//                return;
-//            }
-//            int amount = player.getInventory().getItemInMainHand().getAmount();
-//            player.getInventory().getItemInMainHand().setAmount(amount-1);
-//            canOpen.add(player);
-//            Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
-//                @Override
-//                public void run() {
-//                    canOpen.remove(player);
-//                }
-//            }, 100L);
-//        }
-        if(e.getCrate().getId().equals("legendary")){
+        if(e.getCrate().getId().equals("common")){
+            if(!(MMOItems.getID(player.getInventory().getItemInMainHand()).equals("기타_판도라의열쇠_일반"))){
+                e.setCancelled(true);
+                player.sendMessage("§c  일반 등급 판도라의 열쇠를 손에 들고 시도하세요.");
+                return;
+            }
+            int amount = player.getInventory().getItemInMainHand().getAmount();
+            player.getInventory().getItemInMainHand().setAmount(amount-1);
+            canOpen.add(player);
+            Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    canOpen.remove(player);
+                }
+            }, 100L);
+
+        }
+        else if(e.getCrate().getId().equals("rare")){
+            if(!(MMOItems.getID(player.getInventory().getItemInMainHand()).equals("기타_판도라의열쇠_레어"))){
+                e.setCancelled(true);
+                player.sendMessage("§c  레어 등급 판도라의 열쇠를 손에 들고 시도하세요.");
+                return;
+            }
+            int amount = player.getInventory().getItemInMainHand().getAmount();
+            player.getInventory().getItemInMainHand().setAmount(amount-1);
+            canOpen.add(player);
+            Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    canOpen.remove(player);
+                }
+            }, 100L);
+
+        }
+        else if(e.getCrate().getId().equals("epic")){
+            if(!(MMOItems.getID(player.getInventory().getItemInMainHand()).equals("기타_판도라의열쇠_에픽"))){
+                e.setCancelled(true);
+                player.sendMessage("§c  에픽 등급 판도라의 열쇠를 손에 들고 시도하세요.");
+                return;
+            }
+            int amount = player.getInventory().getItemInMainHand().getAmount();
+            player.getInventory().getItemInMainHand().setAmount(amount-1);
+            canOpen.add(player);
+            Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    canOpen.remove(player);
+                }
+            }, 100L);
+
+        }
+        else if(e.getCrate().getId().equals("unique")){
+            if(!(MMOItems.getID(player.getInventory().getItemInMainHand()).equals("기타_판도라의열쇠_유니크"))){
+                e.setCancelled(true);
+                player.sendMessage("§c  유니크 등급 판도라의 열쇠를 손에 들고 시도하세요.");
+                return;
+            }
+            int amount = player.getInventory().getItemInMainHand().getAmount();
+            player.getInventory().getItemInMainHand().setAmount(amount-1);
+            canOpen.add(player);
+            Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    canOpen.remove(player);
+                }
+            }, 100L);
+
+        }
+        else if(e.getCrate().getId().equals("legend")){
+            if(!(MMOItems.getID(player.getInventory().getItemInMainHand()).equals("기타_판도라의열쇠_레전더리"))){
+                e.setCancelled(true);
+                player.sendMessage("§c  레전더리 등급 판도라의 열쇠를 손에 들고 시도하세요.");
+                return;
+            }
+            int amount = player.getInventory().getItemInMainHand().getAmount();
+            player.getInventory().getItemInMainHand().setAmount(amount-1);
+            canOpen.add(player);
+            Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    canOpen.remove(player);
+                }
+            }, 100L);
+
+        }
+        else if(e.getCrate().getId().equals("legendary")){
             if(!(MMOItems.getID(player.getInventory().getItemInMainHand()).equals("기타_판도라의열쇠"))){
                 e.setCancelled(true);
                 player.sendMessage("§c  판도라의 열쇠를 손에 들고 시도하세요.");

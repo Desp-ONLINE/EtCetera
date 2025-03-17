@@ -28,13 +28,13 @@ public class VoteListener implements Listener {
         Player player = Bukkit.getPlayer(username);
         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(username);
         if (player == null) {
-//            boolean activate = IDEPassAPI.getPlayer(offlinePlayer.getUniqueId().toString()).isActivate();
+            boolean activate = IDEPassAPI.getPlayer(offlinePlayer);
             ItemStack voteCoin = MMOItems.plugin.getItem("MISCELLANEOUS", "기타_추천코인");
             ItemStack ruby = MMOItems.plugin.getItem("CONSUMABLE", "기타_루비");
-//            if (activate) {
-//                voteCoin.setAmount(2);
-//                ruby.setAmount(2);
-//            }
+            if(activate){
+                voteCoin.setAmount(2);
+                ruby.setAmount(2);
+            }
             List<ItemStack> items = new ArrayList<>();
             items.add(voteCoin);
             items.add(ruby);
