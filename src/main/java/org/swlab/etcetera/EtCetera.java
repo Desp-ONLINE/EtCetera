@@ -108,5 +108,6 @@ public final class EtCetera extends JavaPlugin {
         getCommand("잠수포인트").setExecutor(new AFKPointCommand());
         getCommand("PVP").setExecutor(new PvpCommand());
         getCommand("음악").setExecutor(new MusicCommand());
+        getCommand("정보").setExecutor(new InformationCommand());
     }
 }

@@ -62,3 +62,5 @@ commands:
     aliases: ["피비피", "pk"]
   음악:
     aliases: ["dmadkr","qoruddmadkr","배경음악","노래","shfo"]
+  정보:
+    aliases: ["wjdqh"]
