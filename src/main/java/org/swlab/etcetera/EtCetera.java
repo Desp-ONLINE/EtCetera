@@ -1,9 +1,17 @@
 package org.swlab.etcetera;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.vexsoftware.votifier.model.Vote;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.checkerframework.checker.units.qual.A;
 import org.swlab.etcetera.Commands.*;
@@ -12,6 +20,8 @@ import org.swlab.etcetera.Listener.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Set;
+
+import static org.apache.logging.log4j.LogManager.getLogger;
 
 public final class EtCetera extends JavaPlugin {
 
@@ -58,6 +68,7 @@ public final class EtCetera extends JavaPlugin {
     public void onDisable() {
         // Plugin shutdown logic
     }
+
 
     public void registerEvents() {
         if (channelType.equals("lobby")) {

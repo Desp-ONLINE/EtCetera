@@ -32,7 +32,14 @@ public class LeapListener implements Listener {
             }
             Vector vector;
             if(EtCetera.getChannelType().equals("lobby")){
-                vector = p.getLocation().getDirection().multiply(3).setY(0.5);
+                if(p.getWorld().getName().equals("pvp")){
+                    vector = p.getLocation().getDirection().multiply(1.5).setY(0.5);
+                }
+                else {
+                    vector = p.getLocation().getDirection().multiply(3).setY(0.5);
+
+                }
+
             }
             else {
                 vector = p.getLocation().getDirection().multiply(2).setY(0.5);
