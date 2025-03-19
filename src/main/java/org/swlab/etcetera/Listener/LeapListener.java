@@ -21,6 +21,7 @@ public class LeapListener implements Listener {
 
     @EventHandler
     public void onLeap(PlayerSwapHandItemsEvent e) {
+        
         Player p = e.getPlayer();
         ArrayList<String> sword = new ArrayList(Arrays.asList(Material.DIAMOND_SWORD, Material.GOLDEN_SWORD, Material.IRON_SWORD, Material.WOODEN_SWORD, Material.STONE_SWORD));
         if (sword.contains(p.getInventory().getItemInMainHand().getType()) && !p.isSneaking()) {
