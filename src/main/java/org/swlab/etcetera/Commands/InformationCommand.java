@@ -20,6 +20,7 @@ public class InformationCommand implements CommandExecutor {
         double skillCriticalStrikeChance = statMap.getStat("SKILL_CRITICAL_STRIKE_CHANCE");
         double skillCriticalStrikePower = statMap.getStat("SKILL_CRITICAL_STRIKE_POWER");
         double movementSpeed = statMap.getStat("MOVEMENT_SPEED");
+        double additionalExperience = statMap.getStat("ADDITIONAL_EXPERIENCE");
         long maxHealth = Math.round(health);
 
         player.sendMessage("§f > "+player.getName()+" 님의 §a스텟 §f정보입니다.");
@@ -29,6 +30,7 @@ public class InformationCommand implements CommandExecutor {
         player.sendMessage("§f  ᎏ §e크리티컬 확률: §f+"+skillCriticalStrikeChance+"%");
         player.sendMessage("§f  ᎏ §6크리티컬 데미지: §f+"+skillCriticalStrikePower+"%");
         player.sendMessage("§f  ᎒ §b이동 속도: §f+"+movementSpeed);
+        player.sendMessage("§f  Ӻ §a경험치 획득량: §f+"+additionalExperience+"%");
         player.sendMessage("");
         return true;
     }
