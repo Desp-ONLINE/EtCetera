@@ -18,7 +18,7 @@ public class MineWarpCommand implements CommandExecutor {
             return false;
         }
         else{
-            Bukkit.dispatchCommand(player, "채널 워프 lobby 워프 이동 광산_입구");
+            CommandUtil.runCommandAsOP(player, "채널 워프 lobby 워프 이동 광산_입구");
             return false;
         }
     }
