@@ -1,12 +1,6 @@
 package org.swlab.etcetera;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.PacketAdapter;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.events.PacketEvent;
-import com.comphenix.protocol.wrappers.EnumWrappers;
+
 import com.vexsoftware.votifier.model.Vote;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -83,6 +77,7 @@ public final class EtCetera extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new LevelUpListener(), this);
         Bukkit.getPluginManager().registerEvents(new ClassChangeListener(), this);
         Bukkit.getPluginManager().registerEvents(new DialogSendListener(), this);
+        Bukkit.getPluginManager().registerEvents(new ConsumableListener(), this);
         Bukkit.getPluginManager().registerEvents(new ChestExpansionListener(), this);
         Bukkit.getPluginManager().registerEvents(new MusicListener(), this);
     }
