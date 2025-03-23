@@ -40,6 +40,7 @@ public class VoteListener implements Listener {
             Bukkit.broadcastMessage("  §f" + username + "§a님께서 서버를 추천하여 보상을 지급받았습니다! §7§o(/추천)");
             return;
         }
+
         boolean activate = IDEPassAPI.getPlayer(player.getUniqueId().toString()).isActivate();
         ItemStack voteCoin = MMOItems.plugin.getItem("MISCELLANEOUS", "기타_추천코인");
         ItemStack ruby = MMOItems.plugin.getItem("CONSUMABLE", "기타_루비");
