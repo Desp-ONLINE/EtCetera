@@ -1,11 +1,7 @@
 package org.swlab.etcetera.Listener;
 
-import fr.skytasul.quests.BeautyQuests;
-import fr.skytasul.quests.api.QuestsAPI;
-import fr.skytasul.quests.api.quests.Quest;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,10 +10,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.swlab.etcetera.EtCetera;
-import su.nightexpress.excellentcrates.api.event.CrateOpenEvent;
-
-import java.util.ArrayList;
 
 public class ChestExpansionListener implements Listener {
 

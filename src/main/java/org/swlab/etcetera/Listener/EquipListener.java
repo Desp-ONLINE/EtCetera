@@ -1,34 +1,21 @@
 package org.swlab.etcetera.Listener;
 
-import io.lumine.mythic.lib.api.event.armorequip.ArmorEquipEvent;
-import io.lumine.mythic.lib.api.event.armorequip.ArmorType;
-import io.lumine.mythic.lib.api.itemtype.ItemType;
-import net.Indyuce.inventory.MMOInventory;
-import net.Indyuce.inventory.api.MMOInventoryAPI;
 import net.Indyuce.inventory.api.event.ItemEquipEvent;
 import net.Indyuce.inventory.slot.SlotType;
-import net.Indyuce.mmoitems.comp.inventory.PlayerInventory;
-import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Util.CommandUtil;
-
-import java.util.Set;
 
 public class EquipListener implements Listener {
     @EventHandler

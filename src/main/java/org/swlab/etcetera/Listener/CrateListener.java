@@ -9,11 +9,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.swlab.etcetera.EtCetera;
-import su.nightexpress.excellentcrates.api.event.CrateEvent;
 import su.nightexpress.excellentcrates.api.event.CrateOpenEvent;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class CrateListener implements Listener {
 

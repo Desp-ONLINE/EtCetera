@@ -1,27 +1,19 @@
 package org.swlab.etcetera.Listener;
 
-import fr.maxlego08.zauctionhouse.api.event.events.AuctionPostAdminRemoveEvent;
-import fr.maxlego08.zauctionhouse.api.event.events.AuctionSellEvent;
-import fr.maxlego08.zauctionhouse.api.event.events.AuctionTransactionEvent;
-import fr.skytasul.quests.integrations.mobs.MythicMobs;
 import io.lumine.mythic.api.adapters.AbstractEntity;
-import io.lumine.mythic.api.adapters.AbstractPlayer;
 import io.lumine.mythic.api.skills.SkillCaster;
-import io.lumine.mythic.api.skills.targeters.ISkillTargeter;
 import io.lumine.mythic.bukkit.adapters.BukkitPlayer;
 import io.lumine.mythic.bukkit.events.MythicDamageEvent;
-import io.lumine.mythic.bukkit.events.MythicPlayerAttackEvent;
 import io.lumine.mythic.bukkit.events.MythicProjectileHitEvent;
-import io.lumine.mythic.bukkit.events.MythicTargeterLoadEvent;
-import io.lumine.mythic.core.skills.placeholders.all.TargetEntityTypePlaceholder;
 import io.lumine.mythic.lib.api.event.skill.PlayerCastSkillEvent;
-import io.lumine.mythic.lib.api.event.skill.SkillCastEvent;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.command.Command;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Cow;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -33,12 +25,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Util.CommandUtil;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Optional;
-
-import static org.bukkit.Material.WARPED_DOOR;
 
 public class BasicListener implements Listener {
     @EventHandler
@@ -132,13 +118,9 @@ public class BasicListener implements Listener {
         }
     }
 
-    //    @EventHandler
-//    public void onsellitem(AuctionPostAdminRemoveEvent e){
-//        Player player = e.getPlayer();
-//    }
+
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
-//        e.setJoinMessage("§a[!] §e"+e.getPlayer().getName()+"§f 님께서 서버에 접속하셨습니다!");
         e.setJoinMessage("");
         Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
             @Override

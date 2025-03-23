@@ -1,6 +1,5 @@
 package org.swlab.etcetera.Commands;
 
-import io.lumine.mythic.bukkit.events.MythicPlayerLoadedEvent;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

@@ -1,10 +1,5 @@
 package org.swlab.etcetera.Listener;
 
-import fr.skytasul.quests.BeautyQuests;
-import fr.skytasul.quests.api.QuestsAPI;
-import fr.skytasul.quests.api.quests.Quest;
-import net.Indyuce.mmoitems.MMOItems;
-import org.bukkit.Bukkit;
 import org.bukkit.SoundCategory;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -15,9 +10,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.swlab.etcetera.EtCetera;
-import su.nightexpress.excellentcrates.api.event.CrateOpenEvent;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;

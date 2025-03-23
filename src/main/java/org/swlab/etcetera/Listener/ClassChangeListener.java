@@ -1,7 +1,5 @@
 package org.swlab.etcetera.Listener;
 
-import fr.phoenixdevt.profiles.event.ProfileCreateEvent;
-import fr.skytasul.quests.BeautyQuests;
 import fr.skytasul.quests.api.events.QuestFinishEvent;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
 import net.Indyuce.mmocore.api.event.PlayerChangeClassEvent;

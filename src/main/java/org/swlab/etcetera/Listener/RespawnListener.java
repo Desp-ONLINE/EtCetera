@@ -1,8 +1,5 @@
 package org.swlab.etcetera.Listener;
 
-import com.binggre.mmodungeon.api.MMODungeonAPI;
-import com.binggre.mmodungeon.repository.DungeonRepository;
-import com.binggre.mmodungeon.repository.PlayerRepository;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;

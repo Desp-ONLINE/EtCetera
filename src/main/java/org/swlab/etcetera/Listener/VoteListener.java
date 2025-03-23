@@ -1,7 +1,6 @@
 package org.swlab.etcetera.Listener;
 
 import com.binggre.mmomail.MMOMail;
-import com.binggre.mmomail.api.MailAPI;
 import com.binggre.mmomail.objects.Mail;
 import com.vexsoftware.votifier.model.Vote;
 import com.vexsoftware.votifier.model.VotifierEvent;
@@ -11,13 +10,10 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.desp.IDEPass.api.IDEPassAPI;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class VoteListener implements Listener {
