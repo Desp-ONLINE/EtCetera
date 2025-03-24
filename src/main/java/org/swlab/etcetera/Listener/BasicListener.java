@@ -131,11 +131,12 @@ public class BasicListener implements Listener {
         CommandUtil.runCommandAsOP(e.getPlayer(), "spawn");
         MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
         mmoCoreAPI.getPlayerData(e.getPlayer()).setClassPoints(999);
-        e.getPlayer().setNoDamageTicks(0);
+
         Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
             @Override
             public void run() {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "huds layout "+e.getPlayer().getName()+" remove slot_hud-layout");
+                e.getPlayer().setNoDamageTicks(0);
             }
         }, 20L);
 
