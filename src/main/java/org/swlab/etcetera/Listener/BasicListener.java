@@ -161,7 +161,7 @@ public class BasicListener implements Listener {
         if (e.getDamager() instanceof Cow && e.getEntity() instanceof Player) {
             String className = mmoCoreAPI.getPlayerData((Player) e.getEntity()).getProfess().getId();
             if (className.equals("크루세이더")) {
-                e.setDamage(damage - damage * 10 / 100);
+                e.setDamage(damage - damage * 15 / 100);
             }
         }
         if (e.getDamager() instanceof Player attacker) {
@@ -180,7 +180,10 @@ public class BasicListener implements Listener {
                     e.setDamage(damage + damage * 7 / 100);
                 }
                 if (mmoCoreAPI.getPlayerData(attacker).getProfess().getId().equals("제피르")) {
-                    e.setDamage(damage - damage * 5 / 100);
+                    e.setDamage(damage - damage * 8 / 100);
+                }
+                if (mmoCoreAPI.getPlayerData(attacker).getProfess().getId().equals("크루세이더")) {
+                    e.setDamage(damage - damage * 3 / 100);
                 }
             }
             if (e.getEntity() instanceof Cow) {
