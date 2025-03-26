@@ -20,6 +20,7 @@ public class MarketCommand implements CommandExecutor{
         if (strings.length == 0) {
             CommandUtil.runCommandAsOP(player, "ah");
             player.sendMessage("§7 > 대금 수령은 §6/시장 수령 §7명령어를 이용해주세요.");
+            player.sendMessage("§7 > 판매할 아이템을 들고 §6/시세§7를 입력하면 최근 판매 이력을 볼 수 있습니다.");
             player.sendMessage("§c ※ 고의적으로 시장에 시세보다 훨씬 낮은 가격으로 거래하는 사항은 제재 대상입니다.");
             return false;
         }
@@ -43,13 +44,6 @@ public class MarketCommand implements CommandExecutor{
                         double v = Double.parseDouble(strings[2]);
                         Integer i = Integer.valueOf((int) v);
                         CommandUtil.runCommandAsOP(player, "ah sell " + strings[1] +" "+i);
-                        System.out.println("시장판매됨");
-                        System.out.println("시장판매됨");
-                        System.out.println("시장판매됨");
-                        System.out.println("시장판매됨");
-                        System.out.println("시장판매됨");
-                        System.out.println("시장판매됨");
-                        System.out.println("시장판매됨");
                     } catch (NumberFormatException e) {
                         player.sendMessage("§c/시장 판매 <금액> <개수>: 개수 입력이 잘못되었습니다.");
                     }

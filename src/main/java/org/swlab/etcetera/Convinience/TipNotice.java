@@ -8,7 +8,7 @@ public class TipNotice {
 
     public static String getNotice() {
         Random rand = new Random();
-        int noticeNumber = rand.nextInt(0, 8);
+        int noticeNumber = rand.nextInt(0, 9);
         return switch (noticeNumber) {
             case 0 -> "§f 摩 " + format("#fcd07f") + "알고 계셨나요? 무기를 들고 F를 누르면 도약할 수 있습니다!";
             case 1 -> "§f 摩 " + format("#FFF897") + "알고 계셨나요? 아무것도 들지 않고, SHIFT+F를 누르면 메뉴를 열 수 있습니다! §7§o(/메뉴)";
@@ -20,6 +20,7 @@ public class TipNotice {
                     "§f 摩 " + format("#FFD4FC") + "문제가 발생하여 고객센터를 통해 복구받은 경우, 메일함을 통해 복구를 받을 수 있습니다. 문의가 종료되었다면 메일함을 확인해보세요! §7§o(/메일함)";
             case 6 -> "§f 摩 " + format("#8193FF") + "아이템을 소모하여 도감을 채우면 영구적인 스탯 보상을 얻을 수 있습니다! 각 특수무기의 +MAX 등급을 인벤토리에 가지고 있으면 표시됩니다! §7§o(/도감)";
             case 7 -> "§f 摩 " + format("#FFCF4E") + "IDE 온라인에서는 시장을 통한 거래만 가능합니다. 아쉽게도 개인 거래는 불가합니다. §7§o(/시장)";
+            case 8 -> "§f 摩 " + format("#FFC770") + "시장에 아이템을 팔고 싶은데 시세를 모르겠나요? 판매 할 아이템을 손에 들고 /시세 명령어를 입력하면 최근 거래 내역을 확인할 수 있습니다! §7§o(/시세)";
             default -> "";
         };
     }
