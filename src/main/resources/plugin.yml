@@ -27,7 +27,7 @@ commands:
   직업:
     aliases: ["직업변경", "클래스", "wlrdjq","zmffotm","wlrdjqqusrud"]
   낚시:
-    aliases: ["skRtl, skrtl, 낙시"]
+    aliases: ["skRtl", "skrtl", "낙시"]
   기본템:
     aliases: ["rlqhsxpa"]
   퀘스트:
