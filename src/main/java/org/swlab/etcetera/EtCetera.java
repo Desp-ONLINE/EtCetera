@@ -74,7 +74,6 @@ public final class EtCetera extends JavaPlugin {
     public void registerEvents() {
         if (channelType.equals("lobby")) {
             Bukkit.getPluginManager().registerEvents(new CrateListener(), this);
-            Bukkit.getPluginManager().registerEvents(new VoteListener(), this);
             Bukkit.getPluginManager().registerEvents(new DungeonFailListener(), this);
             Bukkit.getPluginManager().registerEvents(new DungeonLogListener(), this);
 
@@ -121,7 +120,6 @@ public final class EtCetera extends JavaPlugin {
         getCommand("후원").setExecutor(new DonationCommand());
         getCommand("메일함").setExecutor(new MailBoxCommand());
         getCommand("시장").setExecutor(new MarketCommand());
-        getCommand("추천").setExecutor(new VoteCommand());
         getCommand("디스코드").setExecutor(new DiscordCommand());
         getCommand("엔더상자").setExecutor(new EnderchestCommand());
         getCommand("창고").setExecutor(new ChestCommand());

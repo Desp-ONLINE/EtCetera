@@ -42,8 +42,6 @@ commands:
     aliases: ["apdlfgka"]
   시장:
     aliases: ["tlwkd","rudaowkd","경매장"]
-  추천:
-    aliases: ["cncjs"]
   디스코드:
     aliases: ["eltmzhem", "elzh", "디코"]
   엔더상자:
