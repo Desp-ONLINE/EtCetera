@@ -17,7 +17,11 @@ public class ClassChangeListener implements Listener{
     public void onLevelUp(PlayerChangeClassEvent e){
         Player player = e.getPlayer();
         PlayerClass newClass = e.getNewClass();
+
         MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
+        if(mmoCoreAPI.getPlayerData(player).getLevel() != 1){
+            return;
+        }
         ItemStack basicWeapon = MMOItems.plugin.getItem("SWORD", "직업무기_1" + newClass.getName() + "0");
         ItemStack basicArmor = MMOItems.plugin.getItem("ARMOR", "방어구_모험가0");
         player.getInventory().addItem(basicArmor);
