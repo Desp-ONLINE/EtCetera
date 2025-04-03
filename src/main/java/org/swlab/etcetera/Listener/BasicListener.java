@@ -124,6 +124,7 @@ public class BasicListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         e.setJoinMessage("");
+
         Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
             @Override
             public void run() {
@@ -139,6 +140,7 @@ public class BasicListener implements Listener {
             public void run() {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "huds layout "+e.getPlayer().getName()+" remove slot_hud-layout");
                 e.getPlayer().setNoDamageTicks(0);
+                e.getPlayer().setHealth(e.getPlayer().getMaxHealth());
             }
         }, 20L);
 

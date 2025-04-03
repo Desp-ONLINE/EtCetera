@@ -75,16 +75,8 @@ public final class EtCetera extends JavaPlugin {
         if (channelType.equals("lobby")) {
             Bukkit.getPluginManager().registerEvents(new CrateListener(), this);
             Bukkit.getPluginManager().registerEvents(new DungeonFailListener(), this);
-            Bukkit.getPluginManager().registerEvents(new DungeonLogListener(), this);
 
-            Bukkit.getScheduler().runTaskTimerAsynchronously(EtCetera.getInstance(), new Runnable() {
-                @Override
-                public void run() {
-                    for (String joinedUserName : DungeonLogListener.getJoinedUserNames()) {
-                        System.out.println("잔여 닉네임:" + joinedUserName);
-                    }
-                }
-            }, 20L, 1220L);
+
         }
         Bukkit.getPluginManager().registerEvents(new LeapListener(), this);
         Bukkit.getPluginManager().registerEvents(new BasicListener(), this);

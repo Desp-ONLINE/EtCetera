@@ -1,6 +1,5 @@
 package org.swlab.etcetera.Commands;
 
-import com.comphenix.protocol.PacketType;
 import io.lumine.mythic.lib.math3.analysis.function.Min;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.command.Command;
