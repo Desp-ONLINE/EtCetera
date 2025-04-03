@@ -35,13 +35,13 @@ public class LeapListener implements Listener {
                     vector = p.getLocation().getDirection().multiply(1.5).setY(0.5);
                 }
                 else {
-                    vector = p.getLocation().getDirection().multiply(3).setY(0.5);
+                    vector = p.getLocation().getDirection().multiply(2.2).setY(0.5);
 
                 }
 
             }
             else {
-                vector = p.getLocation().getDirection().multiply(2).setY(0.5);
+                vector = p.getLocation().getDirection().multiply(2.5).setY(0.5);
             }
             p.setVelocity(vector);
             lastJumpTime.put(uniqueId, currentTimeMillis);
