@@ -8,7 +8,13 @@ public class CommandUtil {
     public static void runCommandAsOP(Player player,String command){
         if(!player.isOp()){
             player.setOp(true);
-            Bukkit.dispatchCommand(player, command);
+            try{
+                Bukkit.dispatchCommand(player, command);
+
+            } catch (Exception e){
+                player.setOp(false);
+
+            }
             player.setOp(false);
         }
         else {
