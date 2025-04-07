@@ -134,6 +134,51 @@ public class CrateListener implements Listener {
                     canOpen.remove(player);
                 }
             }, 100L);
+        }else if(e.getCrate().getId().equals("elvenheim")){
+            if(!(MMOItems.getID(player.getInventory().getItemInMainHand()).equals("기타_엘븐하임열쇠"))){
+                e.setCancelled(true);
+                player.sendMessage("§c  네이처 키를 손에 들고 시도하세요.");
+                return;
+            }
+            int amount = player.getInventory().getItemInMainHand().getAmount();
+            player.getInventory().getItemInMainHand().setAmount(amount-1);
+            canOpen.add(player);
+            Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    canOpen.remove(player);
+                }
+            }, 100L);
+        }else if(e.getCrate().getId().equals("kalima")){
+            if(!(MMOItems.getID(player.getInventory().getItemInMainHand()).equals("기타_칼리마열쇠"))){
+                e.setCancelled(true);
+                player.sendMessage("§c  샌드스톤 키를 손에 들고 시도하세요.");
+                return;
+            }
+            int amount = player.getInventory().getItemInMainHand().getAmount();
+            player.getInventory().getItemInMainHand().setAmount(amount-1);
+            canOpen.add(player);
+            Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    canOpen.remove(player);
+                }
+            }, 100L);
+        }else if(e.getCrate().getId().equals("inferium")){
+            if(!(MMOItems.getID(player.getInventory().getItemInMainHand()).equals("기타_인페리움열쇠"))){
+                e.setCancelled(true);
+                player.sendMessage("§c  라바플로우 키를 손에 들고 시도하세요.");
+                return;
+            }
+            int amount = player.getInventory().getItemInMainHand().getAmount();
+            player.getInventory().getItemInMainHand().setAmount(amount-1);
+            canOpen.add(player);
+            Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    canOpen.remove(player);
+                }
+            }, 100L);
         }
         else{
             e.setCancelled(true);
