@@ -5,66 +5,68 @@ api-version: '1.20'
 commands:
   nbt검사:
   spawn:
-    aliases: ["로비", "넴주", "스폰", "lobby", "tmvhs"]
+    aliases: [ "로비", "넴주", "스폰", "lobby", "tmvhs" ]
   광산:
-    aliases: ["채광", "채광장", "rhkdtks", "corhkdwkd"]
+    aliases: [ "채광", "채광장", "rhkdtks", "corhkdwkd" ]
   던전:
-    aliases: ["사냥", "사냥터", "ejswjs", "tksid", "tksidxj"]
+    aliases: [ "사냥", "사냥터", "ejswjs", "tksid", "tksidxj" ]
   쓰레기통:
-    aliases: ["Tmfprlxhd"]
+    aliases: [ "Tmfprlxhd" ]
   장비:
-    aliases: ["장비창", "wkdql", "wkdqlckd", "acc"]
+    aliases: [ "장비창", "wkdql", "wkdqlckd", "acc" ]
   강화:
-    aliases: ["rkdghk"]
+    aliases: [ "rkdghk" ]
   합성:
-    aliases: ["gkqtjd"]
+    aliases: [ "gkqtjd" ]
   전리품:
-    aliases: ["wjsflvna", "전리품판매", "wjsflvnavksao", "상점", "상점가", "tkdwja", "tkdwjark", "후원상점", "캐시상점", "루비상점","fnqltkdwja", "zotltkdwja", "gndnjstkdwja"]
+    aliases: [ "wjsflvna", "전리품판매", "wjsflvnavksao", "상점", "상점가", "tkdwja", "tkdwjark", "후원상점", "캐시상점", "루비상점","fnqltkdwja", "zotltkdwja", "gndnjstkdwja" ]
   판도라:
-    aliases: ["vksehfk", "특수무기", "xmrtnanrl"]
+    aliases: [ "vksehfk", "특수무기", "xmrtnanrl" ]
   스텟:
-    aliases: ["스탯", "tmxot", "tmxpt", "stat"]
+    aliases: [ "스탯", "tmxot", "tmxpt", "stat" ]
   직업:
-    aliases: ["직업변경", "클래스", "wlrdjq","zmffotm","wlrdjqqusrud"]
+    aliases: [ "직업변경", "클래스", "wlrdjq","zmffotm","wlrdjqqusrud" ]
   낚시:
-    aliases: ["skRtl", "skrtl", "낙시"]
+    aliases: [ "skRtl", "skrtl", "낙시" ]
   기본템:
-    aliases: ["rlqhsxpa"]
+    aliases: [ "rlqhsxpa" ]
   퀘스트:
     aliases: [ "q", "ㅂ", "znptmxm" ]
   마을:
-    aliases: ["village", "akdmf", "빌리지"]
+    aliases: [ "village", "akdmf", "빌리지" ]
   메뉴:
-    aliases: ["menu", "apsb"]
+    aliases: [ "menu", "apsb" ]
   후원:
-    aliases: ["gndnjs"]
+    aliases: [ "gndnjs" ]
   메일함:
-    aliases: ["apdlfgka"]
+    aliases: [ "apdlfgka" ]
   시장:
-    aliases: ["tlwkd","rudaowkd","경매장"]
+    aliases: [ "tlwkd","rudaowkd","경매장" ]
   디스코드:
-    aliases: ["eltmzhem", "elzh", "디코"]
+    aliases: [ "eltmzhem", "elzh", "디코" ]
   엔더상자:
-    aliases: ["dpsejtkdwk"]
+    aliases: [ "dpsejtkdwk" ]
   창고:
-    aliases: ["ckdrh"]
+    aliases: [ "ckdrh" ]
   파티:
-    aliases: ["vkxl"]
+    aliases: [ "vkxl" ]
   루비:
-    aliases: ["zotl", "fnql"]
+    aliases: [ "zotl", "fnql" ]
   잠수:
-    aliases: ["wkatn"]
+    aliases: [ "wkatn" ]
   잠수포인트:
-    aliases: ["wkatnvhdlsxm"]
+    aliases: [ "wkatnvhdlsxm" ]
   PVP:
-    aliases: ["피비피", "pk"]
+    aliases: [ "피비피", "pk" ]
   음악:
-    aliases: ["dmadkr","qoruddmadkr","배경음악","노래","shfo"]
+    aliases: [ "dmadkr","qoruddmadkr","배경음악","노래","shfo" ]
   정보:
-    aliases: ["wjdqh"]
+    aliases: [ "wjdqh" ]
   필드보스:
-    aliases: ["vlfemqhtm", "필보","qhtm","vlfqh","보스"]
+    aliases: [ "vlfemqhtm", "필보","qhtm","vlfqh","보스" ]
   친구:
-    aliases: ["clsrn"]
+    aliases: [ "clsrn" ]
   쿠폰:
-    aliases: ["znvhs"]
+    aliases: [ "znvhs" ]
+  펫:
+    aliases: [ "vpt" ]

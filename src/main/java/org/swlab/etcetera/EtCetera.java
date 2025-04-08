@@ -103,6 +103,7 @@ public final class EtCetera extends JavaPlugin {
         getCommand("판도라").setExecutor(new PandoraCommand());
         getCommand("스텟").setExecutor(new StatCommand());
         getCommand("직업").setExecutor(new ClassSelectCommand());
+        getCommand("펫").setExecutor(new PetCommand());
         getCommand("낚시").setExecutor(new FishingCommand());
         getCommand("기본템").setExecutor(new BasicWeaponCommand());
         getCommand("퀘스트").setExecutor(new QuestCommand());
