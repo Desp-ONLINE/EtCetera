@@ -125,5 +125,9 @@ public final class EtCetera extends JavaPlugin {
         getCommand("정보").setExecutor(new InformationCommand());
         getCommand("필드보스").setExecutor(new BossCommand());
         getCommand("친구").setExecutor(new FriendCommand());
+        getCommand("엘븐하임").setExecutor(new ElvenheimCommand());
+        getCommand("칼리마").setExecutor(new KalimaCommand());
+        getCommand("인페리움").setExecutor(new InferiumCommand());
+        getCommand("아르크티카").setExecutor(new ArcticaCommand());
     }
 }
