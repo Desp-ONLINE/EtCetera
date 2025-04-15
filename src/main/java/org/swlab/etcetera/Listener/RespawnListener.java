@@ -14,17 +14,12 @@ public class RespawnListener implements Listener {
     @EventHandler
     public void onRespawn(PlayerRespawnEvent e) {
         if(EtCetera.getChannelType().equals("lobby")){
-            World world = Bukkit.getWorld("world");
             if(e.getPlayer().getWorld().equals(Bukkit.getWorld("raid"))){
                 return;
             }
+            World world = Bukkit.getWorld("world");
             Location location = new Location(world, -21.475, 37.0000, -737.459, -90.7f, 1.9f);
-            Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
-                @Override
-                public void run() {
-                    e.getPlayer().teleport(location);
-                }
-            }, 10L);
+            e.setRespawnLocation(location);
 
         }
         if(EtCetera.getChannelType().equals("dungeon")){
