@@ -166,7 +166,7 @@ public class BasicListener implements Listener {
         if (e.getDamager() instanceof Cow && e.getEntity() instanceof Player) {
             String className = mmoCoreAPI.getPlayerData((Player) e.getEntity()).getProfess().getId();
             if (className.equals("크루세이더")) {
-                e.setDamage(damage - damage * 15 / 100);
+                e.setDamage(damage - damage * 10 / 100);
             }
         }
         if (e.getDamager() instanceof Player attacker) {
@@ -201,7 +201,7 @@ public class BasicListener implements Listener {
                     damage = damage + damage * 10 / 100;
                     e.setDamage(damage);
                 }
-                e.setDamage(damage - damage * 40 / 100);
+                e.setDamage(damage - damage * 55 / 100);
             }
             double fixedDamage = Math.round(e.getDamage());
             attacker.sendTitle("", "§f                                                                   ᎈ §c" + fixedDamage, 5, 10, 5);
