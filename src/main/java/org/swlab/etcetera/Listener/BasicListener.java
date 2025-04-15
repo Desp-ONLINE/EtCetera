@@ -192,9 +192,7 @@ public class BasicListener implements Listener {
                 if (mmoCoreAPI.getPlayerData(attacker).getProfess().getId().equals("인페르노")) {
                     e.setDamage(damage + damage * 5 / 100);
                 }
-                if (mmoCoreAPI.getPlayerData(attacker).getProfess().getId().equals("크루세이더")) {
-                    e.setDamage(damage - damage * 3 / 100);
-                }
+
             }
             if(e.getEntity() instanceof Player victim){
                 if (mmoCoreAPI.getPlayerData(attacker).getProfess().getId().equals("제피르")) {
