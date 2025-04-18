@@ -1,5 +1,6 @@
 package org.swlab.etcetera.Listener;
 
+import com.binggre.binggreapi.utils.ColorManager;
 import com.binggre.mmodungeon.MMODungeon;
 import com.binggre.mmodungeon.api.MMODungeonAPI;
 import io.lumine.mythic.api.adapters.AbstractEntity;
@@ -9,6 +10,7 @@ import io.lumine.mythic.bukkit.events.MythicDamageEvent;
 import io.lumine.mythic.bukkit.events.MythicProjectileHitEvent;
 import io.lumine.mythic.lib.api.event.skill.PlayerCastSkillEvent;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -51,15 +53,15 @@ public class BasicListener implements Listener {
     }
 
     @EventHandler
-    public void onMythicHitEvent(MythicDamageEvent e){
-        if(!e.getTarget().getWorld().getName().equals("raid")){
+    public void onMythicHitEvent(MythicDamageEvent e) {
+        if (!e.getTarget().getWorld().getName().equals("raid")) {
             return;
         }
         SkillCaster caster = e.getCaster();
         AbstractEntity target = e.getTarget();
-        if(caster.getEntity().isPlayer() && target.isPlayer()){
+        if (caster.getEntity().isPlayer() && target.isPlayer()) {
             MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
-            if (mmoCoreAPI.isInSameParty((Player) caster.getEntity().getBukkitEntity(), (Player) target.getBukkitEntity())){
+            if (mmoCoreAPI.isInSameParty((Player) caster.getEntity().getBukkitEntity(), (Player) target.getBukkitEntity())) {
                 e.setCancelled(true);
             }
         }
@@ -76,13 +78,12 @@ public class BasicListener implements Listener {
     }
 
 
-
     @EventHandler
     public void cancelPlayerDebuff(MythicProjectileHitEvent e) {
-        if(e.getProjectile().getData().getCaster().getEntity().isPlayer()) {
-            if(e.getEntity().isPlayer()){
+        if (e.getProjectile().getData().getCaster().getEntity().isPlayer()) {
+            if (e.getEntity().isPlayer()) {
                 MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
-                if(mmoCoreAPI.isInSameParty((Player) e.getProjectile().getData().getCaster().getEntity().asPlayer().getBukkitEntity(), (Player) e.getEntity().asPlayer().getBukkitEntity())){
+                if (mmoCoreAPI.isInSameParty((Player) e.getProjectile().getData().getCaster().getEntity().asPlayer().getBukkitEntity(), (Player) e.getEntity().asPlayer().getBukkitEntity())) {
                     e.setCancelled(true);
                 }
             }
@@ -104,8 +105,8 @@ public class BasicListener implements Listener {
                     }
                 }
             }
-            if(e.getEntity().getWorld().getName().equals(worldName)){
-                if(e.getEntity().getLocation().getY() >= 18){
+            if (e.getEntity().getWorld().getName().equals(worldName)) {
+                if (e.getEntity().getLocation().getY() >= 18) {
                     e.setCancelled(true);
                 }
             }
@@ -124,13 +125,19 @@ public class BasicListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         e.setJoinMessage("");
+        if (!e.getPlayer().hasPlayedBefore()) {
+            Bukkit.broadcastMessage(" §f摩 " + ColorManager.format("#8FFFAE")+e.getPlayer().getName() + " 님께서 서버에 §e첫 접속 " + ColorManager.format("#8FFFAE") + "하셨습니다! 환영해주세요! :)");
+        }
+        if(e.getPlayer().isOp()){
+            Bukkit.broadcastMessage("§3 관리자 §f"+e.getPlayer().getName() +"님께서 §a접속§f하셨습니다.");
+        }
 
         Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
             @Override
             public void run() {
                 e.getPlayer().clearActivePotionEffects();
             }
-        },20L);
+        }, 20L);
         CommandUtil.runCommandAsOP(e.getPlayer(), "spawn");
         MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
         mmoCoreAPI.getPlayerData(e.getPlayer()).setClassPoints(999);
@@ -138,7 +145,7 @@ public class BasicListener implements Listener {
         Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
             @Override
             public void run() {
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "huds layout "+e.getPlayer().getName()+" remove slot_hud-layout");
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "huds layout " + e.getPlayer().getName() + " remove slot_hud-layout");
                 e.getPlayer().setNoDamageTicks(0);
                 e.getPlayer().setHealth(e.getPlayer().getMaxHealth());
             }
@@ -177,7 +184,7 @@ public class BasicListener implements Listener {
             if (e.getEntity() instanceof LivingEntity victim) {
                 PotionEffect potionEffect = victim.getPotionEffect(PotionEffectType.BAD_OMEN);
                 if (potionEffect != null) {
-                    e.setDamage(damage + damage * (potionEffect.getAmplifier()+1)*10 / 100);
+                    e.setDamage(damage + damage * (potionEffect.getAmplifier() + 1) * 10 / 100);
                 }
             }
             if (e.getEntity() instanceof Zombie) {
@@ -194,7 +201,7 @@ public class BasicListener implements Listener {
                 }
 
             }
-            if(e.getEntity() instanceof Player victim){
+            if (e.getEntity() instanceof Player victim) {
                 if (mmoCoreAPI.getPlayerData(attacker).getProfess().getId().equals("제피르")) {
                     damage = damage + damage * 10 / 100;
                     e.setDamage(damage);
@@ -205,12 +212,14 @@ public class BasicListener implements Listener {
             attacker.sendTitle("", "§f                                                                   ᎈ §c" + fixedDamage, 5, 10, 5);
         }
     }
+
     @EventHandler
-    public void onFireTick(BlockIgniteEvent e){
+    public void onFireTick(BlockIgniteEvent e) {
         e.setCancelled(true);
     }
+
     @EventHandler
-    public void onBlockExplode(BlockExplodeEvent e){
+    public void onBlockExplode(BlockExplodeEvent e) {
         e.setCancelled(true);
     }
 

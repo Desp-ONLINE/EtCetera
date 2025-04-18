@@ -10,7 +10,7 @@ public class TipNotice {
         Random rand = new Random();
         int noticeNumber = rand.nextInt(0, 9);
         return switch (noticeNumber) {
-            case 0 -> "§f 摩 " + format("#fcd07f") + "알고 계셨나요? 무기를 들고 F를 누르면 도약할 수 있습니다!";
+            case 0 -> "§f 摩 " + format("#fcd07f") + "알고 계셨나요? 점프를 두 번 하여 더블 점프를 할 수 있습니다!";
             case 1 -> "§f 摩 " + format("#FFF897") + "알고 계셨나요? 아무것도 들지 않고, SHIFT+F를 누르면 메뉴를 열 수 있습니다! §7§o(/메뉴)";
             case 2 -> "§f 摩 " + format("#FF97AC") + "전직의 증서를 획득하고, 자신의 직업무기 +MAX를 강화하여 전직할 수 있습니다! §7§o(/강화)";
             case 3 -> "§f 摩 " + format("#97FFB7") + "각 마을에는 서브퀘스트가 있습니다! 사냥의 보상을 극대화 해보세요!";
