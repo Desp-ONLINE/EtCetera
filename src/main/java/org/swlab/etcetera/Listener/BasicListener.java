@@ -125,7 +125,7 @@ public class BasicListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         e.setJoinMessage("");
-        if (!e.getPlayer().hasPlayedBefore()) {
+        if (!e.getPlayer().hasPlayedBefore() && EtCetera.getChannelType().equals("lobby")) {
             Bukkit.broadcastMessage(" §f摩 " + ColorManager.format("#8FFFAE")+e.getPlayer().getName() + " 님께서 서버에 §e첫 접속 " + ColorManager.format("#8FFFAE") + "하셨습니다! 환영해주세요! :)");
         }
         if(e.getPlayer().isOp()){

@@ -7,7 +7,6 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.util.Vector;
@@ -26,70 +25,46 @@ public class LeapListener implements Listener {
     @EventHandler
     public void onItemSwap(PlayerSwapHandItemsEvent e) {
         Player p = e.getPlayer();
+        e.setCancelled(true);
         if (p.isSneaking()) {
-            e.setCancelled(true);
             CommandUtil.runCommandAsOP(p, "gui open 메뉴");
             return;
         }
 
+        ArrayList<String> sword = new ArrayList(Arrays.asList(Material.DIAMOND_SWORD, Material.GOLDEN_SWORD, Material.IRON_SWORD, Material.WOODEN_SWORD, Material.STONE_SWORD));
+
+        if (sword.contains(p.getInventory().getItemInMainHand().getType()) && !p.isSneaking()) {
+            UUID uuid = p.getUniqueId();
+            if (!isCooldown(uuid)) {
+                e.setCancelled(true);
+                return;
+            }
+            Vector vector;
+            if (EtCetera.getChannelType().equals("lobby")) {
+                if (p.getWorld().getName().equals("pvp")) {
+                    vector = p.getLocation().getDirection().normalize().multiply(1.3).setY(0.5);
+                } else {
+                    vector = p.getLocation().getDirection().normalize().multiply(2.2).setY(0.5);
+                }
+            } else {
+                vector = p.getLocation().getDirection().normalize().multiply(3.2).setY(0.5);
+            }
+            p.setVelocity(vector);
+            addCooldown(uuid);
+            runEffect(p);
+        }
+    }
+    @EventHandler
+    public void onFly(PlayerToggleFlightEvent e){
+        if(!e.getPlayer().isOp()){
+            e.setCancelled(true);
+            e.getPlayer().setFlying(false);
+            e.getPlayer().setAllowFlight(false);
+        }
     }
 
 
-    @EventHandler
-    public void onPlayerMove(PlayerMoveEvent event) {
-        Player player = event.getPlayer();
-
-        // 서바이벌/어드벤처 모드 + 지상일 때
-        if ((player.getGameMode() == GameMode.SURVIVAL || player.getGameMode() == GameMode.ADVENTURE)
-                && player.isOnGround()) {
-
-            UUID uuid = player.getUniqueId();
-            long now = System.currentTimeMillis();
-
-            // 쿨타임이 끝났으면 비행 허용
-            if (!cooldowns.containsKey(uuid) || now - cooldowns.get(uuid) >= 2000) {
-                player.setAllowFlight(true);
-            } else {
-                player.setAllowFlight(false); // 쿨타임 중엔 비행 불가
-            }
-        }
-    }
-
-    @EventHandler
-    public void onDoubleJump(PlayerToggleFlightEvent event) {
-        Player player = event.getPlayer();
-
-        if (player.getGameMode() == GameMode.CREATIVE) return;
-
-        event.setCancelled(true);
-        player.setAllowFlight(false);
-        player.setFlying(false);
-
-        UUID uuid = player.getUniqueId();
-        long now = System.currentTimeMillis();
-
-        // 쿨타임 검사 (2초 = 2000ms)
-        if (cooldowns.containsKey(uuid) && now - cooldowns.get(uuid) < 2000) {
-            event.setCancelled(true);
-            return;
-        }
-
-        // 이제 진짜 점프 처리 시작
-
-
-        Vector vector;
-        if (EtCetera.getChannelType().equals("lobby")) {
-            if (player.getWorld().getName().equals("pvp")) {
-                vector = player.getLocation().getDirection().normalize().multiply(1.3).setY(0.5);
-            } else {
-                vector = player.getLocation().getDirection().normalize().multiply(2.2).setY(0.5);
-            }
-        } else {
-            vector = player.getLocation().getDirection().normalize().multiply(3.2).setY(0.5);
-        }
-
-        player.setVelocity(vector);
-        cooldowns.put(uuid, now);
+    public void runEffect(Player player){
         player.playSound(player.getLocation(), Sound.ENTITY_PHANTOM_FLAP, 2.0f, 2.2f);
 
         player.getWorld().spawnParticle(
@@ -99,5 +74,16 @@ public class LeapListener implements Listener {
                 0.2, 0.05, 0.2,                                   // 확산 범위 (X, Y, Z)
                 0.01                                              // 속도
         );
+    }
+    public boolean isCooldown(UUID uuid) {
+        long now = System.currentTimeMillis();
+        if (cooldowns.containsKey(uuid) && now - cooldowns.get(uuid) < 3000) {
+            return false;
+        }
+        return true;
+    }
+    public void addCooldown(UUID uuid){
+        long now = System.currentTimeMillis();
+        cooldowns.put(uuid, now);
     }
 }
