@@ -12,14 +12,12 @@ public class DialogSendListener implements Listener {
         Player player = e.getPlayer();
         String name1 = e.getDialog().getNpc().getNpc().getName();
         String text = e.getMessage().text;
-        if(player.getName().equals("dople_L")){
-            if(e.getMessage().sender.name().equals("NPC")){
-                player.sendTitle("§6"+name1, text);
-            }
-            else if (e.getMessage().sender.name().equals("PLAYER")){
-                player.sendTitle("§e"+player.getName(), text);
-            }
+        if (e.getMessage().sender.name().equals("NPC")) {
+            player.sendTitle("§6" + name1, text);
+        } else if (e.getMessage().sender.name().equals("PLAYER")) {
+            player.sendTitle("§e" + player.getName(), text);
         }
+        player.playSound(player, "minecraft:entity.villager.ambient", 1.0f, 1.0f);
 
     }
 
