@@ -7,16 +7,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.swlab.etcetera.Util.TitleAnimationUtil;
 
 public class CheckNBTTagCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        Player player = (Player) sender;
-        ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
-        NBT.get(itemInMainHand, nbt -> {
-            Boolean nbtTag = nbt.getBoolean(strings[0]);
-            player.sendMessage("결과: " + nbtTag);
-        });
+        TitleAnimationUtil.getInstance().sendAnimation((Player) sender, strings[0], strings[1], 0, 10, 0, "#123456", "#FFFFFF");
         return false;
     }
 }

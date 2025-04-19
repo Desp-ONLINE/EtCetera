@@ -20,42 +20,45 @@ import org.swlab.etcetera.Util.CommandUtil;
 public class EquipListener implements Listener {
     @EventHandler
     public void onEquipChestplate(ItemEquipEvent e) {
+        Player player = e.getPlayer();
+
         if (e.getSlot() == null) {
             e.setCancelled(true);
-            e.getPlayer().sendMessage("§c 쉬프트+클릭을 통한 탈착은 금지되어 있습니다.");
+            player.sendMessage("§c 쉬프트+클릭을 통한 탈착은 금지되어 있습니다.");
             return;
 
         }
         if (e.getSlot().getType().equals(SlotType.BOOTS) || e.getSlot().getType().equals(SlotType.LEGGINGS)) {
             return;
         }
+        player.playSound(player, "uisounds:itemequip", 1.0F, 1.0F);
         if (e.getSlot().getType().equals(SlotType.CHESTPLATE)) {
             ItemStack item = e.getItem();
             LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
             if (meta == null) {
-                e.getPlayer().getInventory().setLeggings(new ItemStack(Material.AIR));
-                e.getPlayer().getInventory().setBoots(new ItemStack(Material.AIR));
+                player.getInventory().setLeggings(new ItemStack(Material.AIR));
+                player.getInventory().setBoots(new ItemStack(Material.AIR));
                 return;
             }
             int customModelData = meta.getCustomModelData();
             Color color = meta.getColor();
-            if (e.getPlayer().getInventory().getBoots() == null) {
+            if (player.getInventory().getBoots() == null) {
                 ItemStack boots = new ItemStack(Material.LEATHER_BOOTS, 1);
                 LeatherArmorMeta bootsMeta = (LeatherArmorMeta) boots.getItemMeta();
                 bootsMeta.setColor(color);
                 bootsMeta.setCustomModelData(customModelData);
                 bootsMeta.setUnbreakable(true);
                 boots.setItemMeta(bootsMeta);
-                e.getPlayer().getInventory().setBoots(boots);
+                player.getInventory().setBoots(boots);
             }
-            if (e.getPlayer().getInventory().getLeggings() == null) {
+            if (player.getInventory().getLeggings() == null) {
                 ItemStack leggings = new ItemStack(Material.LEATHER_LEGGINGS, 1);
                 LeatherArmorMeta leggingsMeta = (LeatherArmorMeta) leggings.getItemMeta();
                 leggingsMeta.setColor(color);
                 leggingsMeta.setCustomModelData(customModelData);
                 leggingsMeta.setUnbreakable(true);
                 leggings.setItemMeta(leggingsMeta);
-                e.getPlayer().getInventory().setLeggings(leggings);
+                player.getInventory().setLeggings(leggings);
             }
         }
     }
