@@ -3,6 +3,9 @@ package org.swlab.etcetera.Listener;
 import com.binggre.binggreapi.utils.ColorManager;
 import com.binggre.mmodungeon.MMODungeon;
 import com.binggre.mmodungeon.api.MMODungeonAPI;
+import com.binggre.velocitysocketclient.VelocityClient;
+import com.binggre.velocitysocketclient.listener.BroadcastComponentVelocityListener;
+import com.binggre.velocitysocketclient.listener.BroadcastVelocityListener;
 import io.lumine.mythic.api.adapters.AbstractEntity;
 import io.lumine.mythic.api.skills.SkillCaster;
 import io.lumine.mythic.bukkit.adapters.BukkitPlayer;
@@ -11,6 +14,8 @@ import io.lumine.mythic.bukkit.events.MythicProjectileHitEvent;
 import io.lumine.mythic.lib.api.event.skill.PlayerCastSkillEvent;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.serializer.json.JSONComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -125,11 +130,12 @@ public class BasicListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         e.setJoinMessage("");
-        if (!e.getPlayer().hasPlayedBefore() && EtCetera.getChannelType().equals("lobby")) {
-            Bukkit.broadcastMessage(" §f摩 " + ColorManager.format("#8FFFAE")+e.getPlayer().getName() + " 님께서 서버에 §e첫 접속 " + ColorManager.format("#8FFFAE") + "하셨습니다! 환영해주세요! :)");
-        }
-        if(e.getPlayer().isOp()){
-            Bukkit.broadcastMessage("§3 관리자 §f"+e.getPlayer().getName() +"님께서 §a접속§f하셨습니다.");
+        if ((!e.getPlayer().hasPlayedBefore() && EtCetera.getChannelType().equals("lobby"))) {
+            String text = " §f摩 #8FFFAE" + e.getPlayer().getName() + " 님께서 서버에 &e첫 접속 #8FFFAE하셨습니다! 환영해주세요!";
+            String format = ColorManager.format(text);
+            Bukkit.broadcastMessage(format);
+
+            VelocityClient.getInstance().getConnectClient().send(FirstJoinVelocityListener.class, format);
         }
 
         Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {

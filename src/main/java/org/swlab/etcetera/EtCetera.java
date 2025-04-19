@@ -1,5 +1,6 @@
 package org.swlab.etcetera;
 
+import com.binggre.velocitysocketclient.VelocityClient;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -45,6 +46,7 @@ public final class EtCetera extends JavaPlugin {
         }
         startAutoNotice();
 
+        VelocityClient.getInstance().getConnectClient().registerListener(FirstJoinVelocityListener.class);
     }
 
     public static String getChannelType() {
