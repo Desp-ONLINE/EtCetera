@@ -13,10 +13,10 @@ public class AFKCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         Player player = (Player) commandSender;
         if(EtCetera.getChannelType().equals("lobby")){
-            CommandUtil.runCommandAsOP(player, "워프 이동 afk");
+            CommandUtil.runCommandAsOP(player, "채널 이동 afk");
         }
         else {
-            CommandUtil.runCommandAsOP(player, "채널 워프 lobby 워프 이동 afk");
+            CommandUtil.runCommandAsOP(player, "채널 이동 afk");
         }
         return false;
     }

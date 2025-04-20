@@ -93,7 +93,9 @@ public final class EtCetera extends JavaPlugin {
 
     public void registerCommands() {
         getCommand("nbt검사").setExecutor(new CheckNBTTagCommand());
-        getCommand("spawn").setExecutor(new SpawnCommand());
+        if(!EtCetera.getChannelType().equalsIgnoreCase("afk")){
+            getCommand("spawn").setExecutor(new SpawnCommand());
+        }
         getCommand("광산").setExecutor(new MineWarpCommand());
         getCommand("던전").setExecutor(new DungeonCommand());
         getCommand("쓰레기통").setExecutor(new TrashcanCommand());
