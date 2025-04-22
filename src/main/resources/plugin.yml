@@ -5,25 +5,25 @@ api-version: '1.20'
 commands:
   nbt검사:
   spawn:
-    aliases: [ "로비", "넴주", "스폰", "lobby", "tmvhs" ]
+    aliases: [ "로비", "넴주", "스폰", "lobby", "tmvhs", "ㅅㅍ", "tv" ]
   광산:
-    aliases: [ "채광", "채광장", "rhkdtks", "corhkdwkd" ]
+    aliases: [ "채광", "채광장", "rhkdtks", "corhkdwkd", "ㄳ", "ㄱㅅ" ]
   던전:
-    aliases: [ "사냥", "사냥터", "ejswjs", "tksid", "tksidxj" ]
+    aliases: [ "사냥", "사냥터", "ejswjs", "tksid", "tksidxj", "ㄷㅈ", "ew" ]
   쓰레기통:
-    aliases: [ "Tmfprlxhd" ]
+    aliases: [ "쓰" ]
   장비:
-    aliases: [ "장비창", "wkdql", "wkdqlckd", "acc" ]
+    aliases: [ "장비창", "wkdql", "wkdqlckd", "acc", "ㅈㅂ", "wq" ]
   강화:
-    aliases: [ "rkdghk" ]
+    aliases: [ "rkdghk", "ㄱㅎ", "rg" ]
   합성:
-    aliases: [ "gkqtjd" ]
+    aliases: [ "gkqtjd", "ㅎㅅ","gt" ]
   전리품:
-    aliases: [ "wjsflvna", "전리품판매", "wjsflvnavksao", "상점", "상점가", "tkdwja", "tkdwjark", "후원상점", "캐시상점", "루비상점","fnqltkdwja", "zotltkdwja", "gndnjstkdwja" ]
+    aliases: [ "wjsflvna", "전리품판매", "wjsflvnavksao", "상점", "상점가", "tkdwja", "tkdwjark", "후원상점", "캐시상점", "루비상점","fnqltkdwja", "zotltkdwja", "gndnjstkdwja"]
   판도라:
     aliases: [ "vksehfk", "특수무기", "xmrtnanrl" ]
   스텟:
-    aliases: [ "스탯", "tmxot", "tmxpt", "stat" ]
+    aliases: [ "스탯", "tmxot", "tmxpt", "stat", "ㅅㅌ", "tx" ]
   직업:
     aliases: [ "직업변경", "클래스", "wlrdjq","zmffotm","wlrdjqqusrud" ]
   낚시:
@@ -33,7 +33,7 @@ commands:
   퀘스트:
     aliases: [ "q", "ㅂ", "znptmxm" ]
   마을:
-    aliases: [ "village", "akdmf", "빌리지" ]
+    aliases: [ "village", "akdmf", "빌리지", "ㅁㅇ", "ad" ]
   메뉴:
     aliases: [ "menu", "apsb" ]
   후원:
@@ -41,13 +41,13 @@ commands:
   메일함:
     aliases: [ "apdlfgka" ]
   시장:
-    aliases: [ "tlwkd","rudaowkd","경매장" ]
+    aliases: [ "tlwkd","rudaowkd","경매장", "ㅅㅈ", "tw" ]
   디스코드:
     aliases: [ "eltmzhem", "elzh", "디코" ]
   엔더상자:
     aliases: [ "dpsejtkdwk" ]
   창고:
-    aliases: [ "ckdrh" ]
+    aliases: [ "ckdrh", "ㅊㄱ", "cr" ]
   파티:
     aliases: [ "vkxl" ]
   루비:
@@ -63,7 +63,7 @@ commands:
   정보:
     aliases: [ "wjdqh" ]
   필드보스:
-    aliases: [ "vlfemqhtm", "필보","qhtm","vlfqh","보스" ]
+    aliases: [ "vlfemqhtm", "필보","qhtm","vlfqh","보스" ,"qt", "ㅄ", "ㅂㅅ" ]
   친구:
     aliases: [ "clsrn" ]
   쿠폰:
@@ -71,10 +71,10 @@ commands:
   펫:
     aliases: [ "vpt" ]
   엘븐하임:
-    aliases: ["dpfqmsgkdla"]
+    aliases: ["dpfqmsgkdla", "엘븐"]
   칼리마:
     aliases: ["zkfflak"]
   인페리움:
-    aliases: ["dlsvpfldna"]
+    aliases: ["dlsvpfldna", "인페"]
   아르크티카:
-    aliases: ["dkfmzmxlzk"]
+    aliases: ["dkfmzmxlzk", "아르크"]
