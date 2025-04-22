@@ -29,6 +29,7 @@ public class MarketCommand implements CommandExecutor {
         if (strings.length == 0) {
             CommandUtil.runCommandAsOP(player, "ah");
             player.sendMessage("§7 > 대금 수령은 §6/시장 수령 §7명령어를 이용해주세요.");
+            player.sendMessage("§7 > 아이템 판매는 §e/시장 판매 <금액> §7명령어를 통해 손에 든 아이템을 판매할 수 있습니다. (3000만과 같이 \"만\"글자를 붙여서 사용할 수 있습니다.)");
             player.sendMessage("§c ※ 고의적으로 시장에 시세보다 훨씬 낮은 가격으로 거래하는 사항은 제재 대상입니다.");
             return false;
         }
@@ -49,7 +50,8 @@ public class MarketCommand implements CommandExecutor {
                 }
                 if (strings.length == 3) {
                     try {
-                        long price = Long.parseLong(strings[1]);
+                        String priceString = strings[1].replace("만", "0000");
+                        long price = Long.parseLong(priceString);
                         double v = Double.parseDouble(strings[2]);
                         Integer i = Integer.valueOf((int) v);
                         if (!checkPriceInRange(price, player)) {
@@ -61,7 +63,8 @@ public class MarketCommand implements CommandExecutor {
                     }
                     return false;
                 }
-                long price = Long.parseLong(strings[1]);
+                String priceString = strings[1].replace("만", "0000");
+                long price = Long.parseLong(priceString);
                 if (!checkPriceInRange(price, player)) {
                     return false;
                 }
