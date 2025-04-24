@@ -111,6 +111,7 @@ public final class EtCetera extends JavaPlugin {
         getCommand("낚시").setExecutor(new FishingCommand());
         getCommand("기본템").setExecutor(new BasicWeaponCommand());
         getCommand("퀘스트").setExecutor(new QuestCommand());
+        getCommand("훈련장").setExecutor(new TrainingCommand());
         getCommand("마을").setExecutor(new VillageCommand());
         getCommand("마을").setTabCompleter(new VillageCommand());
         getCommand("메뉴").setExecutor(new MenuCommand());
