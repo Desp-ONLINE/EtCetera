@@ -19,12 +19,9 @@ public class PetCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         Player player = (Player) sender;
-        if(!EtCetera.getChannelType().equals("lobby")){
-            player.sendMessage("§c 로비에서만 이용할 수 있습니다.");
-            return false;
-        }
         CommandUtil.runCommandAsOP(player, "mcpets");
 
         return true;
     }
+
 }
