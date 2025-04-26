@@ -47,11 +47,11 @@ public class BasicListener implements Listener {
             e.setCancelled(true);
             return;
         }
-        if (e.getCause() == EntityDamageEvent.DamageCause.SUFFOCATION) {
-            if (!(e.getEntity() instanceof Player)) {
-                e.getEntity().remove();
-            }
-        }
+//        if (e.getCause() == EntityDamageEvent.DamageCause.SUFFOCATION) {
+//            if (!(e.getEntity() instanceof Player)) {
+//                e.getEntity().remove();
+//            }
+//        }
         //로비채널에서 world에선 데미지 입는거 cancel
         if ((e.getEntity().getWorld().getName().equals("world") || e.getEntity().getWorld().getName().equals("fishing")) && EtCetera.getChannelType().equals("lobby") && e.getEntity() instanceof Player) {
             e.setCancelled(true);
