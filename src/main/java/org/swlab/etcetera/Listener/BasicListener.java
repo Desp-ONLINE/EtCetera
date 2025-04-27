@@ -30,6 +30,7 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
@@ -56,6 +57,13 @@ public class BasicListener implements Listener {
         if ((e.getEntity().getWorld().getName().equals("world") || e.getEntity().getWorld().getName().equals("fishing")) && EtCetera.getChannelType().equals("lobby") && e.getEntity() instanceof Player) {
             e.setCancelled(true);
         }
+    }
+    @EventHandler
+    public void onChunkUnload(ChunkUnloadEvent e){
+        if(e.getWorld().getName().equals("raid")){
+
+        }
+        e.getChunk().addPluginChunkTicket(EtCetera.getInstance());
     }
 
     @EventHandler

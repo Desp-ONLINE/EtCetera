@@ -128,6 +128,7 @@ public final class EtCetera extends JavaPlugin {
         getCommand("PVP").setExecutor(new PvpCommand());
         getCommand("음악").setExecutor(new MusicCommand());
         getCommand("정보").setExecutor(new InformationCommand());
+        getCommand("도움말").setExecutor(new HelpCommand());
         getCommand("필드보스").setExecutor(new BossCommand());
         getCommand("친구").setExecutor(new FriendCommand());
         getCommand("엘븐하임").setExecutor(new ElvenheimCommand());

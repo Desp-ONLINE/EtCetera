@@ -54,14 +54,6 @@ public class LeapListener implements Listener {
             runEffect(p);
         }
     }
-    @EventHandler
-    public void onFly(PlayerToggleFlightEvent e){
-        if(!e.getPlayer().isOp()){
-            e.setCancelled(true);
-            e.getPlayer().setFlying(false);
-            e.getPlayer().setAllowFlight(false);
-        }
-    }
 
 
     public void runEffect(Player player){
