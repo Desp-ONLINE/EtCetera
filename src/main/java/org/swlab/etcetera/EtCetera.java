@@ -89,6 +89,7 @@ public final class EtCetera extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new DialogSendListener(), this);
         Bukkit.getPluginManager().registerEvents(new ChestExpansionListener(), this);
         Bukkit.getPluginManager().registerEvents(new ConsumableListener(), this);
+        Bukkit.getPluginManager().registerEvents(new ModelEngineListener(), this);
     }
 
     public void registerCommands() {
