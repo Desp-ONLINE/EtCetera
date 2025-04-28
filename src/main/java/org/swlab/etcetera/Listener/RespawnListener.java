@@ -23,7 +23,7 @@ public class RespawnListener implements Listener {
 
         }
         if(EtCetera.getChannelType().equals("dungeon")){
-            CommandUtil.runCommandAsOP(e.getPlayer(), "채널 워프 lobby spawn");
+            CommandUtil.runCommandAsOP(e.getPlayer(), "채널 워프 lobby 워프 이동 던전");
         }
     }
 }
