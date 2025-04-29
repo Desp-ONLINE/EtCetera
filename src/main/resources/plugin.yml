@@ -19,7 +19,7 @@ commands:
   합성:
     aliases: [ "gkqtjd", "ㅎㅅ","gt" ]
   전리품:
-    aliases: [ "wjsflvna", "전리품판매", "wjsflvnavksao", "상점", "상점가", "tkdwja", "tkdwjark", "후원상점", "캐시상점", "루비상점","fnqltkdwja", "zotltkdwja", "gndnjstkdwja"]
+    aliases: [ "wjsflvna", "전리품판매", "wjsflvnavksao", "상점", "상점가", "tkdwja", "tkdwjark", "후원상점", "캐시상점", "루비상점","fnqltkdwja", "zotltkdwja", "gndnjstkdwja" ]
   판도라:
     aliases: [ "vksehfk", "특수무기", "xmrtnanrl" ]
   스텟:
@@ -71,14 +71,16 @@ commands:
   펫:
     aliases: [ "vpt" ]
   엘븐하임:
-    aliases: ["dpfqmsgkdla", "엘븐"]
+    aliases: [ "dpfqmsgkdla", "엘븐" ]
   칼리마:
-    aliases: ["zkfflak"]
+    aliases: [ "zkfflak" ]
   인페리움:
-    aliases: ["dlsvpfldna", "인페"]
+    aliases: [ "dlsvpfldna", "인페" ]
   아르크티카:
-    aliases: ["dkfmzmxlzk", "아르크"]
+    aliases: [ "dkfmzmxlzk", "아르크" ]
   훈련장:
-    aliases: ["훈련", "gnsfuswkd", "gnsfus", "epalwlxptmxm", "데미지테스트"]
+    aliases: [ "훈련", "gnsfuswkd", "gnsfus", "epalwlxptmxm", "데미지테스트" ]
   도움말:
-    aliases: ["ehdnaakf", "help", "헬프", "위키", "사이트", "dnlzl","tkdlxm","wiki","site","ghavpdlwl","홈페이지"]
+    aliases: [ "ehdnaakf", "help", "헬프", "위키", "사이트", "dnlzl","tkdlxm","wiki","site","ghavpdlwl","홈페이지" ]
+  아포칼립스:
+    aliases: [ "dkvhzkfflqtm", "아포","dkvh" ]

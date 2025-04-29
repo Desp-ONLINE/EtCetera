@@ -99,6 +99,7 @@ public final class EtCetera extends JavaPlugin {
         }
         getCommand("광산").setExecutor(new MineWarpCommand());
         getCommand("던전").setExecutor(new DungeonCommand());
+        getCommand("아포칼립스").setExecutor(new ApocalypseCommand());
         getCommand("쓰레기통").setExecutor(new TrashcanCommand());
         getCommand("장비").setExecutor(new AccCommand());
         getCommand("강화").setExecutor(new ReinforceCommand());
