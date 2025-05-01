@@ -63,7 +63,7 @@ public class BasicListener implements Listener {
         if(e.getWorld().getName().equals("raid")){
 
         }
-        e.getChunk().addPluginChunkTicket(EtCetera.getInstance());
+//        e.getChunk().addPluginChunkTicket(EtCetera.getInstance());
     }
 
     @EventHandler
