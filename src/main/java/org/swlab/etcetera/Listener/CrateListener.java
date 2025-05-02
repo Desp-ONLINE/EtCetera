@@ -180,6 +180,22 @@ public class CrateListener implements Listener {
                 }
             }, 100L);
         }
+        else if(e.getCrate().getId().equals("arctica")){
+            if(!(MMOItems.getID(player.getInventory().getItemInMainHand()).equals("기타_아르크티카열쇠"))){
+                e.setCancelled(true);
+                player.sendMessage("§c  프로스트 키를 손에 들고 시도하세요.");
+                return;
+            }
+            int amount = player.getInventory().getItemInMainHand().getAmount();
+            player.getInventory().getItemInMainHand().setAmount(amount-1);
+            canOpen.add(player);
+            Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    canOpen.remove(player);
+                }
+            }, 100L);
+        }
         else{
             e.setCancelled(true);
         }
