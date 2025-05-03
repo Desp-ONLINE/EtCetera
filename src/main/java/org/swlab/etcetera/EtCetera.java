@@ -78,7 +78,7 @@ public final class EtCetera extends JavaPlugin {
     public void registerEvents() {
         if (channelType.equals("lobby")) {
             Bukkit.getPluginManager().registerEvents(new CrateListener(), this);
-            Bukkit.getPluginManager().registerEvents(new DungeonFailListener(), this);
+            Bukkit.getPluginManager().registerEvents(new DungeonListener(), this);
 
 
         }
