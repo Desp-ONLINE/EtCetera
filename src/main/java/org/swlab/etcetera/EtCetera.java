@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.swlab.etcetera.Commands.*;
 import org.swlab.etcetera.Convinience.TipNotice;
+import org.swlab.etcetera.Database.DatabaseRegister;
 import org.swlab.etcetera.Listener.*;
 
 import java.util.ArrayList;
@@ -45,6 +46,7 @@ public final class EtCetera extends JavaPlugin {
             }
         }
         startAutoNotice();
+        new DatabaseRegister();
 
         VelocityClient.getInstance().getConnectClient().registerListener(FirstJoinVelocityListener.class);
     }
@@ -107,6 +109,7 @@ public final class EtCetera extends JavaPlugin {
         getCommand("쿠폰").setExecutor(new CouponCommand());
         getCommand("합성").setExecutor(new MergeCommand());
         getCommand("전리품").setExecutor(new RewardSellCommand());
+        getCommand("장사글").setExecutor(new TradeCommand());
         getCommand("판도라").setExecutor(new PandoraCommand());
         getCommand("스텟").setExecutor(new StatCommand());
         getCommand("직업").setExecutor(new ClassSelectCommand());
