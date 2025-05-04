@@ -11,7 +11,7 @@ public class ConsumableListener implements Listener{
 
     @EventHandler
     public void onItemConsume(ConsumableConsumedEvent e){
-        if(e.getPlayer().hasPotionEffect(PotionEffectType.SATURATION)){
+        if(e.getPlayer().hasPotionEffect(PotionEffectType.SATURATION) || e.getPlayer().getWorld().getName().equals("pvp")){
             e.getPlayer().sendMessage("§c 현재 해당 아이템을 사용할 수 없습니다.");
             e.setCancelled(true);
             return;

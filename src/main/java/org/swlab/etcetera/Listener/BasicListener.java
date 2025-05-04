@@ -166,7 +166,9 @@ public class BasicListener implements Listener {
                 e.getPlayer().clearActivePotionEffects();
             }
         }, 20L);
-        CommandUtil.runCommandAsOP(e.getPlayer(), "spawn");
+        if(EtCetera.getInstance().getChannelType().equals("lobby")){
+            CommandUtil.runCommandAsOP(e.getPlayer(), "spawn");
+        }
         MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
         mmoCoreAPI.getPlayerData(e.getPlayer()).setClassPoints(999);
 
