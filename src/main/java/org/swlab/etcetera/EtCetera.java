@@ -48,7 +48,7 @@ public final class EtCetera extends JavaPlugin {
         }
         startAutoNotice();
         new DatabaseRegister();
-//        SkillCooldownNotice.scheduleStart();
+        SkillCooldownNotice.scheduleStart();
 
         VelocityClient.getInstance().getConnectClient().registerListener(FirstJoinVelocityListener.class);
     }
