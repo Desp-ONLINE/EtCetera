@@ -7,6 +7,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.swlab.etcetera.Commands.*;
+import org.swlab.etcetera.Convinience.SkillCooldownNotice;
 import org.swlab.etcetera.Convinience.TipNotice;
 import org.swlab.etcetera.Database.DatabaseRegister;
 import org.swlab.etcetera.Listener.*;
@@ -47,6 +48,7 @@ public final class EtCetera extends JavaPlugin {
         }
         startAutoNotice();
         new DatabaseRegister();
+//        SkillCooldownNotice.scheduleStart();
 
         VelocityClient.getInstance().getConnectClient().registerListener(FirstJoinVelocityListener.class);
     }
