@@ -81,7 +81,7 @@ public class SkillCooldownNotice {
                         String name = ability.getAbility().getName();
                         String replacedName = name.replace(" ", "_").toLowerCase();
                         String cooldown = PlaceholderAPI.setPlaceholders(player, "%mythiclib_cooldown_skill_" + replacedName + "%");
-                        stringBuilder.append("§6"+key + "§f: " + cooldown + "초");
+                        stringBuilder.append("§6"+key + "§f: §a" + cooldown + "§f초");
                         if(iterator.hasNext()){
                             stringBuilder.append(" | ");
                         }
@@ -89,7 +89,7 @@ public class SkillCooldownNotice {
                     }
                 });
             }
-        },10L,10L);
+        },4L,4L);
     }
 
 }
