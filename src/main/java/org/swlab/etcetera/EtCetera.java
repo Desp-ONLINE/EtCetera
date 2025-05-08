@@ -1,6 +1,8 @@
 package org.swlab.etcetera;
 
 import com.binggre.velocitysocketclient.VelocityClient;
+import com.mongodb.client.MongoCollection;
+import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -12,9 +14,8 @@ import org.swlab.etcetera.Convinience.TipNotice;
 import org.swlab.etcetera.Database.DatabaseRegister;
 import org.swlab.etcetera.Listener.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Set;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public final class EtCetera extends JavaPlugin {
 
@@ -22,6 +23,7 @@ public final class EtCetera extends JavaPlugin {
     public static int channelNumber = 0;
     public static EtCetera instance;
 
+    private String lastCheckedDate = "";
     public static EtCetera getInstance() {
         return instance;
     }
@@ -38,6 +40,7 @@ public final class EtCetera extends JavaPlugin {
         channelNumber = config.getInt("channelNumber");
         registerEvents();
         registerCommands();
+        startDayChangeCheckScheduler();
 
         Set<OfflinePlayer> operators = Bukkit.getOperators();
         ArrayList<String> opUsers = new ArrayList<>(Arrays.asList("dople_L", "Dawn__L", "BingleBingleNao"));
@@ -76,6 +79,24 @@ public final class EtCetera extends JavaPlugin {
         }, 20L, 2400L);
     }
 
+    public void startDayChangeCheckScheduler(){
+        lastCheckedDate = getCurrentDate();
+        Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> {
+            String currentDate = getCurrentDate();
+            if(!currentDate.equals(lastCheckedDate)){
+                MongoCollection<Document> jumpmapLog = DatabaseRegister.getInstance().getMongoDatabase().getCollection("JumpmapLog");
+                jumpmapLog.deleteMany(new Document());
+            } else{
+                lastCheckedDate = currentDate;
+            }
+        }, 20L, 20L);
+    }
+
+    private String getCurrentDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(new Date(System.currentTimeMillis()));
+    }
+
 
     public void registerEvents() {
         if (channelType.equals("lobby")) {
@@ -95,6 +116,7 @@ public final class EtCetera extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ChestExpansionListener(), this);
         Bukkit.getPluginManager().registerEvents(new ConsumableListener(), this);
         Bukkit.getPluginManager().registerEvents(new ModelEngineListener(), this);
+        Bukkit.getPluginManager().registerEvents(new JumpMapListener(), this);
     }
 
     public void registerCommands() {
