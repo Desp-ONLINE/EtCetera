@@ -77,6 +77,9 @@ public class SkillCooldownNotice {
                             case "Shift Left Click":
                                 key = "쉬프트+좌클릭";
                                 break;
+                            case "Shift Drop Item":
+                                key = "쉬프트+버리기";
+                                break;
                         }
                         String name = ability.getAbility().getName();
                         String replacedName = name.replace(" ", "_").toLowerCase();

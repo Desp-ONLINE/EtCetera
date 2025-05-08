@@ -273,6 +273,11 @@ public class BasicListener implements Listener {
         if (!e.getPlayer().isOp()) {
             e.setCancelled(true);
         }
+        ItemStack itemInMainHand = e.getPlayer().getInventory().getItemInMainHand();
+        Type type = MMOItems.getType(itemInMainHand);
+        if(type.equals(Type.SWORD)){
+            e.setCancelled(true);
+        }
     }
 
     @EventHandler
