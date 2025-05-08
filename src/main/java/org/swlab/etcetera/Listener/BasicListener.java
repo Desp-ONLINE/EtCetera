@@ -268,15 +268,21 @@ public class BasicListener implements Listener {
         e.setCancelled(true);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void cancelThrowItem(PlayerDropItemEvent e) {
+        Item itemDrop = e.getItemDrop();
+        ItemStack itemStack = itemDrop.getItemStack();
         if (!e.getPlayer().isOp()) {
             e.setCancelled(true);
         }
-        ItemStack itemInMainHand = e.getPlayer().getInventory().getItemInMainHand();
-        Type type = MMOItems.getType(itemInMainHand);
-        if(type.equals(Type.SWORD)){
+        String id = MMOItems.getID(itemStack);
+        if(id==null){
+            return;
+        }
+        System.out.println("id = " + id);
+        if(id.startsWith("직업무기_5")){
             e.setCancelled(true);
+
         }
     }
 
@@ -309,13 +315,6 @@ public class BasicListener implements Listener {
     @EventHandler
     public void cancelCraftItem(CraftItemEvent e) {
         e.setCancelled(true);
-    }
-
-    @EventHandler
-    public void cancelItemSwap(PlayerSwapHandItemsEvent e) {
-        if (!e.getPlayer().isOp()) {
-            e.setCancelled(true);
-        }
     }
 
     @EventHandler
