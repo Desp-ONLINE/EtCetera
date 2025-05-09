@@ -218,7 +218,7 @@ public class BasicListener implements Listener {
         if (e.getDamager() instanceof Cow && e.getEntity() instanceof Player) {
             String className = mmoCoreAPI.getPlayerData((Player) e.getEntity()).getProfess().getId();
             if (className.equals("크루세이더")) {
-                e.setDamage(damage - damage * 10 / 100);
+                damage -= damage * 10 / 100;
             }
         }
         if (e.getDamager() instanceof Player attacker) {
@@ -229,20 +229,25 @@ public class BasicListener implements Listener {
             if (e.getEntity() instanceof LivingEntity victim) {
                 PotionEffect potionEffect = victim.getPotionEffect(PotionEffectType.BAD_OMEN);
                 if (potionEffect != null) {
-                    e.setDamage(damage + damage * (potionEffect.getAmplifier() + 1) * 10 / 100);
+                    damage += damage * (potionEffect.getAmplifier() + 1) * 10 / 100;
                 }
             }
             if (e.getEntity() instanceof Zombie) {
                 if (mmoCoreAPI.getPlayerData(attacker).getProfess().getId().equals("파우스트")) {
-                    e.setDamage(damage + damage * 8 / 100);
+                    damage += damage * 8 / 100;
                 }
             }
             if (e.getEntity() instanceof Cow) {
                 if (mmoCoreAPI.getPlayerData(attacker).getProfess().getId().equals("인페르노")) {
-                    e.setDamage(damage + damage * 5 / 100);
+                    damage += damage * 5 / 100;
                 }
             }
-            double fixedDamage = Math.round(e.getDamage());
+            if(attacker.hasPotionEffect(PotionEffectType.INCREASE_DAMAGE)){
+                damage += damage * ((attacker.getPotionEffect(PotionEffectType.INCREASE_DAMAGE).getAmplifier() + 1) * 10) / 100;
+                System.out.println("damage = " + damage);
+            }
+            e.setDamage(damage);
+            double fixedDamage = Math.round(damage);
             attacker.sendTitle("", "§f                                                                   ᎈ §c" + fixedDamage, 5, 10, 5);
         }
     }
