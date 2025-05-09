@@ -86,6 +86,7 @@ public final class EtCetera extends JavaPlugin {
             if(!currentDate.equals(lastCheckedDate)){
                 MongoCollection<Document> jumpmapLog = DatabaseRegister.getInstance().getMongoDatabase().getCollection("JumpmapLog");
                 jumpmapLog.deleteMany(new Document());
+                jumpmapLog.insertOne(new Document("players", new ArrayList<String>()));
             } else{
                 lastCheckedDate = currentDate;
             }
