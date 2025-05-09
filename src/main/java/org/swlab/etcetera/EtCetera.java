@@ -80,13 +80,19 @@ public final class EtCetera extends JavaPlugin {
     }
 
     public void startDayChangeCheckScheduler(){
+        if(!EtCetera.getChannelType().equals("lobby")){
+            return;
+        }
         lastCheckedDate = getCurrentDate();
         Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> {
             String currentDate = getCurrentDate();
             if(!currentDate.equals(lastCheckedDate)){
                 MongoCollection<Document> jumpmapLog = DatabaseRegister.getInstance().getMongoDatabase().getCollection("JumpmapLog");
-                jumpmapLog.deleteMany(new Document());
-                jumpmapLog.insertOne(new Document("players", new ArrayList<String>()));
+                Document first = jumpmapLog.find().first();
+                Document updateDocument = new Document().append("players", new ArrayList<String>());
+                jumpmapLog.updateOne(first, new Document("$set", updateDocument));
+                System.out.println("lastCheckedDate = " + lastCheckedDate);
+                System.out.println("getCurrentDate = " + getCurrentDate());
             } else{
                 lastCheckedDate = currentDate;
             }
