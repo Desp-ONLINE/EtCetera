@@ -236,22 +236,11 @@ public class BasicListener implements Listener {
                 if (mmoCoreAPI.getPlayerData(attacker).getProfess().getId().equals("파우스트")) {
                     e.setDamage(damage + damage * 8 / 100);
                 }
-                if (mmoCoreAPI.getPlayerData(attacker).getProfess().getId().equals("제피르")) {
-                    e.setDamage(damage - damage * 8 / 100);
-                }
             }
             if (e.getEntity() instanceof Cow) {
                 if (mmoCoreAPI.getPlayerData(attacker).getProfess().getId().equals("인페르노")) {
                     e.setDamage(damage + damage * 5 / 100);
                 }
-
-            }
-            if (e.getEntity() instanceof Player victim) {
-                if (mmoCoreAPI.getPlayerData(attacker).getProfess().getId().equals("제피르")) {
-                    damage = damage + damage * 10 / 100;
-                    e.setDamage(damage);
-                }
-                e.setDamage(damage - damage * 55 / 100);
             }
             double fixedDamage = Math.round(e.getDamage());
             attacker.sendTitle("", "§f                                                                   ᎈ §c" + fixedDamage, 5, 10, 5);
