@@ -32,7 +32,7 @@ public class JumpMapListener implements Listener{
         Player player = e.getPlayer();
         int fallScore = e.getFallScore();
         MongoCollection<Document> jumpmapLogCollection = DatabaseRegister.getInstance().getMongoDatabase().getCollection("JumpmapLog");
-        if(fallScore >= 30){
+        if(fallScore >= 20){
             Document first = jumpmapLogCollection.find().first();
             List<String> players = first.getList("players", String.class);
             if(players.contains(player.getName())){
