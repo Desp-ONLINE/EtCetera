@@ -7,6 +7,7 @@ import com.binggre.velocitysocketclient.VelocityClient;
 import com.binggre.velocitysocketclient.listener.BroadcastComponentVelocityListener;
 import com.binggre.velocitysocketclient.listener.BroadcastVelocityListener;
 import de.kinglol12345.GUIPlus.events.GUIClickEvent;
+import fr.phoenixdevt.profiles.event.ProfileSelectEvent;
 import io.lumine.mythic.api.adapters.AbstractEntity;
 import io.lumine.mythic.api.skills.SkillCaster;
 import io.lumine.mythic.bukkit.adapters.BukkitPlayer;
@@ -255,6 +256,12 @@ public class BasicListener implements Listener {
     @EventHandler
     public void onFireTick(BlockIgniteEvent e) {
         e.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onProfileLoad(ProfileSelectEvent e){
+        Player player = e.getPlayer();
+        player.setHealth(player.getMaxHealth());
     }
 
     @EventHandler
