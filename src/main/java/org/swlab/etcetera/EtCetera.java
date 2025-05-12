@@ -96,7 +96,7 @@ public final class EtCetera extends JavaPlugin {
                 Document updateDocument = new Document().append("players", new ArrayList<String>());
                 jumpmapLog.updateOne(first, new Document("$set", updateDocument));
             }
-            lastCheckedDate = currentDate;
+            lastCheckedDate = getCurrentDate();
         }, 20L, 20L);
     }
 
