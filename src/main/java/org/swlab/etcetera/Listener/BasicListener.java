@@ -235,6 +235,9 @@ public class BasicListener implements Listener {
             }
             if (e.getEntity() instanceof Zombie) {
                 if (mmoCoreAPI.getPlayerData(attacker).getProfess().getId().equals("파우스트")) {
+                    damage += damage * 11 / 100;
+                }
+                if (mmoCoreAPI.getPlayerData(attacker).getProfess().getId().equals("제피르")) {
                     damage += damage * 8 / 100;
                 }
             }
