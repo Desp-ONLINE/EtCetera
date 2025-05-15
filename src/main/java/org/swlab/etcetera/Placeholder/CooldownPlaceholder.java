@@ -51,9 +51,6 @@ public class CooldownPlaceholder extends PlaceholderExpansion {
             return getCooldownString(player);
         }
         if(Objects.equals(string, "leap")){
-            if(!player.getName().equals("dople_L")){
-                return "";
-            }
             if(LeapListener.getInstance().isCooldown(player.getUniqueId())){
                 return "0";
             }
