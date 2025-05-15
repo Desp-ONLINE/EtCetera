@@ -14,9 +14,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.swlab.etcetera.EtCetera;
+import org.swlab.etcetera.Listener.LeapListener;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Objects;
+import java.util.UUID;
 
 public class CooldownPlaceholder extends PlaceholderExpansion {
 
@@ -47,8 +50,15 @@ public class CooldownPlaceholder extends PlaceholderExpansion {
         if(Objects.equals(string, "cooldown")) {
             return getCooldownString(player);
         }
+        if(Objects.equals(string, "leap")){
+            if(LeapListener.getInstance().isCooldown(player.getUniqueId())){
+                return "true";
+            }
+            return "false";
+        }
         return "";
     }
+
 
     public String getCooldownString(Player player){
         if(EtCetera.getChannelType().equals("lobby")){

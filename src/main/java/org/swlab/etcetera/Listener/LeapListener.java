@@ -23,7 +23,17 @@ import java.util.UUID;
 
 
 public class LeapListener implements Listener {
-    private final HashMap<UUID, Long> cooldowns = new HashMap<>();
+    public final HashMap<UUID, Long> cooldowns = new HashMap<>();
+
+    private static LeapListener instance;
+
+    public static LeapListener getInstance() {
+        if (instance == null) {
+            instance = new LeapListener();
+        }
+        return instance;
+    }
+
 
 
 
