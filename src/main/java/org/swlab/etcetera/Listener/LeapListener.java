@@ -23,7 +23,7 @@ import java.util.UUID;
 
 
 public class LeapListener implements Listener {
-    public final HashMap<UUID, Long> cooldowns = new HashMap<>();
+    public final static HashMap<UUID, Long> cooldowns = new HashMap<>();
 
     private static LeapListener instance;
 
@@ -84,10 +84,7 @@ public class LeapListener implements Listener {
     }
     public boolean isCooldown(UUID uuid) {
         long now = System.currentTimeMillis();
-        if (cooldowns.containsKey(uuid) && now - cooldowns.get(uuid) < 3000) {
-            return false;
-        }
-        return true;
+        return !cooldowns.containsKey(uuid) || now - cooldowns.get(uuid) >= 3000;
     }
     public void addCooldown(UUID uuid){
         long now = System.currentTimeMillis();
