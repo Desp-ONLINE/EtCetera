@@ -62,7 +62,7 @@ public class CooldownPlaceholder extends PlaceholderExpansion {
 
     public String getCooldownString(Player player){
         if(EtCetera.getChannelType().equals("lobby")){
-            if(player.getWorld().getName().equals("world") || player.getWorld().getName().equals("fishing")){
+            if(player.getWorld().getName().equals("fishing")){
                 return "";
             }
         }
