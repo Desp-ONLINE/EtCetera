@@ -1,5 +1,6 @@
 package org.swlab.etcetera.Util;
 
+import com.binggre.binggreapi.utils.ColorManager;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
 import net.Indyuce.mmocore.api.player.PlayerData;
@@ -25,8 +26,21 @@ public class NicknameboardUtil {
 
             String job = PlaceholderAPI.setPlaceholders(player, "%Title_class%");
 
-            // prefix 설정 (색깔도 가능)
-            team.setPrefix("§f"+job+" §6[Lv." + playerData.getLevel() + "] ");
+            int level = playerData.getLevel();
+            String format = "";
+            if (level < 20) {
+                format = ColorManager.format("§f" + job + " #BDFFB9[Lv." + playerData.getLevel() + "] ");
+            } else if (level < 45) {
+                format = ColorManager.format("§f" + job + " #FFFC9B[Lv." + playerData.getLevel() + "] ");
+            } else if (level < 70) {
+                format = ColorManager.format("§f" + job + " #E257FF[Lv." + playerData.getLevel() + "] ");
+            } else if (level < 100) {
+                format = ColorManager.format("§f" + job + " #FF6557[Lv." + playerData.getLevel() + "] ");
+            } else {
+                format = ColorManager.format("§f" + job + " #FF3D3D[Lv." + playerData.getLevel() + "] ");
+            }
+            team.setPrefix(format);
+
 
             // 팀에 플레이어 추가
             if (!team.hasEntry(player.getName())) {

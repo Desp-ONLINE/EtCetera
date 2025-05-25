@@ -14,6 +14,7 @@ import org.swlab.etcetera.Convinience.TipNotice;
 import org.swlab.etcetera.Database.DatabaseRegister;
 import org.swlab.etcetera.Listener.*;
 import org.swlab.etcetera.Placeholder.CooldownPlaceholder;
+import org.swlab.etcetera.Util.NicknameboardUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -56,6 +57,9 @@ public final class EtCetera extends JavaPlugin {
         startAutoNotice();
         new DatabaseRegister();
         SkillCooldownNotice.scheduleStart();
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            NicknameboardUtil.setPlayerLevelPrefix(onlinePlayer);
+        }
 
         VelocityClient.getInstance().getConnectClient().registerListener(FirstJoinVelocityListener.class);
     }
