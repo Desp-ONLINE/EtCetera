@@ -46,6 +46,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Util.CommandUtil;
+import org.swlab.etcetera.Util.NicknameboardUtil;
 
 public class BasicListener implements Listener {
     @EventHandler
@@ -265,6 +266,7 @@ public class BasicListener implements Listener {
     public void onProfileLoad(ProfileSelectEvent e){
         Player player = e.getPlayer();
         player.setHealth(player.getMaxHealth());
+        NicknameboardUtil.setPlayerLevelPrefix(e.getPlayer());
     }
 
     @EventHandler

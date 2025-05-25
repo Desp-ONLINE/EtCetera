@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.swlab.etcetera.EtCetera;
+import org.swlab.etcetera.Util.NicknameboardUtil;
 
 public class LevelUpListener implements Listener {
 
@@ -28,5 +29,6 @@ public class LevelUpListener implements Listener {
             Bukkit.broadcastMessage("");
             e.getPlayer().sendMessage("§e /메일함 §f을 확인해보세요.");
         }
+        NicknameboardUtil.setPlayerLevelPrefix(e.getPlayer());
     }
 }
