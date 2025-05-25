@@ -54,16 +54,28 @@ public class GoldItemListener implements Listener {
         int goldReward = 0;
         if(goldRange <= 65){
             goldReward = random.nextInt(100000, 200001);
+            player.playSound(player, "uisounds:purchase1", 1, 1);
+
         } else if (goldRange <= 80){
             goldReward = random.nextInt(210000, 350001);
+            player.playSound(player, "uisounds:purchase1", 1, 1);
+
         } else if (goldRange <= 92){
             goldReward = random.nextInt(360000, 700001);
+            player.playSound(player, "uisounds:purchase1", 1, 1);
+
         } else if (goldRange <= 97) {
             goldReward = random.nextInt(710000, 900001);
+            player.playSound(player, "uisounds:purchase1", 1, 1);
+
         } else if (goldRange <= 99) {
             goldReward = random.nextInt(910000, 1100001);
+            player.playSound(player, "uisounds:congratulations", 1, 1);
+
         } else{
             goldReward = random.nextInt(1110000, 1500001);
+            player.playSound(player, "uisounds:congratulations", 1, 1);
+
         }
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "eco give "+player.getName()+" "+goldReward);
         String format = ColorManager.format("#FFD900 [미다스의 손] §f축하합니다! §6" + NumberFormat.getIntegerInstance().format(goldReward) + " 골드 §f를 획득했습니다!");
