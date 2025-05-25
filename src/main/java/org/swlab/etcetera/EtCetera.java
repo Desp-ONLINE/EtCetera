@@ -130,6 +130,7 @@ public final class EtCetera extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ConsumableListener(), this);
         Bukkit.getPluginManager().registerEvents(new ModelEngineListener(), this);
         Bukkit.getPluginManager().registerEvents(new JumpMapListener(), this);
+        Bukkit.getPluginManager().registerEvents(new GoldItemListener(), this);
     }
 
     public void registerCommands() {
