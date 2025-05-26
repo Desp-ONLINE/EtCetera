@@ -1,11 +1,7 @@
 package org.swlab.etcetera.Listener;
 
 import com.binggre.binggreapi.utils.ColorManager;
-import com.binggre.mmodungeon.MMODungeon;
-import com.binggre.mmodungeon.api.MMODungeonAPI;
 import com.binggre.velocitysocketclient.VelocityClient;
-import com.binggre.velocitysocketclient.listener.BroadcastComponentVelocityListener;
-import com.binggre.velocitysocketclient.listener.BroadcastVelocityListener;
 import de.kinglol12345.GUIPlus.events.GUIClickEvent;
 import fr.phoenixdevt.profiles.event.ProfileSelectEvent;
 import io.lumine.mythic.api.adapters.AbstractEntity;
@@ -13,20 +9,10 @@ import io.lumine.mythic.api.skills.SkillCaster;
 import io.lumine.mythic.bukkit.adapters.BukkitPlayer;
 import io.lumine.mythic.bukkit.events.MythicDamageEvent;
 import io.lumine.mythic.bukkit.events.MythicProjectileHitEvent;
-import io.lumine.mythic.lib.MythicLib;
 import io.lumine.mythic.lib.api.event.skill.PlayerCastSkillEvent;
-import io.lumine.mythic.lib.api.event.skill.SkillCastEvent;
-import io.lumine.mythic.lib.api.player.MMOPlayerData;
-import io.lumine.mythic.lib.player.cooldown.CooldownInfo;
-import io.lumine.mythic.lib.player.cooldown.CooldownObject;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
 import net.Indyuce.mmocore.api.event.PlayerLevelUpEvent;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.Type;
-import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.serializer.json.JSONComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -43,10 +29,9 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.util.Vector;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Util.CommandUtil;
-import org.swlab.etcetera.Util.NicknameboardUtil;
+import org.swlab.etcetera.Util.NameTagUtil;
 
 public class BasicListener implements Listener {
     @EventHandler
@@ -267,7 +252,7 @@ public class BasicListener implements Listener {
     public void onProfileLoad(ProfileSelectEvent e){
         Player player = e.getPlayer();
         player.setHealth(player.getMaxHealth());
-        NicknameboardUtil.setPlayerLevelPrefix(e.getPlayer());
+        NameTagUtil.setPlayerNameTag(player);
     }
 
     @EventHandler

@@ -1,43 +1,23 @@
 package org.swlab.etcetera.Listener;
 
 import com.binggre.binggreapi.utils.ColorManager;
-import com.binggre.velocitysocketclient.VelocityClient;
-import de.kinglol12345.GUIPlus.events.GUIClickEvent;
-import fr.phoenixdevt.profiles.event.ProfileSelectEvent;
-import io.lumine.mythic.api.adapters.AbstractEntity;
-import io.lumine.mythic.api.skills.SkillCaster;
-import io.lumine.mythic.bukkit.adapters.BukkitPlayer;
-import io.lumine.mythic.bukkit.events.MythicDamageEvent;
-import io.lumine.mythic.bukkit.events.MythicProjectileHitEvent;
-import io.lumine.mythic.lib.api.event.skill.PlayerCastSkillEvent;
-import net.Indyuce.mmocore.api.MMOCoreAPI;
-import net.Indyuce.mmocore.api.event.PlayerLevelUpEvent;
+import com.binggre.binggreapi.utils.EconomyManager;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.*;
-import org.bukkit.event.entity.*;
-import org.bukkit.event.inventory.CraftItemEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
-import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.swlab.etcetera.EtCetera;
-import org.swlab.etcetera.Util.CommandUtil;
-import org.swlab.etcetera.Util.NicknameboardUtil;
 
 import java.text.NumberFormat;
 import java.util.Random;
 
 public class GoldItemListener implements Listener {
+
+    private static Random random = new Random();
+
 
     @EventHandler
     public void onMidasHand(PlayerInteractEvent e) {
@@ -49,7 +29,6 @@ public class GoldItemListener implements Listener {
         if(!MMOItems.getID(item).equals("기타_미다스의손")){
             return;
         }
-        Random random = new Random();
         int goldRange = random.nextInt(1, 101);
         int goldReward = 0;
         if(goldRange <= 65){
@@ -77,7 +56,7 @@ public class GoldItemListener implements Listener {
             player.playSound(player, "uisounds:congratulations", 1, 1);
 
         }
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "eco give "+player.getName()+" "+goldReward);
+        EconomyManager.addMoney(player, goldReward);
         String format = ColorManager.format("#FFD900 [미다스의 손] §f축하합니다! §6" + NumberFormat.getIntegerInstance().format(goldReward) + " 골드 §f를 획득했습니다!");
         player.sendMessage(format);
         item.setAmount(item.getAmount() - 1);
