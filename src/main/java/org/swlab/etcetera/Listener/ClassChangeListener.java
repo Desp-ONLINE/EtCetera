@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.swlab.etcetera.EtCetera;
+import org.swlab.etcetera.Util.NameTagUtil;
 
 
 public class ClassChangeListener implements Listener{
@@ -27,6 +28,7 @@ public class ClassChangeListener implements Listener{
         player.getInventory().addItem(basicArmor);
         player.getInventory().addItem(basicWeapon);
         mmoCoreAPI.getPlayerData(player).setClassPoints(999);
+        NameTagUtil.setPlayerNameTag(player);
     }
     @EventHandler
     public void onProfileCreate(QuestFinishEvent e){

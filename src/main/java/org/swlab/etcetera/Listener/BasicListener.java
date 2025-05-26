@@ -148,6 +148,7 @@ public class BasicListener implements Listener {
     public void onLevelUp(PlayerLevelUpEvent e) {
         Player player = e.getPlayer();
         player.playSound(player, "uisounds:congratulations", 1.0F, 1.0F);
+        NameTagUtil.setPlayerNameTag(player);
     }
 
     @EventHandler
