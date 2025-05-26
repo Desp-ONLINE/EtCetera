@@ -29,15 +29,15 @@ public class NicknameboardUtil {
             int level = playerData.getLevel();
             String format = "";
             if (level < 20) {
-                format = ColorManager.format("§f" + job + " #BDFFB9[Lv." + playerData.getLevel() + "] ");
+                format = ColorManager.format("§f" + " #BDFFB9[Lv." + playerData.getLevel() + "] ");
             } else if (level < 45) {
-                format = ColorManager.format("§f" + job + " #FFFC9B[Lv." + playerData.getLevel() + "] ");
+                format = ColorManager.format("§f" +  " #FFFC9B[Lv." + playerData.getLevel() + "] ");
             } else if (level < 70) {
-                format = ColorManager.format("§f" + job + " #E257FF[Lv." + playerData.getLevel() + "] ");
+                format = ColorManager.format("§f" +  " #E257FF[Lv." + playerData.getLevel() + "] ");
             } else if (level < 100) {
-                format = ColorManager.format("§f" + job + " #FF6557[Lv." + playerData.getLevel() + "] ");
+                format = ColorManager.format("§f" +  " #FF6557[Lv." + playerData.getLevel() + "] ");
             } else {
-                format = ColorManager.format("§f" + job + " #FF3D3D[Lv." + playerData.getLevel() + "] ");
+                format = ColorManager.format("§f" +  " #FF3D3D[Lv." + playerData.getLevel() + "] ");
             }
             team.setPrefix(format);
 
@@ -51,5 +51,11 @@ public class NicknameboardUtil {
             player.setScoreboard(scoreboard);
         }, 20L);
 
+    }
+    public static void removePlayerFromScoreboard(Player player){
+        Scoreboard mainScoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+        Team playerTeam = mainScoreboard.getPlayerTeam(player);
+        playerTeam.removePlayer(player);
+        playerTeam.unregister();
     }
 }

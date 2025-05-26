@@ -204,6 +204,7 @@ public class BasicListener implements Listener {
     public void onQuit(PlayerQuitEvent e) {
 //        e.setQuitMessage("§c[!] §e"+e.getPlayer().getName()+"§f 님께서 서버에서 퇴장하셨습니다.");
         e.setQuitMessage("");
+        NicknameboardUtil.removePlayerFromScoreboard(e.getPlayer());
 
     }
 
