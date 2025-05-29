@@ -28,6 +28,8 @@ public class TutorialCompleteCommand implements CommandExecutor {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + player.getName() + " permission set tutorial");
         CommandUtil.runCommandAsOP(player, "spawn");
         player.sendTitle("§6알림", "§f앞의 메인 퀘스트 NPC, §e제미나이§f에게 말을 걸어주세요!");
+        CommandUtil.runCommandAsOP(player, "직업");
+
 
         return true;
     }
