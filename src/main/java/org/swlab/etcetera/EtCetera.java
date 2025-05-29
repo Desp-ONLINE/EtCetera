@@ -144,6 +144,8 @@ public final class EtCetera extends JavaPlugin {
         getCommand("강화").setExecutor(new ReinforceCommand());
         getCommand("대결").setExecutor(new VersusCommand());
         getCommand("채").setExecutor(new ChannelCommand());
+        getCommand("튜토완료").setExecutor(new TutorialCompleteCommand());
+        getCommand("튜토리얼").setExecutor(new TutorialCommand());
         getCommand("쿠폰").setExecutor(new CouponCommand());
         getCommand("합성").setExecutor(new MergeCommand());
         getCommand("전리품").setExecutor(new RewardSellCommand());

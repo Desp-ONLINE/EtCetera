@@ -161,6 +161,10 @@ public class BasicListener implements Listener {
 
             VelocityClient.getInstance().getConnectClient().send(FirstJoinVelocityListener.class, format);
 
+            if(!e.getPlayer().hasPermission("tutorial")){
+                CommandUtil.runCommandAsOP(e.getPlayer(), "튜토리얼");
+            }
+
         }
 
         Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
@@ -253,6 +257,10 @@ public class BasicListener implements Listener {
         Player player = e.getPlayer();
         player.setHealth(player.getMaxHealth());
         NameTagUtil.setPlayerNameTag(player);
+
+        if(!e.getPlayer().hasPermission("tutorial")){
+            CommandUtil.runCommandAsOP(e.getPlayer(), "튜토리얼");
+        }
     }
 
     @EventHandler

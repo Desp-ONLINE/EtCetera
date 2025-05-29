@@ -94,3 +94,7 @@ commands:
     aliases: ["rlfcot", "g", "ㅎ"]
   대결:
     aliases: ["eoruf", "영혼의대결", "dudghsdmleoruf", "대전", "eowjs"]
+  튜토리얼:
+    aliases: ["xbxhfldjf", "tutorial","tuto"]
+  튜토완료:
+    aliases: ["xbxhdhksfy"]
