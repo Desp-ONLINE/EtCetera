@@ -161,7 +161,7 @@ public class BasicListener implements Listener {
 
             VelocityClient.getInstance().getConnectClient().send(FirstJoinVelocityListener.class, format);
 
-            if(!e.getPlayer().hasPermission("tutorial")){
+            if(!e.getPlayer().hasPermission("tutorial") && EtCetera.getChannelType().equals("lobby")){
                 CommandUtil.runCommandAsOP(e.getPlayer(), "튜토리얼");
             }
 
@@ -258,7 +258,7 @@ public class BasicListener implements Listener {
         player.setHealth(player.getMaxHealth());
         NameTagUtil.setPlayerNameTag(player);
 
-        if(!e.getPlayer().hasPermission("tutorial")){
+        if(!e.getPlayer().hasPermission("tutorial") && EtCetera.getChannelType().equals("lobby")) {
             CommandUtil.runCommandAsOP(e.getPlayer(), "튜토리얼");
         }
     }
