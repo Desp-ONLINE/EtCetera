@@ -161,8 +161,13 @@ public class BasicListener implements Listener {
 
             VelocityClient.getInstance().getConnectClient().send(FirstJoinVelocityListener.class, format);
 
+
+
             if(!e.getPlayer().hasPermission("tutorial") && EtCetera.getChannelType().equals("lobby")){
-                CommandUtil.runCommandAsOP(e.getPlayer(), "튜토리얼");
+                Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), () -> {
+                    CommandUtil.runCommandAsOP(e.getPlayer(), "튜토리얼");
+                    e.getPlayer().sendMessage("§a 튜토리얼을 진행해주세요!");
+                }, 200L);
             }
 
         }
