@@ -29,7 +29,9 @@ public class DungeonListener implements Listener {
 
     @EventHandler
     public void onDungeonSuccess(DungeonClearEvent e){
-        if(e.getDungeonRoom().getConnected().getId().equals(9) && isFirstClearKanaloa){
+        System.out.println("e.getDungeonRoom().getConnected().getId() = " + e.getDungeonRoom().getConnected().getId());
+        System.out.println("isFirstClearKanaloa = " + isFirstClearKanaloa);
+        if(e.getDungeonRoom().getConnected().getId().equals(8) && isFirstClearKanaloa){
             List<String> names = new ArrayList<>();
             ItemStack item = MMOItems.plugin.getItem("CONSUMABLE", "히든_공허의모자");
             List<ItemStack> itemStacks = new ArrayList<>();

@@ -143,6 +143,10 @@ public class BasicListener implements Listener {
         Player player = (Player) inventoryClickEvent.getWhoClicked();
         player.playSound(player, "uisounds:buttonclick2", 1.0F, 1.0F);
     }
+    @EventHandler
+    public void onSculkBloom(SculkBloomEvent e){
+        e.setCancelled(true);
+    }
 
     @EventHandler
     public void onLevelUp(PlayerLevelUpEvent e) {
