@@ -61,7 +61,7 @@ public class LevelPlaceholder extends PlaceholderExpansion {
             } else if (level < 100) {
                 format = ColorManager.format("§f" + " #FF6557[Lv." + level + "] ");
             } else {
-                format = ColorManager.format("§f" + " #FF3D3D[Lv." + level + "] ");
+                format = ColorManager.format("§f" + " #5C2DB2[Lv." + level + "] ");
             }
             return format;
         }

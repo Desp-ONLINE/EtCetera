@@ -30,9 +30,9 @@ public class NameTagUtil {
             } else if (level < 70) {
                 format = ColorManager.format("§f" + " #E257FF[Lv." + playerData.getLevel() + "] ");
             } else if (level < 100) {
-                format = ColorManager.format("§f" + " #FF6557[Lv." + playerData.getLevel() + "] ");
+                format = ColorManager.format("§f" + " #5C2DB2[Lv." + playerData.getLevel() + "] ");
             } else {
-                format = ColorManager.format("§f" + " #FF3D3D[Lv." + playerData.getLevel() + "] ");
+                format = ColorManager.format("§f" + " #223783[Lv." + playerData.getLevel() + "] ");
             }
 
             CommandUtil.runCommandAsOP(player, "nametagedit player " + player.getName() + " prefix " + job +" "+ format + "&f");
