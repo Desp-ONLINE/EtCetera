@@ -14,6 +14,7 @@ import org.swlab.etcetera.Convinience.TipNotice;
 import org.swlab.etcetera.Database.DatabaseRegister;
 import org.swlab.etcetera.Listener.*;
 import org.swlab.etcetera.Placeholder.CooldownPlaceholder;
+import org.swlab.etcetera.Placeholder.LevelPlaceholder;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -34,6 +35,7 @@ public final class EtCetera extends JavaPlugin {
         instance = this;
         if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
             new CooldownPlaceholder(this).register();
+            new LevelPlaceholder(this).register();
         }
         FileConfiguration config = getConfig();
         config.addDefault("channelType", "lobby");
