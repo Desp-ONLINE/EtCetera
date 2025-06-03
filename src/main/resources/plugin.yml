@@ -7,7 +7,7 @@ commands:
   spawn:
     aliases: [ "로비", "넴주", "스폰", "lobby", "tmvhs", "ㅅㅍ", "tv" ]
   광산:
-    aliases: [ "채광", "채광장", "rhkdtks", "corhkdwkd", "ㄳ", "ㄱㅅ" ]
+    aliases: [ "채광", "채광장", "rhkdtks", "corhkdwkd", "ㄳ", "ㄱㅅ" ,"rt"]
   던전:
     aliases: [ "사냥", "사냥터", "ejswjs", "tksid", "tksidxj", "ㄷㅈ", "ew" ]
   쓰레기통:
