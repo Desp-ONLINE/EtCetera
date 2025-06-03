@@ -22,7 +22,9 @@ public class MiningAndFarmingListener implements Listener{
     @EventHandler
     public void onMining(FarmingEvent e){
         Player player = e.getPlayer();
-
+        if(!e.isSuccess()){
+            return;
+        }
         MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
         mmoCoreAPI.getPlayerData(player).giveExperience(40, EXPSource.OTHER);
     }
