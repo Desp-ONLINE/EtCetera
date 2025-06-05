@@ -9,7 +9,9 @@ import io.lumine.mythic.api.skills.SkillCaster;
 import io.lumine.mythic.bukkit.adapters.BukkitPlayer;
 import io.lumine.mythic.bukkit.events.MythicDamageEvent;
 import io.lumine.mythic.bukkit.events.MythicProjectileHitEvent;
+import io.lumine.mythic.lib.api.event.PlayerAttackEvent;
 import io.lumine.mythic.lib.api.event.skill.PlayerCastSkillEvent;
+import io.lumine.mythic.lib.player.PlayerMetadata;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
 import net.Indyuce.mmocore.api.event.PlayerLevelUpEvent;
 import net.Indyuce.mmoitems.MMOItems;
@@ -204,6 +206,14 @@ public class BasicListener implements Listener {
 //        e.setQuitMessage("§c[!] §e"+e.getPlayer().getName()+"§f 님께서 서버에서 퇴장하셨습니다.");
         e.setQuitMessage("");
 
+    }
+
+    @EventHandler
+    public void onPlayerAttack(PlayerAttackEvent e){
+        boolean skillCriticalStrike = e.getAttack().getDamage().isSkillCriticalStrike();
+        if(skillCriticalStrike){
+            e.getPlayer().sendMessage("§e 크리티컬!");
+        }
     }
 
 
