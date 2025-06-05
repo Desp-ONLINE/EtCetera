@@ -73,10 +73,8 @@ public class BasicListener implements Listener {
         SkillCaster caster = e.getCaster();
         AbstractEntity target = e.getTarget();
         if (caster.getEntity().isPlayer() && target.isPlayer()) {
-            MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
-            if (mmoCoreAPI.isInSameParty((Player) caster.getEntity().getBukkitEntity(), (Player) target.getBukkitEntity())) {
-                e.setCancelled(true);
-            }
+            e.setCancelled(true);
+
         }
     }
 
@@ -135,18 +133,15 @@ public class BasicListener implements Listener {
     }
 
 
-
-
-
-
     @EventHandler
     public void onGuiClick(GUIClickEvent e) {
         InventoryClickEvent inventoryClickEvent = e.getInventoryClickEvent();
         Player player = (Player) inventoryClickEvent.getWhoClicked();
         player.playSound(player, "uisounds:buttonclick2", 1.0F, 1.0F);
     }
+
     @EventHandler
-    public void onSculkBloom(SculkBloomEvent e){
+    public void onSculkBloom(SculkBloomEvent e) {
         e.setCancelled(true);
     }
 
@@ -168,8 +163,7 @@ public class BasicListener implements Listener {
             VelocityClient.getInstance().getConnectClient().send(FirstJoinVelocityListener.class, format);
 
 
-
-            if(!e.getPlayer().hasPermission("tutorial") && EtCetera.getChannelType().equals("lobby")){
+            if (!e.getPlayer().hasPermission("tutorial") && EtCetera.getChannelType().equals("lobby")) {
                 Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), () -> {
                     CommandUtil.runCommandAsOP(e.getPlayer(), "튜토리얼");
                     e.getPlayer().sendMessage("§a 튜토리얼을 진행해주세요!");
@@ -209,12 +203,12 @@ public class BasicListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerAttack(PlayerAttackEvent e){
+    public void onPlayerAttack(PlayerAttackEvent e) {
         boolean skillCriticalStrike = e.getAttack().getDamage().isSkillCriticalStrike();
-        if(e.getAttacker().getPlayer().getName().equals("dople_L")){
+        if (e.getAttacker().getPlayer().getName().equals("dople_L")) {
             System.out.println("skillCriticalStrike1 = " + skillCriticalStrike);
         }
-        if(skillCriticalStrike){
+        if (skillCriticalStrike) {
             e.getPlayer().sendMessage("§e 크리티컬!");
         }
     }
@@ -261,7 +255,7 @@ public class BasicListener implements Listener {
                     damage += damage * 5 / 100;
                 }
             }
-            if(attacker.hasPotionEffect(PotionEffectType.INCREASE_DAMAGE)){
+            if (attacker.hasPotionEffect(PotionEffectType.INCREASE_DAMAGE)) {
                 damage += damage * ((attacker.getPotionEffect(PotionEffectType.INCREASE_DAMAGE).getAmplifier() + 1) * 10) / 100;
                 System.out.println("damage = " + damage);
             }
@@ -277,12 +271,12 @@ public class BasicListener implements Listener {
     }
 
     @EventHandler
-    public void onProfileLoad(ProfileSelectEvent e){
+    public void onProfileLoad(ProfileSelectEvent e) {
         Player player = e.getPlayer();
         player.setHealth(player.getMaxHealth());
         NameTagUtil.setPlayerNameTag(player);
 
-        if(!e.getPlayer().hasPermission("tutorial") && EtCetera.getChannelType().equals("lobby")) {
+        if (!e.getPlayer().hasPermission("tutorial") && EtCetera.getChannelType().equals("lobby")) {
             CommandUtil.runCommandAsOP(e.getPlayer(), "튜토리얼");
         }
     }
@@ -300,11 +294,11 @@ public class BasicListener implements Listener {
             e.setCancelled(true);
         }
         String id = MMOItems.getID(itemStack);
-        if(id==null){
+        if (id == null) {
             return;
         }
         System.out.println("id = " + id);
-        if(id.startsWith("직업무기_5")){
+        if (id.startsWith("직업무기_5")) {
             e.setCancelled(true);
 
         }
