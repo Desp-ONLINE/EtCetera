@@ -211,6 +211,9 @@ public class BasicListener implements Listener {
     @EventHandler
     public void onPlayerAttack(PlayerAttackEvent e){
         boolean skillCriticalStrike = e.getAttack().getDamage().isSkillCriticalStrike();
+        if(e.getAttacker().getPlayer().getName().equals("dople_L")){
+            System.out.println("skillCriticalStrike1 = " + skillCriticalStrike);
+        }
         if(skillCriticalStrike){
             e.getPlayer().sendMessage("§e 크리티컬!");
         }
