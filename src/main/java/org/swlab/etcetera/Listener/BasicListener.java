@@ -52,7 +52,7 @@ public class BasicListener implements Listener {
 //            }
 //        }
         //로비채널에서 world에선 데미지 입는거 cancel
-        if ((e.getEntity().getWorld().getName().equals("world") || e.getEntity().getWorld().getName().equals("fishing")) && EtCetera.getChannelType().equals("lobby") && e.getEntity() instanceof Player) {
+        if ((e.getEntity().getWorld().getName().equals("world") || e.getEntity().getWorld().getName().equals("fishing") || e.getEntity().getWorld().getName().equals("tuto")) && EtCetera.getChannelType().equals("lobby") && e.getEntity() instanceof Player) {
             e.setCancelled(true);
         }
     }
