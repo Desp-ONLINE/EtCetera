@@ -239,7 +239,7 @@ public class BasicListener implements Listener {
             if (e.getEntity() instanceof LivingEntity victim) {
                 PotionEffect potionEffect = victim.getPotionEffect(PotionEffectType.BAD_OMEN);
                 if (potionEffect != null) {
-                    damage += damage * (potionEffect.getAmplifier() + 1) * 10 / 100;
+                    damage += damage * (potionEffect.getAmplifier() + 1) * 15 / 100;
                 }
             }
             if (e.getEntity() instanceof Zombie) {
