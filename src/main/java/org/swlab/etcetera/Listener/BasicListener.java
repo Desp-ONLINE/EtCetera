@@ -13,6 +13,8 @@ import io.lumine.mythic.bukkit.events.MythicDamageEvent;
 import io.lumine.mythic.bukkit.events.MythicProjectileHitEvent;
 import io.lumine.mythic.lib.api.event.PlayerAttackEvent;
 import io.lumine.mythic.lib.api.event.skill.PlayerCastSkillEvent;
+import io.lumine.mythic.lib.damage.DamageMetadata;
+import io.lumine.mythic.lib.damage.DamageType;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
 import net.Indyuce.mmocore.api.event.PlayerLevelUpEvent;
 import net.Indyuce.mmoitems.MMOItems;
@@ -206,7 +208,7 @@ public class BasicListener implements Listener {
 //        e.setQuitMessage("§c[!] §e"+e.getPlayer().getName()+"§f 님께서 서버에서 퇴장하셨습니다.");
         e.setQuitMessage("");
         Pet activePet = MCPetsAPI.getActivePet(e.getPlayer().getUniqueId());
-        if(!(activePet == null)){
+        if (!(activePet == null)) {
             String id = activePet.getId();
             PetUtil.savePlayerPetData(e.getPlayer(), id);
         }
@@ -214,66 +216,66 @@ public class BasicListener implements Listener {
 
     }
 
-    @EventHandler
-    public void onPlayerAttack(PlayerAttackEvent e) {
-        boolean skillCriticalStrike = e.getAttack().getDamage().isSkillCriticalStrike();
-        if (e.getAttacker().getPlayer().getName().equals("dople_L")) {
-            System.out.println("skillCriticalStrike1 = " + skillCriticalStrike);
-        }
-        if (skillCriticalStrike) {
-            e.getPlayer().sendMessage("§e 크리티컬!");
-        }
-    }
-
-
     @EventHandler(priority = EventPriority.MONITOR)
-    public void cancelInstantAttack(EntityDamageByEntityEvent e) {
+    public void onPlayerAttack(PlayerAttackEvent e) {
+
         MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
-        double damage = e.getDamage();
+        double damage = e.getDamage().getDamage();
 
         if (EtCetera.getChannelType().equals("dungeon")) {
-            if (e.getDamager() instanceof Player && e.getEntity() instanceof Player) {
+            if (e.getAttacker() instanceof Player && e.getEntity() instanceof Player) {
                 e.setCancelled(true);
             }
         }
-        if (e.getDamager() instanceof Cow && e.getEntity() instanceof Player) {
+        if (e.getAttacker() instanceof Cow && e.getEntity() instanceof Player) {
             String className = mmoCoreAPI.getPlayerData((Player) e.getEntity()).getProfess().getId();
             if (className.equals("크루세이더")) {
                 damage -= damage * 10 / 100;
             }
         }
-        if (e.getDamager() instanceof Player attacker) {
-            if (e.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) { // 기본공격 캔슬
-                e.setCancelled(true);
-                return;
+
+        Player attacker = e.getAttacker().getPlayer();
+        String profess = mmoCoreAPI.getPlayerData(attacker).getProfess().getId();
+        LivingEntity victim = e.getEntity();
+        PotionEffect potionEffect = victim.getPotionEffect(PotionEffectType.BAD_OMEN);
+        if (potionEffect != null) {
+            damage += damage * (potionEffect.getAmplifier() + 1) * 15 / 100;
+        }
+        if (e.getEntity() instanceof Zombie) {
+            if (profess.equals("파우스트")) {
+                damage += damage * 11 / 100;
             }
-            String profess = mmoCoreAPI.getPlayerData(attacker).getProfess().getId();
-            if (e.getEntity() instanceof LivingEntity victim) {
-                PotionEffect potionEffect = victim.getPotionEffect(PotionEffectType.BAD_OMEN);
-                if (potionEffect != null) {
-                    damage += damage * (potionEffect.getAmplifier() + 1) * 15 / 100;
-                }
+            if (profess.equals("제피르")) {
+                damage += damage * 8 / 100;
             }
-            if (e.getEntity() instanceof Zombie) {
-                if (profess.equals("파우스트")) {
-                    damage += damage * 11 / 100;
-                }
-                if (profess.equals("제피르")) {
-                    damage += damage * 8 / 100;
-                }
+        }
+        if (e.getEntity() instanceof Cow) {
+            if (profess.equals("인페르노") || profess.equals("판")) {
+                damage += damage * 5 / 100;
             }
-            if (e.getEntity() instanceof Cow) {
-                if (profess.equals("인페르노") || profess.equals("판")) {
-                    damage += damage * 5 / 100;
-                }
-            }
-            if (attacker.hasPotionEffect(PotionEffectType.INCREASE_DAMAGE)) {
-                damage += damage * ((attacker.getPotionEffect(PotionEffectType.INCREASE_DAMAGE).getAmplifier() + 1) * 10) / 100;
-                System.out.println("damage = " + damage);
-            }
-            e.setDamage(damage);
-            double fixedDamage = Math.round(damage);
-            attacker.sendTitle("", "§f                                                                   ᎈ §c" + fixedDamage, 5, 10, 5);
+        }
+        if (attacker.hasPotionEffect(PotionEffectType.INCREASE_DAMAGE)) {
+            damage += damage * ((attacker.getPotionEffect(PotionEffectType.INCREASE_DAMAGE).getAmplifier() + 1) * 10) / 100;
+        }
+        double originalDamage = e.getDamage().getDamage();
+        DamageMetadata damageMetadata = e.getDamage().add(damage - originalDamage);
+        double fixedDamage = Math.round(damageMetadata.getDamage());
+        boolean skillCriticalStrike = e.getAttack().getDamage().isSkillCriticalStrike();
+        if (skillCriticalStrike) {
+            e.getAttacker().getPlayer().sendTitle("", "§f                                                                   ᎌ §6" + fixedDamage, 5, 10, 5);
+            return;
+        }
+        attacker.sendTitle("", "§f                                                                   ᎈ §c" + fixedDamage, 5, 10, 5);
+
+
+    }
+
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void cancelInstantAttack(EntityDamageByEntityEvent e) {
+        if (e.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK && e.getDamager() instanceof Player) { // 기본공격 캔슬
+            e.setCancelled(true);
+            return;
         }
     }
 
