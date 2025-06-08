@@ -36,6 +36,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Util.CommandUtil;
+import org.swlab.etcetera.Util.DamageIndicatorUtil;
 import org.swlab.etcetera.Util.NameTagUtil;
 import org.swlab.etcetera.Util.PetUtil;
 
@@ -233,6 +234,11 @@ public class BasicListener implements Listener {
                 damage -= damage * 10 / 100;
             }
         }
+        if(EtCetera.getChannelType().equals("dungeon") && e.getEntity() instanceof Player) {
+            System.out.println("타격함. = ");
+            e.setCancelled(true);
+            return;
+        }
 
         Player attacker = e.getAttacker().getPlayer();
         String profess = mmoCoreAPI.getPlayerData(attacker).getProfess().getId();
@@ -260,7 +266,14 @@ public class BasicListener implements Listener {
         double originalDamage = e.getDamage().getDamage();
         DamageMetadata damageMetadata = e.getDamage().add(damage - originalDamage);
         double fixedDamage = Math.round(damageMetadata.getDamage());
+
         boolean skillCriticalStrike = e.getAttack().getDamage().isSkillCriticalStrike();
+
+        if(victim.getType().equals(EntityType.COW)) {
+//            DamageIndicatorUtil.summonTextDisplay(attacker, fixedDamage, e.getEntity(), skillCriticalStrike);
+        }
+
+
         if (skillCriticalStrike) {
             e.getAttacker().getPlayer().sendTitle("", "§f                                                                   ᎌ §6" + fixedDamage, 5, 10, 5);
             return;
@@ -276,6 +289,9 @@ public class BasicListener implements Listener {
         if (e.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK && e.getDamager() instanceof Player) { // 기본공격 캔슬
             e.setCancelled(true);
             return;
+        }
+        if ((e.getEntity().getWorld().getName().equals("world") || e.getEntity().getWorld().getName().equals("fishing") || e.getEntity().getWorld().getName().equals("tuto")) && EtCetera.getChannelType().equals("lobby") && e.getEntity() instanceof Player) {
+            e.setCancelled(true);
         }
     }
 
