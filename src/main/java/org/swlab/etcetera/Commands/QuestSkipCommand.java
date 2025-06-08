@@ -1,5 +1,6 @@
 package org.swlab.etcetera.Commands;
 
+import fr.nocsy.mcpets.api.MCPetsAPI;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

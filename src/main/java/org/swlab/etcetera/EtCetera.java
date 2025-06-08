@@ -2,6 +2,8 @@ package org.swlab.etcetera;
 
 import com.binggre.velocitysocketclient.VelocityClient;
 import com.mongodb.client.MongoCollection;
+import fr.nocsy.mcpets.api.MCPetsAPI;
+import fr.nocsy.mcpets.data.Pet;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -15,6 +17,7 @@ import org.swlab.etcetera.Database.DatabaseRegister;
 import org.swlab.etcetera.Listener.*;
 import org.swlab.etcetera.Placeholder.CooldownPlaceholder;
 import org.swlab.etcetera.Placeholder.LevelPlaceholder;
+import org.swlab.etcetera.Util.PetUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -57,6 +60,7 @@ public final class EtCetera extends JavaPlugin {
         }
         startAutoNotice();
         new DatabaseRegister();
+        loadAllDatas();
         SkillCooldownNotice.scheduleStart();
 
 
@@ -71,9 +75,26 @@ public final class EtCetera extends JavaPlugin {
         return channelNumber;
     }
 
+    public void loadAllDatas(){
+        new PetUtil();
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            PetUtil.loadPlayerPetData(player);
+        }
+    }
+    public void saveAllDatas(){
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            Pet activePet = MCPetsAPI.getActivePet(player.getUniqueId());
+            if(!(activePet == null)){
+                String id = activePet.getId();
+                PetUtil.savePlayerPetData(player, id);
+            }
+        }
+    }
+
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        saveAllDatas();
     }
 
     public void startAutoNotice(){

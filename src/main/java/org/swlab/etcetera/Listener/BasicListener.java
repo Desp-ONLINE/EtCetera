@@ -3,6 +3,8 @@ package org.swlab.etcetera.Listener;
 import com.binggre.binggreapi.utils.ColorManager;
 import com.binggre.velocitysocketclient.VelocityClient;
 import de.kinglol12345.GUIPlus.events.GUIClickEvent;
+import fr.nocsy.mcpets.api.MCPetsAPI;
+import fr.nocsy.mcpets.data.Pet;
 import fr.phoenixdevt.profiles.event.ProfileSelectEvent;
 import io.lumine.mythic.api.adapters.AbstractEntity;
 import io.lumine.mythic.api.skills.SkillCaster;
@@ -11,7 +13,6 @@ import io.lumine.mythic.bukkit.events.MythicDamageEvent;
 import io.lumine.mythic.bukkit.events.MythicProjectileHitEvent;
 import io.lumine.mythic.lib.api.event.PlayerAttackEvent;
 import io.lumine.mythic.lib.api.event.skill.PlayerCastSkillEvent;
-import io.lumine.mythic.lib.player.PlayerMetadata;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
 import net.Indyuce.mmocore.api.event.PlayerLevelUpEvent;
 import net.Indyuce.mmoitems.MMOItems;
@@ -34,6 +35,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Util.CommandUtil;
 import org.swlab.etcetera.Util.NameTagUtil;
+import org.swlab.etcetera.Util.PetUtil;
 
 public class BasicListener implements Listener {
     @EventHandler
@@ -171,6 +173,10 @@ public class BasicListener implements Listener {
             }
 
         }
+        Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), () -> {
+            PetUtil.loadPlayerPetData(e.getPlayer());
+        }, 40L);
+
 
         Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
             @Override
@@ -199,6 +205,12 @@ public class BasicListener implements Listener {
     public void onQuit(PlayerQuitEvent e) {
 //        e.setQuitMessage("§c[!] §e"+e.getPlayer().getName()+"§f 님께서 서버에서 퇴장하셨습니다.");
         e.setQuitMessage("");
+        Pet activePet = MCPetsAPI.getActivePet(e.getPlayer().getUniqueId());
+        if(!(activePet == null)){
+            String id = activePet.getId();
+            PetUtil.savePlayerPetData(e.getPlayer(), id);
+        }
+
 
     }
 
