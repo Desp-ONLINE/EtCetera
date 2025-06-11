@@ -220,8 +220,14 @@ public class BasicListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerAttack(PlayerAttackEvent e) {
 
+        if(!e.getAttacker().getPlayer().isOp()){
+            if(e.getEntity() instanceof  Player){
+                e.setCancelled(true);
+            }
+        }
         MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
         double damage = e.getDamage().getDamage();
+
 
         if (EtCetera.getChannelType().equals("dungeon")) {
             if (e.getAttacker() instanceof Player && e.getEntity() instanceof Player) {
