@@ -46,6 +46,11 @@ public class PetUtil {
     }
 
     public static void savePlayerPetData(Player player, String latestPetID) {
+
         petCollection.replaceOne(new Document("uuid", player.getUniqueId().toString()), new Document("uuid", player.getUniqueId().toString()).append("latestPetID", latestPetID).append("nickname", player.getName()));
+    }
+
+    public static String getPlayerData(Player player) {
+        return petCollection.find(new Document("uuid", player.getUniqueId().toString())).first().getString("latestPetID");
     }
 }

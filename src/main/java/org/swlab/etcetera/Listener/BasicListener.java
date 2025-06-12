@@ -177,7 +177,13 @@ public class BasicListener implements Listener {
 
         }
         Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), () -> {
-            PetUtil.loadPlayerPetData(e.getPlayer());
+            if (!PetUtil.getPlayerData(e.getPlayer()).equals("")) {
+                {
+                    PetUtil.loadPlayerPetData(e.getPlayer());
+
+                }
+
+            }
         }, 40L);
 
 
@@ -212,6 +218,8 @@ public class BasicListener implements Listener {
         if (!(activePet == null)) {
             String id = activePet.getId();
             PetUtil.savePlayerPetData(e.getPlayer(), id);
+        } else {
+            PetUtil.savePlayerPetData(e.getPlayer(), "");
         }
 
 
@@ -220,8 +228,8 @@ public class BasicListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerAttack(PlayerAttackEvent e) {
 
-        if(!e.getAttacker().getPlayer().isOp()){
-            if(e.getEntity() instanceof  Player){
+        if (!e.getAttacker().getPlayer().isOp()) {
+            if (e.getEntity() instanceof Player) {
                 e.setCancelled(true);
             }
         }
@@ -240,7 +248,7 @@ public class BasicListener implements Listener {
                 damage -= damage * 10 / 100;
             }
         }
-        if(EtCetera.getChannelType().equals("dungeon") && e.getEntity() instanceof Player) {
+        if (EtCetera.getChannelType().equals("dungeon") && e.getEntity() instanceof Player) {
             System.out.println("타격함. = ");
             e.setCancelled(true);
             return;
@@ -275,7 +283,7 @@ public class BasicListener implements Listener {
 
         boolean skillCriticalStrike = e.getAttack().getDamage().isSkillCriticalStrike();
 
-        if(victim.getType().equals(EntityType.COW)) {
+        if (victim.getType().equals(EntityType.COW)) {
 //            DamageIndicatorUtil.summonTextDisplay(attacker, fixedDamage, e.getEntity(), skillCriticalStrike);
         }
 
