@@ -41,6 +41,8 @@ import org.swlab.etcetera.Util.NameTagUtil;
 import org.swlab.etcetera.Util.PetUtil;
 
 public class BasicListener implements Listener {
+
+    int firstJoinCount = 0;
     @EventHandler
     public void cancelInstantAttack(EntityDamageEvent e) {
         if (e.getCause() == EntityDamageEvent.DamageCause.FIRE) {
@@ -161,7 +163,8 @@ public class BasicListener implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         e.setJoinMessage("");
         if ((!e.getPlayer().hasPlayedBefore() && EtCetera.getChannelType().equals("lobby"))) {
-            String text = " §f摩 #8FFFAE" + e.getPlayer().getName() + " 님께서 서버에 &e첫 접속 #8FFFAE하셨습니다! 환영해주세요!";
+            firstJoinCount++;
+            String text = " §f摩 #8FFFAE" + e.getPlayer().getName() + " 님께서 서버에 &e첫 접속 #8FFFAE하셨습니다! 환영해주세요! §7(오늘의 "+firstJoinCount+"번째 첫 접속자입니다.)";
             String format = ColorManager.format(text);
             Bukkit.broadcastMessage(format);
 
