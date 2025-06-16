@@ -1,6 +1,7 @@
 package org.swlab.etcetera.Listener;
 
 import com.binggre.binggreapi.utils.ColorManager;
+import com.binggre.mmotimereset.api.DailyResetEvent;
 import com.binggre.velocitysocketclient.VelocityClient;
 import de.kinglol12345.GUIPlus.events.GUIClickEvent;
 import fr.nocsy.mcpets.api.MCPetsAPI;
@@ -213,6 +214,10 @@ public class BasicListener implements Listener {
 
     }
 
+    @EventHandler
+    public void onDailyReset(DailyResetEvent e){
+        firstJoinCount = 0;
+    }
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
 //        e.setQuitMessage("§c[!] §e"+e.getPlayer().getName()+"§f 님께서 서버에서 퇴장하셨습니다.");
