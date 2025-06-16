@@ -242,14 +242,7 @@ public class BasicListener implements Listener {
                 e.setCancelled(true);
             }
         }
-        if (e.getAttacker() instanceof Cow && e.getEntity() instanceof Player) {
-            String className = mmoCoreAPI.getPlayerData((Player) e.getEntity()).getProfess().getId();
-            if (className.equals("크루세이더")) {
-                damage -= damage * 10 / 100;
-            }
-        }
         if (EtCetera.getChannelType().equals("dungeon") && e.getEntity() instanceof Player) {
-            System.out.println("타격함. = ");
             e.setCancelled(true);
             return;
         }
