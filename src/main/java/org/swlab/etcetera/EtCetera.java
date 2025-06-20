@@ -4,12 +4,21 @@ import com.binggre.velocitysocketclient.VelocityClient;
 import com.mongodb.client.MongoCollection;
 import fr.nocsy.mcpets.api.MCPetsAPI;
 import fr.nocsy.mcpets.data.Pet;
+import io.lumine.mythic.api.mobs.MythicMob;
+import io.lumine.mythic.api.skills.Skill;
+import io.lumine.mythic.api.skills.SkillCaster;
+import io.lumine.mythic.api.skills.SkillMetadata;
+import io.lumine.mythic.bukkit.MythicBukkit;
+import io.lumine.mythic.lib.api.player.MMOPlayerData;
+import net.Indyuce.mmocore.api.MMOCoreAPI;
+import net.Indyuce.mmocore.api.player.PlayerData;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.swlab.etcetera.Commands.*;
 import org.swlab.etcetera.Convinience.SkillCooldownNotice;
 import org.swlab.etcetera.Convinience.TipNotice;
@@ -62,6 +71,7 @@ public final class EtCetera extends JavaPlugin {
         new DatabaseRegister();
         loadAllDatas();
         SkillCooldownNotice.scheduleStart();
+        skillSchedule();
 
 
         VelocityClient.getInstance().getConnectClient().registerListener(FirstJoinVelocityListener.class);
@@ -95,6 +105,17 @@ public final class EtCetera extends JavaPlugin {
     public void onDisable() {
         // Plugin shutdown logic
         saveAllDatas();
+    }
+
+    public void skillSchedule(){
+        Player player = Bukkit.getPlayer("dople_L");
+        Bukkit.getScheduler().runTaskTimer(this, new Runnable() {
+            @Override
+            public void run() {
+                MythicBukkit.inst().getAPIHelper().castSkill(player, "PbWS_Runtime_OnUpdate_mmocore");
+
+            }
+        }, 20L, 20L);
     }
 
     public void startAutoNotice(){
