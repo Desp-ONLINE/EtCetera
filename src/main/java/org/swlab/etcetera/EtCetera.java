@@ -108,7 +108,7 @@ public final class EtCetera extends JavaPlugin {
     }
 
     public void skillSchedule(){
-        Player player = Bukkit.getPlayer("dople_L");
+        Player player = Bukkit.getPlayer("dople_L");if(player == null){return;}
         Bukkit.getScheduler().runTaskTimer(this, new Runnable() {
             @Override
             public void run() {
