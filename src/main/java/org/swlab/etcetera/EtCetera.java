@@ -38,6 +38,7 @@ public final class EtCetera extends JavaPlugin {
     public static EtCetera instance;
 
     private String lastCheckedDate = "";
+
     public static EtCetera getInstance() {
         return instance;
     }
@@ -45,7 +46,7 @@ public final class EtCetera extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new CooldownPlaceholder(this).register();
             new LevelPlaceholder(this).register();
         }
@@ -85,16 +86,17 @@ public final class EtCetera extends JavaPlugin {
         return channelNumber;
     }
 
-    public void loadAllDatas(){
+    public void loadAllDatas() {
         new PetUtil();
         for (Player player : Bukkit.getOnlinePlayers()) {
             PetUtil.loadPlayerPetData(player);
         }
     }
-    public void saveAllDatas(){
+
+    public void saveAllDatas() {
         for (Player player : Bukkit.getOnlinePlayers()) {
             Pet activePet = MCPetsAPI.getActivePet(player.getUniqueId());
-            if(!(activePet == null)){
+            if (!(activePet == null)) {
                 String id = activePet.getId();
                 PetUtil.savePlayerPetData(player, id);
             }
@@ -107,18 +109,22 @@ public final class EtCetera extends JavaPlugin {
         saveAllDatas();
     }
 
-    public void skillSchedule(){
-        Player player = Bukkit.getPlayer("dople_L");if(player == null){return;}
+    public void skillSchedule() {
+
         Bukkit.getScheduler().runTaskTimer(this, new Runnable() {
             @Override
             public void run() {
+                Player player = Bukkit.getPlayer("dople_L");
+                if (player == null || !player.isOnline()) {
+                    return;
+                }
                 MythicBukkit.inst().getAPIHelper().castSkill(player, "PbWS_Runtime_OnUpdate_mmocore");
 
             }
         }, 20L, 20L);
     }
 
-    public void startAutoNotice(){
+    public void startAutoNotice() {
         Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> {
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 onlinePlayer.sendMessage("");
@@ -128,14 +134,14 @@ public final class EtCetera extends JavaPlugin {
         }, 20L, 2400L);
     }
 
-    public void startDayChangeCheckScheduler(){
-        if(!EtCetera.getChannelType().equals("lobby")){
+    public void startDayChangeCheckScheduler() {
+        if (!EtCetera.getChannelType().equals("lobby")) {
             return;
         }
         lastCheckedDate = getCurrentDate();
         Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> {
             String currentDate = getCurrentDate();
-            if(!currentDate.equals(lastCheckedDate)){
+            if (!currentDate.equals(lastCheckedDate)) {
                 MongoCollection<Document> jumpmapLog = DatabaseRegister.getInstance().getMongoDatabase().getCollection("JumpmapLog");
                 Document first = jumpmapLog.find().first();
                 Document updateDocument = new Document().append("players", new ArrayList<String>());
@@ -176,7 +182,7 @@ public final class EtCetera extends JavaPlugin {
 
     public void registerCommands() {
         getCommand("nbt검사").setExecutor(new CheckNBTTagCommand());
-        if(!EtCetera.getChannelType().equalsIgnoreCase("afk")){
+        if (!EtCetera.getChannelType().equalsIgnoreCase("afk")) {
             getCommand("spawn").setExecutor(new SpawnCommand());
         }
         getCommand("광산").setExecutor(new MineWarpCommand());
