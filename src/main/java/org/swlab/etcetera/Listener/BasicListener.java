@@ -44,6 +44,7 @@ import org.swlab.etcetera.Util.PetUtil;
 public class BasicListener implements Listener {
 
     int firstJoinCount = 0;
+
     @EventHandler
     public void cancelInstantAttack(EntityDamageEvent e) {
         if (e.getCause() == EntityDamageEvent.DamageCause.FIRE) {
@@ -135,7 +136,7 @@ public class BasicListener implements Listener {
 
     @EventHandler
     public void skillOnVillage(PlayerCastSkillEvent e) {
-        if (EtCetera.getInstance().getChannelType().equals("lobby") && (e.getPlayer().getWorld().getName().equals("world") || e.getPlayer().getWorld().getName().equals("fishing") || e.getPlayer().getWorld().getName().equals("jump"))) {
+        if (EtCetera.getInstance().getChannelType().equals("lobby") && (e.getPlayer().getWorld().getName().equals("world") || e.getPlayer().getWorld().getName().equals("fishing") || e.getPlayer().getWorld().getName().equals("jump")) || e.getPlayer().getWorld().getName().equals("pandora")) {
             e.setCancelled(true);
         }
     }
@@ -167,8 +168,8 @@ public class BasicListener implements Listener {
             firstJoinCount++;
             String text = " §f摩 #8FFFAE" + e.getPlayer().getName() + " 님께서 서버에 &e첫 접속 #8FFFAE하셨습니다! 환영해주세요!";
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                if(onlinePlayer.getName().equals("dople_L")){
-                    onlinePlayer.sendMessage("§7(오늘의 "+firstJoinCount+"번째 첫 접속자입니다.)");
+                if (onlinePlayer.getName().equals("dople_L")) {
+                    onlinePlayer.sendMessage("§7(오늘의 " + firstJoinCount + "번째 첫 접속자입니다.)");
                 }
             }
             String format = ColorManager.format(text);
@@ -220,9 +221,10 @@ public class BasicListener implements Listener {
     }
 
     @EventHandler
-    public void onDailyReset(DailyResetEvent e){
+    public void onDailyReset(DailyResetEvent e) {
         firstJoinCount = 0;
     }
+
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
 //        e.setQuitMessage("§c[!] §e"+e.getPlayer().getName()+"§f 님께서 서버에서 퇴장하셨습니다.");
