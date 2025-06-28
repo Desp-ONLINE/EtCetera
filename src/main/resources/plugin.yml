@@ -7,7 +7,7 @@ commands:
   spawn:
     aliases: [ "로비", "넴주", "스폰", "lobby", "tmvhs", "ㅅㅍ", "tv" ]
   광산:
-    aliases: [ "채광", "채광장", "rhkdtks", "corhkdwkd", "ㄳ", "ㄱㅅ" ,"rt"]
+    aliases: [ "채광", "채광장", "rhkdtks", "corhkdwkd", "ㄳ", "ㄱㅅ" ,"rt" ]
   던전:
     aliases: [ "사냥", "사냥터", "ejswjs", "tksid", "tksidxj", "ㄷㅈ", "ew" ]
   쓰레기통:
@@ -85,17 +85,20 @@ commands:
   아포칼립스:
     aliases: [ "dkvhzkfflqtm", "아포","dkvh" ]
   장사글:
-    aliases: ["wkdtkrmf", "확성기", "ghkrtjdrl"]
+    aliases: [ "wkdtkrmf", "확성기", "ghkrtjdrl" ]
   채:
-    aliases: ["cosjf","co"]
+    aliases: [ "cosjf","co" ]
   UI:
-    aliases: ["ui", "일일퀘스트알림", "일퀘알림", "dlfdlfznptmxmdkffla", "dlfznpdkffla"]
+    aliases: [ "ui", "일일퀘스트알림", "일퀘알림", "dlfdlfznptmxmdkffla", "dlfznpdkffla" ]
   길챗:
-    aliases: ["rlfcot", "g", "ㅎ"]
+    aliases: [ "rlfcot", "g", "ㅎ" ]
   대결:
-    aliases: ["eoruf", "영혼의대결", "dudghsdmleoruf", "대전", "eowjs"]
+    aliases: [ "eoruf", "영혼의대결", "dudghsdmleoruf", "대전", "eowjs" ]
   튜토리얼:
-    aliases: ["xbxhfldjf", "tutorial","tuto"]
+    aliases: [ "xbxhfldjf", "tutorial","tuto" ]
   튜토완료:
-    aliases: ["xbxhdhksfy"]
+    aliases: [ "xbxhdhksfy" ]
+  텔레포트:
+    aliases: [ "xpffpvhxm" ]
   퀘스킵:
+

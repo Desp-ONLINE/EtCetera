@@ -57,6 +57,7 @@ public final class EtCetera extends JavaPlugin {
         saveConfig();
         channelType = config.getString("channelType");
         channelNumber = config.getInt("channelNumber");
+        new DatabaseRegister();
         registerEvents();
         registerCommands();
         startDayChangeCheckScheduler();
@@ -69,10 +70,8 @@ public final class EtCetera extends JavaPlugin {
             }
         }
         startAutoNotice();
-        new DatabaseRegister();
         loadAllDatas();
         SkillCooldownNotice.scheduleStart();
-        skillSchedule();
 
 
         VelocityClient.getInstance().getConnectClient().registerListener(FirstJoinVelocityListener.class);
@@ -107,21 +106,6 @@ public final class EtCetera extends JavaPlugin {
     public void onDisable() {
         // Plugin shutdown logic
         saveAllDatas();
-    }
-
-    public void skillSchedule() {
-
-        Bukkit.getScheduler().runTaskTimer(this, new Runnable() {
-            @Override
-            public void run() {
-                Player player = Bukkit.getPlayer("dople_L");
-                if (player == null || !player.isOnline()) {
-                    return;
-                }
-                MythicBukkit.inst().getAPIHelper().castSkill(player, "PbWS_Runtime_OnUpdate_mmocore");
-
-            }
-        }, 20L, 20L);
     }
 
     public void startAutoNotice() {
@@ -197,6 +181,7 @@ public final class EtCetera extends JavaPlugin {
         getCommand("채").setExecutor(new ChannelCommand());
         getCommand("튜토완료").setExecutor(new TutorialCompleteCommand());
         getCommand("튜토리얼").setExecutor(new TutorialCommand());
+        getCommand("텔레포트").setExecutor(new TeleportCommand());
         getCommand("쿠폰").setExecutor(new CouponCommand());
         getCommand("합성").setExecutor(new MergeCommand());
         getCommand("전리품").setExecutor(new RewardSellCommand());
