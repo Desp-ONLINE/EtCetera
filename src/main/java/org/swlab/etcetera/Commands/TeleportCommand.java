@@ -135,7 +135,7 @@ public class TeleportCommand implements CommandExecutor {
         Document first = playerTeleport.find(new Document("uuid", player.getUniqueId().toString())).first();
         String string = first.getString("latestTeleportedTime");
         OffsetDateTime parse = OffsetDateTime.parse(string);
-        Duration duration = Duration.between(now, parse);
+        Duration duration = Duration.between(parse, now);
         return duration.toMinutes();
     }
 
@@ -148,7 +148,7 @@ public class TeleportCommand implements CommandExecutor {
             return true;
         }
         OffsetDateTime parse = OffsetDateTime.parse(string);
-        Duration duration = Duration.between(now, parse);
+        Duration duration = Duration.between(parse, now);
         return duration.toMinutes() >= 20;
     }
 }
