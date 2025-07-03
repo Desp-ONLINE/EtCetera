@@ -187,11 +187,8 @@ public class BasicListener implements Listener {
 
         }
         Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), () -> {
-            if (!PetUtil.getPlayerData(e.getPlayer()).equals("")) {
-                {
-                    PetUtil.loadPlayerPetData(e.getPlayer());
-
-                }
+            {
+                PetUtil.loadPlayerPetData(e.getPlayer());
 
             }
         }, 40L);
@@ -230,15 +227,16 @@ public class BasicListener implements Listener {
 //        e.setQuitMessage("§c[!] §e"+e.getPlayer().getName()+"§f 님께서 서버에서 퇴장하셨습니다.");
         e.setQuitMessage("");
         Pet activePet = MCPetsAPI.getActivePet(e.getPlayer().getUniqueId());
-        if (!(activePet == null)) {
+        if (activePet == null) {
+            PetUtil.savePlayerPetData(e.getPlayer(), "");
+        } else {
             String id = activePet.getId();
             PetUtil.savePlayerPetData(e.getPlayer(), id);
-        } else {
-            PetUtil.savePlayerPetData(e.getPlayer(), "");
         }
 
 
     }
+
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerAttack(PlayerAttackEvent e) {

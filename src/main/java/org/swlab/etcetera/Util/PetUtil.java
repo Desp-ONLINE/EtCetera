@@ -14,8 +14,8 @@ public class PetUtil {
     private static MongoCollection<Document> petCollection;
     private static PetUtil instance;
 
-    public PetUtil(){
-        if(instance == null){
+    public PetUtil() {
+        if (instance == null) {
             instance = this;
         }
         petCollection = DatabaseRegister.getInstance().getMongoDatabase().getCollection("Pet");
@@ -27,18 +27,21 @@ public class PetUtil {
 
         Document first = petCollection.find(new Document("uuid", player.getUniqueId().toString())).first();
 
-        if(first == null){
+        if (first == null) {
             insertPlayerData(player);
         }
         first = petCollection.find(new Document("uuid", player.getUniqueId().toString())).first();
 
         String latestPetID = first.getString("latestPetID");
-        if(latestPetID.equals("")){
-            return;
+        String command = "";
+        if (latestPetID.isEmpty()) {
+            command = "mcpets revoke";
         }
-        String command = "mcpets spawn " + latestPetID + " " + name + " true";
-        System.out.println(" command = " +  command);
+        else {
+            command = "mcpets spawn " + latestPetID + " " + name + " true";
+        }
         CommandUtil.runCommandAsOP(player, command);
+        System.out.println("command = " + command);
     }
 
     public static void insertPlayerData(Player player) {
