@@ -40,6 +40,7 @@ public class LeapListener implements Listener {
     @EventHandler
     public void onItemSwap(PlayerSwapHandItemsEvent e) {
         Player p = e.getPlayer();
+
         e.setCancelled(true);
         if (p.isSneaking()) {
             CommandUtil.runCommandAsOP(p, "gui open 메뉴");
@@ -56,7 +57,10 @@ public class LeapListener implements Listener {
             }
             Vector vector;
             if (EtCetera.getChannelType().equals("lobby")) {
-                if (p.getWorld().getName().equals("pvp")) {
+                if (p.getWorld().getName().equals("adventures")){
+                    return;
+                }
+                else if (p.getWorld().getName().equals("pvp")) {
                     vector = p.getLocation().getDirection().normalize().multiply(1.3).setY(0.5);
                 } else {
                     vector = p.getLocation().getDirection().normalize().multiply(2.2).setY(0.5);

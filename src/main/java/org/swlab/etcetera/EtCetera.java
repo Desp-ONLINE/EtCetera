@@ -1,5 +1,7 @@
 package org.swlab.etcetera;
 
+import com.binggre.mmotimeraid.api.TimeRaidClearEvent;
+import com.binggre.mmotimeraid.objects.TimeRaid;
 import com.binggre.velocitysocketclient.VelocityClient;
 import com.mongodb.client.MongoCollection;
 import fr.nocsy.mcpets.api.MCPetsAPI;
@@ -154,6 +156,7 @@ public final class EtCetera extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new EquipListener(), this);
         Bukkit.getPluginManager().registerEvents(new RespawnListener(), this);
         Bukkit.getPluginManager().registerEvents(new LevelUpListener(), this);
+        Bukkit.getPluginManager().registerEvents(new BabelListener(), this);
         Bukkit.getPluginManager().registerEvents(new ClassChangeListener(), this);
         Bukkit.getPluginManager().registerEvents(new MiningAndFarmingListener(), this);
         Bukkit.getPluginManager().registerEvents(new DialogSendListener(), this);
@@ -162,6 +165,7 @@ public final class EtCetera extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ModelEngineListener(), this);
         Bukkit.getPluginManager().registerEvents(new JumpMapListener(), this);
         Bukkit.getPluginManager().registerEvents(new GoldItemListener(), this);
+        Bukkit.getPluginManager().registerEvents(new TimeDungeonListener(), this);
     }
 
     public void registerCommands() {
@@ -180,6 +184,7 @@ public final class EtCetera extends JavaPlugin {
         getCommand("퀘스킵").setExecutor(new QuestSkipCommand());
         getCommand("채").setExecutor(new ChannelCommand());
         getCommand("튜토완료").setExecutor(new TutorialCompleteCommand());
+        getCommand("양조").setExecutor(new BrewingCommand());
         getCommand("튜토리얼").setExecutor(new TutorialCommand());
         getCommand("텔레포트").setExecutor(new TeleportCommand());
         getCommand("쿠폰").setExecutor(new CouponCommand());
@@ -191,6 +196,7 @@ public final class EtCetera extends JavaPlugin {
         getCommand("판도라").setExecutor(new PandoraCommand());
         getCommand("스텟").setExecutor(new StatCommand());
         getCommand("직업").setExecutor(new ClassSelectCommand());
+        getCommand("환던티켓지급").setExecutor(new AdventureCommand());
         getCommand("펫").setExecutor(new PetCommand());
         getCommand("낚시").setExecutor(new FishingCommand());
         getCommand("기본템").setExecutor(new BasicWeaponCommand());
@@ -201,8 +207,10 @@ public final class EtCetera extends JavaPlugin {
         getCommand("마을").setTabCompleter(new VillageCommand());
         getCommand("메뉴").setExecutor(new MenuCommand());
         getCommand("후원").setExecutor(new DonationCommand());
+        getCommand("전체지급").setExecutor(new AllGIveCommand());
         getCommand("메일함").setExecutor(new MailBoxCommand());
         getCommand("시장").setExecutor(new MarketCommand());
+        getCommand("채집").setExecutor(new FarmingCommand());
         getCommand("디스코드").setExecutor(new DiscordCommand());
         getCommand("엔더상자").setExecutor(new EnderchestCommand());
         getCommand("창고").setExecutor(new ChestCommand());
@@ -213,6 +221,7 @@ public final class EtCetera extends JavaPlugin {
         getCommand("PVP").setExecutor(new PvpCommand());
         getCommand("음악").setExecutor(new MusicCommand());
         getCommand("정보").setExecutor(new InformationCommand());
+        getCommand("복구").setExecutor(new RestoreCommand());
         getCommand("도움말").setExecutor(new HelpCommand());
         getCommand("필드보스").setExecutor(new BossCommand());
         getCommand("친구").setExecutor(new FriendCommand());
@@ -220,5 +229,6 @@ public final class EtCetera extends JavaPlugin {
         getCommand("칼리마").setExecutor(new KalimaCommand());
         getCommand("인페리움").setExecutor(new InferiumCommand());
         getCommand("아르크티카").setExecutor(new ArcticaCommand());
+        getCommand("엡실론").setExecutor(new EpsilonCommand());
     }
 }

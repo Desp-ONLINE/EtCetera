@@ -27,7 +27,7 @@ public class ChestExpansionListener implements Listener {
         }
         if (e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR) {
             if (id.equals(CASH_CHEST_EXPAND_ITEM_ID)) {
-                for (int i = 4; i < 9; i++) {
+                for (int i = 4; i < 13; i++) {
                     if (!player.hasPermission("mmochest." + i)) {
                         ConsoleCommandSender consoleSender = Bukkit.getConsoleSender();
                         Bukkit.dispatchCommand(consoleSender, "lp user " + player.getName() + " permission set " + "mmochest." + i);

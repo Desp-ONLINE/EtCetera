@@ -1,7 +1,7 @@
 package org.swlab.etcetera.Listener;
 
 import net.Indyuce.inventory.api.event.ItemEquipEvent;
-import net.Indyuce.inventory.slot.SlotType;
+import net.Indyuce.inventory.inventory.slot.SlotType;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -28,18 +28,23 @@ public class EquipListener implements Listener {
             return;
 
         }
+
         if (e.getSlot().getType().equals(SlotType.BOOTS) || e.getSlot().getType().equals(SlotType.LEGGINGS)) {
             return;
         }
         player.playSound(player, "uisounds:itemequip", 1.0F, 1.0F);
         if (e.getSlot().getType().equals(SlotType.CHESTPLATE)) {
             ItemStack item = e.getItem();
-            LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
-            if (meta == null) {
+            if (item == null) {
                 player.getInventory().setLeggings(new ItemStack(Material.AIR));
                 player.getInventory().setBoots(new ItemStack(Material.AIR));
                 return;
             }
+            LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
+            if(meta == null){
+                return;
+            }
+
             int customModelData = meta.getCustomModelData();
             Color color = meta.getColor();
             if (player.getInventory().getBoots() == null) {

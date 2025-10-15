@@ -88,6 +88,22 @@ public class VillageCommand implements CommandExecutor, TabCompleter {
                     CommandUtil.runCommandAsOP(player, "채널 워프 lobby 워프 이동 아르크티카_입구");
                 }
                 return false;
+            case "엡실론":
+                if(EtCetera.getChannelType().equals("lobby")){
+                    if(level < 130){
+                        player.sendMessage("§c  130레벨 미만은 엡실론에 출입할 수 없습니다.");
+                        return false;
+                    }
+                    CommandUtil.runCommandAsOP(player, "워프 이동 엡실론_입구");
+                }
+                else {
+                    if(level < 130){
+                        player.sendMessage("§c  130레벨 미만은 엡실론에 출입할 수 없습니다.");
+                        return false;
+                    }
+                    CommandUtil.runCommandAsOP(player, "채널 워프 lobby 워프 이동 엡실론_입구");
+                }
+                return false;
         }
         return false;
     }
@@ -109,6 +125,9 @@ public class VillageCommand implements CommandExecutor, TabCompleter {
             }
             if(level >= 100){
                 villageList.add("아르크티카");
+            }
+            if(level >= 130){
+                villageList.add("엡실론");
             }
             if(level<20){
                 villageList.add("이동 가능 마을이 없습니다!");

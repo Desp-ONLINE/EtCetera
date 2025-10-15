@@ -35,6 +35,16 @@ public class BasicWeaponCommand implements CommandExecutor {
         jobList.put("제피르", 5);
         jobList.put("루인드", 6);
         jobList.put("판", 7);
+        jobList.put("페이탈", 8);
+        HashMap<String, Integer> awakenedJobList = new HashMap<>();
+        awakenedJobList.put("크루세이더", 1);
+        awakenedJobList.put("파우스트", 2);
+        awakenedJobList.put("오베론", 5);
+        awakenedJobList.put("인페르노", 6);
+        awakenedJobList.put("제피르", 4);
+        awakenedJobList.put("루인드", 3);
+        awakenedJobList.put("판", 7);
+        awakenedJobList.put("페이탈", 8);
 
         // Arrays.asList("크루세이더", "파우스트", "오베론", "인페르노", "제피르", "루인드","판")
 
@@ -83,7 +93,7 @@ public class BasicWeaponCommand implements CommandExecutor {
                 }
                 break;
             case "각성":
-                if(checkisFinished(player, 90020+jobList.get(playerClass.getName()), mmoCoreAPI.getPlayerData(player).getLevel(), 70)){
+                if(checkisFinished(player, 90030+awakenedJobList.get(playerClass.getName()), mmoCoreAPI.getPlayerData(player).getLevel(), 100)){
                     ItemStack basicWeapon = MMOItems.plugin.getItem("SWORD", "직업무기_5" + playerClass.getName() + "0");
                     player.getInventory().addItem(basicWeapon);
                     player.sendMessage("§e 기본템 지급이 완료되었습니다. +0 강화 등급으로는 언제든 복구가 가능하나, 강화 이후에는 해당 강화 등급으로 복구가 불가하니 주의해주세요.");
@@ -111,7 +121,7 @@ public class BasicWeaponCommand implements CommandExecutor {
 
     }
 
-    public boolean checkisFinished(Player player, int questID, int level, int levelCondition){
+    public static boolean checkisFinished(Player player, int questID, int level, int levelCondition){
         QuestsManager questsManager = BeautyQuests.getInstance().getAPI().getQuestsManager();
         Quest quest = questsManager.getQuest(questID);
         PlayerQuestDatasImplementation questDatas = BeautyQuests.getInstance().getPlayersManager().getAccount(player).getQuestDatas(quest);

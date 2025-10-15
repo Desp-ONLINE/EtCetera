@@ -19,8 +19,7 @@ import io.lumine.mythic.lib.damage.DamageType;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
 import net.Indyuce.mmocore.api.event.PlayerLevelUpEvent;
 import net.Indyuce.mmoitems.MMOItems;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -35,6 +34,7 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.Vector;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Util.CommandUtil;
 import org.swlab.etcetera.Util.DamageIndicatorUtil;
@@ -47,7 +47,8 @@ public class BasicListener implements Listener {
 
     @EventHandler
     public void cancelInstantAttack(EntityDamageEvent e) {
-        if (e.getCause() == EntityDamageEvent.DamageCause.FIRE) {
+        if (e.getCause() == EntityDamageEvent.DamageCause.FIRE || e.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK) {
+
             e.setCancelled(true);
             return;
         }
@@ -96,6 +97,8 @@ public class BasicListener implements Listener {
             }
         }
     }
+
+
 
 
     @EventHandler
@@ -218,6 +221,19 @@ public class BasicListener implements Listener {
     }
 
     @EventHandler
+    public void onRightClickToBlock(PlayerInteractEvent e) {
+            if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK)){
+                Location location = e.getClickedBlock().getLocation();
+
+                if(location.getBlockX() == 1193 && location.getBlockY() == 15 && location.getBlockZ() == 1229){
+                    e.getPlayer().teleport(new Location(Bukkit.getWorld("world"), 1146, 6, 1242));
+                }
+            }
+
+
+    }
+
+    @EventHandler
     public void onDailyReset(DailyResetEvent e) {
         firstJoinCount = 0;
     }
@@ -235,6 +251,13 @@ public class BasicListener implements Listener {
         }
 
 
+    }
+
+    @EventHandler
+    public void potionEffectApplyEvent(EntityPotionEffectEvent e){
+        if(e.getModifiedType().equals(PotionEffectType.WITHER) && e.getEntity().getType().equals(EntityType.PLAYER)){
+            e.setCancelled(true);
+        }
     }
 
 
@@ -260,12 +283,18 @@ public class BasicListener implements Listener {
             return;
         }
 
+
         Player attacker = e.getAttacker().getPlayer();
         String profess = mmoCoreAPI.getPlayerData(attacker).getProfess().getId();
         LivingEntity victim = e.getEntity();
         PotionEffect potionEffect = victim.getPotionEffect(PotionEffectType.BAD_OMEN);
         if (potionEffect != null) {
-            damage += damage * (potionEffect.getAmplifier() + 1) * 15 / 100;
+            if(profess.equals("페이탈")){
+                damage += damage * (potionEffect.getAmplifier() + 1) * 20 / 100;
+            } else{
+                damage += damage * (potionEffect.getAmplifier() + 1) * 15 / 100;
+
+            }
         }
         if (e.getEntity() instanceof Zombie) {
             if (profess.equals("파우스트")) {
@@ -336,6 +365,11 @@ public class BasicListener implements Listener {
         e.setCancelled(true);
     }
 
+    @EventHandler
+    public void onPlayerUseNetherPortal(PlayerPortalEvent e){
+        e.setCancelled(true);
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void cancelThrowItem(PlayerDropItemEvent e) {
         Item itemDrop = e.getItemDrop();
@@ -347,7 +381,7 @@ public class BasicListener implements Listener {
         if (id == null) {
             return;
         }
-        System.out.println("id = " + id);
+//        System.out.println("id = " + id);
         if (id.startsWith("직업무기_5")) {
             e.setCancelled(true);
 
@@ -361,8 +395,38 @@ public class BasicListener implements Listener {
                 return;
             }
             if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getClickedBlock().getType().isInteractable()) {
-                e.setCancelled(true);
+                if (e.getClickedBlock().getType().equals(Material.CHEST)) {
+                    if (!e.getPlayer().getWorld().getName().equals("adventures")) {
+                        e.setCancelled(true);
+                    }
+                } else {
+                    e.setCancelled(true);
+
+
+                }
             }
+        }
+    }
+
+    @EventHandler
+    public void onFishing(PlayerFishEvent e) {
+        boolean fishing = e.getPlayer().getWorld().getName().equals("fishing");
+        if (!fishing) {
+            e.getPlayer().sendMessage("§c 이곳에서 낚시 하실 수 없습니다.");
+            e.setCancelled(true);
+
+            return;
+        }
+    }
+
+    @EventHandler
+    public void onFishing(PlayerInteractEvent e) {
+        if (e.getItem() == null) {
+            return;
+        }
+        if (e.getItem().getType().equals(Material.ENDER_PEARL)) {
+            e.getPlayer().sendMessage("§c 엔더진주 사용 불가합니다.");
+            e.setCancelled(true);
         }
     }
 
@@ -376,8 +440,40 @@ public class BasicListener implements Listener {
 
     @EventHandler
     public void onDeath(PlayerDeathEvent e) {
+        Player player = e.getPlayer();
         e.setKeepInventory(true);
         e.setDeathMessage(null);
+        if(e.getPlayer().getWorld().getName().equals("raid")){
+            return;
+        }
+        int delay = 0;
+        Note[] notes = {
+                Note.natural(0, Note.Tone.D),   // 낮은 파
+                Note.natural(0, Note.Tone.C),   // 중간 라
+                Note.natural(0, Note.Tone.B),   // 높은 도
+                Note.natural(0, Note.Tone.A)    // 높은 파
+        };
+
+        String[] messages = {
+                "#FFD4D4D   E   A   D", "#FA9C9CD  E  A  D", "#FF5A5AD E A D", "#FF1D1DDEAD"
+        };
+        for (int i = 0; i < 4; i++) {
+            Note note = notes[i].sharped();
+            int finalI = i;
+            int finalDelay = delay;
+            Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    player.sendTitle(ColorManager.format(messages[finalI]), "§f사망하여 로비에서 부활합니다.", 0, 10, 0);
+                    player.playNote(player.getLocation(), Instrument.PIANO, note);
+                    player.addPotionEffect(PotionEffectType.BLINDNESS.createEffect(finalDelay, 20));
+
+                }
+            }, delay);
+
+            delay += 5;
+        }
+
     }
 
     @EventHandler
@@ -396,6 +492,7 @@ public class BasicListener implements Listener {
             e.setCancelled(true);
         }
     }
+
 
     @EventHandler
     public void cancelItemConsume(PlayerItemConsumeEvent e) {

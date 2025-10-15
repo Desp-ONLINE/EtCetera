@@ -33,6 +33,10 @@ public class JumpMapListener implements Listener{
         int fallScore = e.getFallScore();
         MongoCollection<Document> jumpmapLogCollection = DatabaseRegister.getInstance().getMongoDatabase().getCollection("JumpmapLog");
         if(fallScore >= 20){
+            ItemStack worldCoreItemStack = MMOItems.plugin.getItem("MISCELLANEOUS", "기타_세계의핵");
+            worldCoreItemStack.setAmount(5);
+            player.getInventory().addItem(worldCoreItemStack);
+            player.sendMessage("§a 점프맵 20점 이상 보상으로 §f세계의 핵 x5 §a아이템을 획득했습니다!");
             Document first = jumpmapLogCollection.find().first();
             List<String> players = first.getList("players", String.class);
             if(players.contains(player.getName())){

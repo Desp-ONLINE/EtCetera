@@ -11,7 +11,7 @@ public class AccCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         Player player = (Player) sender;
-        CommandUtil.runCommandAsOP(player, "mmoinv");
+        CommandUtil.runCommandAsOP(player, "mmoinv open mmoinventory1_legacy");
         return false;
     }
 }

@@ -1,6 +1,5 @@
 package org.swlab.etcetera.Commands;
 
-import io.lumine.mythic.lib.math3.analysis.function.Min;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,8 +11,8 @@ import org.jetbrains.annotations.NotNull;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Util.CommandUtil;
 
-import javax.swing.text.NumberFormatter;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.List;
 
 public class MarketCommand implements CommandExecutor {
@@ -35,7 +34,9 @@ public class MarketCommand implements CommandExecutor {
         }
         switch (strings[0]) {
             case "판매":
-                List<String> lore = player.getInventory().getItemInMainHand().getItemMeta().getLore();
+                ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
+                List<String> lore = itemInMainHand.getItemMeta().getLore();
+                String id = MMOItems.getID(itemInMainHand);
                 if (lore == null) {
                     player.sendMessage("§c 이 아이템은 판매할 수 없습니다.");
                     return false;
@@ -43,6 +44,17 @@ public class MarketCommand implements CommandExecutor {
                 if (lore.contains("§6    거래: §c불가")) {
                     player.sendMessage("§c 이 아이템은 판매할 수 없습니다.");
                     return false;
+                }
+                if (id.startsWith("특수무기") || id.startsWith("합성무기")) {
+                    if (id.endsWith("1") || id.endsWith("2") || id.endsWith("3") || id.endsWith("4")) {
+                        player.sendMessage("§c 이 아이템은 판매할 수 없습니다.");
+                        return false;
+                    }
+                }
+                if (id.contains("응집")) {
+                    player.sendMessage("§c 이 아이템은 판매할 수 없습니다.");
+                    return false;
+
                 }
                 if (strings.length == 1) {
                     player.sendMessage("§c 가격을 입력하세요. §7§o(/시장 판매 <가격> <개수> : 개수는 입력하지 않으면 손에 든 아이템의 전부를 판매합니다.) ");
@@ -58,15 +70,19 @@ public class MarketCommand implements CommandExecutor {
                             return false;
                         }
                         CommandUtil.runCommandAsOP(player, "ah sell " + price + " " + i);
-                    } catch (NumberFormatException e) {
+                    } catch (NumberFormatException | ParseException e) {
                         player.sendMessage("§c/시장 판매 <금액> <개수>: 개수 입력이 잘못되었습니다.");
                     }
                     return false;
                 }
                 String priceString = strings[1].replace("만", "0000");
                 long price = Long.parseLong(priceString);
-                if (!checkPriceInRange(price, player)) {
-                    return false;
+                try {
+                    if (!checkPriceInRange(price, player)) {
+                        return false;
+                    }
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
                 }
                 CommandUtil.runCommandAsOP(player, "ah sell " + price);
                 return false;
@@ -77,14 +93,21 @@ public class MarketCommand implements CommandExecutor {
         return false;
     }
 
-    public boolean checkPriceInRange(long price, Player player) {
+    public boolean checkPriceInRange(long price, Player player) throws ParseException {
         ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
         String id = MMOItems.getID(itemInMainHand);
         String type = MMOItems.getType(itemInMainHand).getId();
-        long averagePrice = TransactionLogRepository.getInstance().getAveragePrice(id, type, 5);
-        if(averagePrice == 0){
+        long averagePrice = TransactionLogRepository.getInstance().getAveragePrice(id, type, 20);
+        if (averagePrice == 0) {
             return true;
         }
+//        int untransactedDays = TransactionLogRepository.getInstance().getUntransactedDays(id, type, 1, player);
+//        if(untransactedDays >= 30){
+//            averagePrice = 0;
+//        } else {
+//            averagePrice -= averagePrice / 100 * untransactedDays;
+//        }
+
         averagePrice *= itemInMainHand.getAmount();
         long maximumPrice = averagePrice + averagePrice * SELL_PERCENTAGE / 100;
         long minimumPrice = averagePrice - averagePrice * SELL_PERCENTAGE / 100;
