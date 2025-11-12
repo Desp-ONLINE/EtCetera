@@ -23,6 +23,10 @@ public class VersusCommand implements CommandExecutor {
             player.sendMessage("§c 로비에서만 이용하실 수 있습니다.");
             return false;
         }
+        if(EtCetera.getChannelNumber() == 2){
+            player.sendMessage("§c 영혼의 대결은 로비 1채널에서만 사용하실 수 있습니다. §7§o(/채널 명령어를 통해 이동하실 수 있습니다.)");
+            return false;
+        }
         if (args.length == 0) {
             player.sendMessage(ColorManager.format("#5798FF /대결 매칭 &f- 영혼의 대결 매칭 대기열에 입/퇴장합니다. &7&o(입장 후 입력 시 퇴장됩니다.)"));
             player.sendMessage(ColorManager.format("#5798FF /대결 정보 &f- 내 영혼의 대결 정보를 확인합니다."));

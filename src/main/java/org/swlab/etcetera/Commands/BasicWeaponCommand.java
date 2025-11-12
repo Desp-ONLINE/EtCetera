@@ -48,7 +48,7 @@ public class BasicWeaponCommand implements CommandExecutor {
 
         // Arrays.asList("크루세이더", "파우스트", "오베론", "인페르노", "제피르", "루인드","판")
 
-        if(strings.length == 0){
+        if (strings.length == 0) {
             player.sendMessage("§e [기본템] §f/기본템 <1/2/3/4/각성> - §7지급 받으실 기본템의 전직 등급을 함께 작성해주세요.");
             player.sendMessage("§7                 ㄴ> 예) /기본템 4 - 본인 현재 직업의 4차 직업 기본템을 지급 받습니다.");
             return false;
@@ -58,12 +58,18 @@ public class BasicWeaponCommand implements CommandExecutor {
         PlayerClass playerClass = mmoCoreAPI.getPlayerData(player).getProfess();
 
 
-        switch (strings[0]){
+        switch (strings[0]) {
             case "2":
-                if(checkisFinished(player, 90000+jobList.get(playerClass.getName()), mmoCoreAPI.getPlayerData(player).getLevel(), 20)){
+                if (checkisFinished(player, 90000 + jobList.get(playerClass.getName()), mmoCoreAPI.getPlayerData(player).getLevel(), 20)) {
+                    if (playerClass.getName().equals("판")) {
+                        ItemStack jobItem = MMOItems.plugin.getItem("JOB_EQUIPMENT", "긍지_판2");
+                        player.getInventory().addItem(jobItem);
+                    }
                     ItemStack basicWeapon = MMOItems.plugin.getItem("SWORD", "직업무기_2" + playerClass.getName() + "0");
-                    player.getInventory().addItem(basicWeapon);player.sendMessage("");
+                    player.getInventory().addItem(basicWeapon);
+                    player.sendMessage("");
                     player.sendMessage("§e 기본템 지급이 완료되었습니다. +0 강화 등급으로는 언제든 복구가 가능하나, 강화 이후에는 해당 강화 등급으로 복구가 불가하니 주의해주세요.");
+
                 } else {
                     player.sendMessage("§c 20레벨 미만이거나, 전직 퀘스트를 클리어 하지 않았습니다. 2차 전직 퀘스트는 엘븐하임의 전직관으로부터 수행할 수 있습니다.");
                     return false;
@@ -71,9 +77,14 @@ public class BasicWeaponCommand implements CommandExecutor {
                 }
                 break;
             case "3":
-                if(checkisFinished(player, 90010+jobList.get(playerClass.getName()), mmoCoreAPI.getPlayerData(player).getLevel(), 45)){
+                if (checkisFinished(player, 90010 + jobList.get(playerClass.getName()), mmoCoreAPI.getPlayerData(player).getLevel(), 45)) {
+                    if (playerClass.getName().equals("판")) {
+                        ItemStack jobItem = MMOItems.plugin.getItem("JOB_EQUIPMENT", "긍지_판3");
+                        player.getInventory().addItem(jobItem);
+                    }
                     ItemStack basicWeapon = MMOItems.plugin.getItem("SWORD", "직업무기_3" + playerClass.getName() + "0");
-                    player.getInventory().addItem(basicWeapon);player.sendMessage("");
+                    player.getInventory().addItem(basicWeapon);
+                    player.sendMessage("");
                     player.sendMessage("§e 기본템 지급이 완료되었습니다. +0 강화 등급으로는 언제든 복구가 가능하나, 강화 이후에는 해당 강화 등급으로 복구가 불가하니 주의해주세요.");
                 } else {
                     player.sendMessage("§c 45레벨 미만이거나, 전직 퀘스트를 클리어 하지 않았습니다. 3차 전직 퀘스트는 칼리마의 전직관으로부터 수행할 수 있습니다.");
@@ -82,9 +93,14 @@ public class BasicWeaponCommand implements CommandExecutor {
                 }
                 break;
             case "4":
-                if(checkisFinished(player, 90020+jobList.get(playerClass.getName()), mmoCoreAPI.getPlayerData(player).getLevel(), 70)){
+                if (checkisFinished(player, 90020 + jobList.get(playerClass.getName()), mmoCoreAPI.getPlayerData(player).getLevel(), 70)) {
+                    if (playerClass.getName().equals("판")) {
+                        ItemStack jobItem = MMOItems.plugin.getItem("JOB_EQUIPMENT", "긍지_판4");
+                        player.getInventory().addItem(jobItem);
+                    }
                     ItemStack basicWeapon = MMOItems.plugin.getItem("SWORD", "직업무기_4" + playerClass.getName() + "0");
-                    player.getInventory().addItem(basicWeapon);player.sendMessage("");
+                    player.getInventory().addItem(basicWeapon);
+                    player.sendMessage("");
                     player.sendMessage("§e 기본템 지급이 완료되었습니다. +0 강화 등급으로는 언제든 복구가 가능하나, 강화 이후에는 해당 강화 등급으로 복구가 불가하니 주의해주세요.");
                 } else {
                     player.sendMessage("§c 70레벨 미만이거나, 전직 퀘스트를 클리어 하지 않았습니다. 4차 전직 퀘스트는 인페리움의 전직관으로부터 수행할 수 있습니다.");
@@ -93,7 +109,11 @@ public class BasicWeaponCommand implements CommandExecutor {
                 }
                 break;
             case "각성":
-                if(checkisFinished(player, 90030+awakenedJobList.get(playerClass.getName()), mmoCoreAPI.getPlayerData(player).getLevel(), 100)){
+                if (checkisFinished(player, 90030 + awakenedJobList.get(playerClass.getName()), mmoCoreAPI.getPlayerData(player).getLevel(), 100)) {
+                    if (playerClass.getName().equals("판")) {
+                        ItemStack jobItem = MMOItems.plugin.getItem("JOB_EQUIPMENT", "긍지_판5");
+                        player.getInventory().addItem(jobItem);
+                    }
                     ItemStack basicWeapon = MMOItems.plugin.getItem("SWORD", "직업무기_5" + playerClass.getName() + "0");
                     player.getInventory().addItem(basicWeapon);
                     player.sendMessage("§e 기본템 지급이 완료되었습니다. +0 강화 등급으로는 언제든 복구가 가능하나, 강화 이후에는 해당 강화 등급으로 복구가 불가하니 주의해주세요.");
@@ -103,6 +123,10 @@ public class BasicWeaponCommand implements CommandExecutor {
                 }
                 break;
             case "1":
+                if (playerClass.getName().equals("판")) {
+                    ItemStack jobItem = MMOItems.plugin.getItem("JOB_EQUIPMENT", "긍지_판1");
+                    player.getInventory().addItem(jobItem);
+                }
                 ItemStack basicWeapon = MMOItems.plugin.getItem("SWORD", "직업무기_1" + playerClass.getName() + "0");
                 player.getInventory().addItem(basicWeapon);
                 player.sendMessage("§e 기본템 지급이 완료되었습니다. +0 강화 등급으로는 언제든 복구가 가능하나, 강화 이후에는 해당 강화 등급으로 복구가 불가하니 주의해주세요.");
@@ -121,7 +145,7 @@ public class BasicWeaponCommand implements CommandExecutor {
 
     }
 
-    public static boolean checkisFinished(Player player, int questID, int level, int levelCondition){
+    public static boolean checkisFinished(Player player, int questID, int level, int levelCondition) {
         QuestsManager questsManager = BeautyQuests.getInstance().getAPI().getQuestsManager();
         Quest quest = questsManager.getQuest(questID);
         PlayerQuestDatasImplementation questDatas = BeautyQuests.getInstance().getPlayersManager().getAccount(player).getQuestDatas(quest);

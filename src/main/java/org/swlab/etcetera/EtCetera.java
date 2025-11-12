@@ -166,6 +166,7 @@ public final class EtCetera extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new JumpMapListener(), this);
         Bukkit.getPluginManager().registerEvents(new GoldItemListener(), this);
         Bukkit.getPluginManager().registerEvents(new TimeDungeonListener(), this);
+        Bukkit.getPluginManager().registerEvents(new AFKListener(), this);
     }
 
     public void registerCommands() {
@@ -178,11 +179,14 @@ public final class EtCetera extends JavaPlugin {
         getCommand("아포칼립스").setExecutor(new ApocalypseCommand());
         getCommand("쓰레기통").setExecutor(new TrashcanCommand());
         getCommand("UI").setExecutor(new UICommand());
+        getCommand("마나회복").setExecutor(new ManaCommand());
         getCommand("장비").setExecutor(new AccCommand());
         getCommand("강화").setExecutor(new ReinforceCommand());
+        getCommand("도플명령어").setExecutor(new AdminCommand());
         getCommand("대결").setExecutor(new VersusCommand());
         getCommand("퀘스킵").setExecutor(new QuestSkipCommand());
         getCommand("채").setExecutor(new ChannelCommand());
+        getCommand("쿨초기화").setExecutor(new CoolResetCommand());
         getCommand("튜토완료").setExecutor(new TutorialCompleteCommand());
         getCommand("양조").setExecutor(new BrewingCommand());
         getCommand("튜토리얼").setExecutor(new TutorialCommand());

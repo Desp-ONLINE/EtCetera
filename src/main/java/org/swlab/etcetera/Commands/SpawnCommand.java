@@ -8,15 +8,18 @@ import org.jetbrains.annotations.NotNull;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Util.CommandUtil;
 
+import java.util.Random;
+
 public class SpawnCommand implements CommandExecutor {
+
+
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        if(EtCetera.getChannelType().equals("lobby")){
+        if (EtCetera.getChannelType().equals("lobby")) {
             Player player = (Player) sender;
             CommandUtil.runCommandAsOP(player, "warp 로비");
             return false;
-        }
-        else {
+        } else {
             Player player = (Player) sender;
             CommandUtil.runCommandAsOP(player, "채널 워프 lobby warp 로비");
             return false;

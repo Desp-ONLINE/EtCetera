@@ -25,7 +25,7 @@ public class CooldownUtil {
         SkillManager skillManager = new SkillManager();
         for (RegisteredSkill registeredSkill : skillManager.getAll()) {
             String name = registeredSkill.getName();
-            System.out.println("name = " + name);
+//            System.out.println("name = " + name);
             cooldownMap.resetCooldown(name);
 
         }

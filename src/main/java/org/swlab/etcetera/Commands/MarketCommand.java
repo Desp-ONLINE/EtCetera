@@ -25,6 +25,11 @@ public class MarketCommand implements CommandExecutor {
         if (!EtCetera.getChannelType().equals("lobby")) {
             CommandUtil.runCommandAsOP(player, "채널 워프 lobby 시장");
         }
+        if(EtCetera.getChannelType().equals("lobby") && EtCetera.getChannelNumber() == 2){
+            player.sendMessage("§c 시장 명령어는 로비 1채널에서만 사용하실 수 있습니다. §7§o(/채널 명령어를 통해 이동하실 수 있습니다.)");
+            CommandUtil.runCommandAsOP(player, "채널 워프 lobby 시장");
+            return false;
+        }
         if (strings.length == 0) {
             CommandUtil.runCommandAsOP(player, "ah");
             player.sendMessage("§7 > 대금 수령은 §6/시장 수령 §7명령어를 이용해주세요.");

@@ -7,10 +7,12 @@ import com.binggre.mmomail.MMOMail;
 import com.binggre.mmomail.objects.Mail;
 import com.binggre.velocitysocketclient.VelocityClient;
 import com.binggre.velocitysocketclient.listener.BroadcastStringVelocityListener;
+import io.lumine.mythic.lib.api.player.MMOPlayerData;
 import net.Indyuce.mmocore.api.player.PlayerData;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Item;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -26,9 +28,22 @@ public class DungeonListener implements Listener {
     @EventHandler
     public void onDungeonFail(DungeonFailedEvent e) {
 
-
-
+        List<Player> members = e.getDungeonRoom().getMembers();
+        for (Player member : members) {
+            MMOPlayerData mmoPlayerData = MMOPlayerData.get(member.getUniqueId());
+            mmoPlayerData.getCooldownMap().clearAllCooldowns();
+        }
         e.setCancelledAmount(true);
+    }
+
+    @EventHandler
+    public void onDungeonClear(DungeonClearEvent e){
+
+        List<Player> members = e.getDungeonRoom().getMembers();
+        for (Player member : members) {
+            MMOPlayerData mmoPlayerData = MMOPlayerData.get(member.getUniqueId());
+            mmoPlayerData.getCooldownMap().clearAllCooldowns();
+        }
     }
 //
 //    @EventHandler

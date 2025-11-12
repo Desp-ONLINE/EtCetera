@@ -101,18 +101,20 @@ commands:
   텔레포트:
     aliases: [ "xpffpvhxm" ]
   타임던전:
-    aliases: [ "xkdlaejswjs", "ㅌㅇㄷㅈ"]
+    aliases: [ "xkdlaejswjs", "ㅌㅇㄷㅈ" ]
   레이드:
-    aliases: [ "fpdlem", "raid", "ㄹㅇㄷ"]
+    aliases: [ "fpdlem", "raid", "ㄹㅇㄷ" ]
   채집:
-    aliases: [ "cowlq"]
+    aliases: [ "cowlq" ]
   복구:
-    aliases: ["qhrrn"]
+    aliases: [ "qhrrn" ]
   양조:
-    aliases: ["didwh"]
+    aliases: [ "didwh" ]
   엡실론:
-    aliases: ["dpqtlffhs"]
+    aliases: [ "dpqtlffhs" ]
   전체지급:
   퀘스킵:
+  마나회복:
+  쿨초기화:
   환던티켓지급:
-
+  도플명령어:

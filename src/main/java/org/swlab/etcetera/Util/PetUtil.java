@@ -41,7 +41,7 @@ public class PetUtil {
             command = "mcpets spawn " + latestPetID + " " + name + " true";
         }
         CommandUtil.runCommandAsOP(player, command);
-        System.out.println("command = " + command);
+//        System.out.println("command = " + command);
     }
 
     public static void insertPlayerData(Player player) {

@@ -14,8 +14,9 @@ import io.lumine.mythic.bukkit.events.MythicDamageEvent;
 import io.lumine.mythic.bukkit.events.MythicProjectileHitEvent;
 import io.lumine.mythic.lib.api.event.PlayerAttackEvent;
 import io.lumine.mythic.lib.api.event.skill.PlayerCastSkillEvent;
+import io.lumine.mythic.lib.api.event.skill.SkillCastEvent;
+import io.lumine.mythic.lib.api.player.MMOPlayerData;
 import io.lumine.mythic.lib.damage.DamageMetadata;
-import io.lumine.mythic.lib.damage.DamageType;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
 import net.Indyuce.mmocore.api.event.PlayerLevelUpEvent;
 import net.Indyuce.mmoitems.MMOItems;
@@ -34,10 +35,8 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.util.Vector;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Util.CommandUtil;
-import org.swlab.etcetera.Util.DamageIndicatorUtil;
 import org.swlab.etcetera.Util.NameTagUtil;
 import org.swlab.etcetera.Util.PetUtil;
 
@@ -48,7 +47,6 @@ public class BasicListener implements Listener {
     @EventHandler
     public void cancelInstantAttack(EntityDamageEvent e) {
         if (e.getCause() == EntityDamageEvent.DamageCause.FIRE || e.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK) {
-
             e.setCancelled(true);
             return;
         }
@@ -87,6 +85,8 @@ public class BasicListener implements Listener {
 
         }
     }
+
+
 
     @EventHandler
     public void onFishingRodHitPlayer(PlayerFishEvent e) {
@@ -197,6 +197,8 @@ public class BasicListener implements Listener {
         }, 40L);
 
 
+
+
         Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
             @Override
             public void run() {
@@ -212,7 +214,6 @@ public class BasicListener implements Listener {
         Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
             @Override
             public void run() {
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "huds layout " + e.getPlayer().getName() + " remove slot_hud-layout");
                 e.getPlayer().setNoDamageTicks(0);
                 e.getPlayer().setHealth(e.getPlayer().getMaxHealth());
             }
@@ -288,6 +289,12 @@ public class BasicListener implements Listener {
         String profess = mmoCoreAPI.getPlayerData(attacker).getProfess().getId();
         LivingEntity victim = e.getEntity();
         PotionEffect potionEffect = victim.getPotionEffect(PotionEffectType.BAD_OMEN);
+        if(victim instanceof Player player && e.getAttacker() instanceof Cow boss){
+            if(boss.hasPotionEffect(PotionEffectType.WEAKNESS)){
+                PotionEffect potionEffect1 = boss.getPotionEffect(PotionEffectType.WEAKNESS);
+                damage -= damage * (potionEffect1.getAmplifier() + 1) * 10 / 100;
+            }
+        }
         if (potionEffect != null) {
             if(profess.equals("페이탈")){
                 damage += damage * (potionEffect.getAmplifier() + 1) * 20 / 100;
@@ -305,7 +312,15 @@ public class BasicListener implements Listener {
             }
         }
         if (e.getEntity() instanceof Cow) {
-            if (profess.equals("인페르노") || profess.equals("판")) {
+            if (profess.equals("인페르노")) {
+                if(e.getEntity().getFireTicks() > 0){
+                    damage += damage * 15 / 100;
+                    
+                } else {
+                    damage += damage * 5 / 100;
+                }
+            }
+            else if (profess.equals("판")) {
                 damage += damage * 5 / 100;
             }
         }

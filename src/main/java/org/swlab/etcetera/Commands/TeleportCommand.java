@@ -44,6 +44,8 @@ public class TeleportCommand implements CommandExecutor {
         hashMap.put(13, "공허로향하는길_입구");
         hashMap.put(14, "원무의공간_입구");
         hashMap.put(15, "아공간_입구");
+        hashMap.put(16, "망자의기로_입구");
+        hashMap.put(17, "망각의영역_입구");
         playerTeleport = DatabaseRegister.getInstance().getMongoDatabase().getCollection("PlayerTeleport");
 
     }
@@ -111,8 +113,18 @@ public class TeleportCommand implements CommandExecutor {
                 CommandUtil.runCommandAsOP(player, "채널 워프 dungeon"+channelNumber+" 워프 이동 "+hashMap.get(dungeonNumber));
                 updateTeleportTime(player);
                 return true;
+            } else if (dungeonNumber <=18){
+                if(level < 130){
+                    player.sendMessage("§c 130레벨 이상인 경우에만 입장하실 수 있습니다.");
+                    return false;
+                }
+                CommandUtil.runCommandAsOP(player, "채널 워프 dungeon"+channelNumber+" 워프 이동 "+hashMap.get(dungeonNumber));
+                updateTeleportTime(player);
+
+                return true;
             }
         }
+        System.out.println("asdg");
         return false;
     }
 

@@ -38,12 +38,13 @@ public class NameTagUtil {
                 format = ColorManager.format("§f" + " #E257FF[Lv." + playerData.getLevel() + "] ");
             } else if (level < 100) {
                 format = ColorManager.format("§f" + " #5C2DB2[Lv." + playerData.getLevel() + "] ");
-            } else {
+            }else if (level < 130) {
                 format = ColorManager.format("§f" + " #223783[Lv." + playerData.getLevel() + "] ");
+            } else {
+                format = ColorManager.format("§f" + " #7A89FF[Lv." + playerData.getLevel() + "] ");
             }
 
 
-//            CommandUtil.runCommandAsOP(player, "tag " + player.getName() + " prefix " + job+"&f");
         }, 20L);
 
 
