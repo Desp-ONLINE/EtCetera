@@ -50,6 +50,16 @@ public class BasicListener implements Listener {
             e.setCancelled(true);
             return;
         }
+
+        if(e.getCause() == EntityDamageEvent.DamageCause.LAVA && e.getEntity() instanceof Player player){
+
+            if(player.getWorld().getName().equals("raid")){
+                double v = player.getMaxHealth() / 10;
+                player.damage(v);
+                e.setCancelled(true);
+                return;
+            }
+        }
         if (e.getCause() == EntityDamageEvent.DamageCause.FALL) {
             e.setCancelled(true);
             return;

@@ -36,15 +36,15 @@ public class DungeonListener implements Listener {
         e.setCancelledAmount(true);
     }
 
-//    @EventHandler
-//    public void onDungeonClear(DungeonClearEvent e){
-//
-//        List<Player> members = e.getDungeonRoom().getMembers();
-//        for (Player member : members) {
-//            MMOPlayerData mmoPlayerData = MMOPlayerData.get(member.getUniqueId());
-//            mmoPlayerData.getCooldownMap().clearAllCooldowns();
-//        }
-//    }
+    @EventHandler
+    public void onDungeonClear(DungeonClearEvent e){
+
+        List<Player> members = e.getDungeonRoom().getMembers();
+        for (Player member : members) {
+            MMOPlayerData mmoPlayerData = MMOPlayerData.get(member.getUniqueId());
+            mmoPlayerData.getCooldownMap().clearAllCooldowns();
+        }
+    }
 //
 //    @EventHandler
 //    public void onDungeonClear(DungeonClearEvent e) {

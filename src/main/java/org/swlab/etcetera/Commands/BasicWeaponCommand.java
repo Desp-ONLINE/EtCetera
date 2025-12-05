@@ -65,6 +65,10 @@ public class BasicWeaponCommand implements CommandExecutor {
                         ItemStack jobItem = MMOItems.plugin.getItem("JOB_EQUIPMENT", "긍지_판2");
                         player.getInventory().addItem(jobItem);
                     }
+                    if (playerClass.getName().equals("루인드")) {
+                        ItemStack jobItem = MMOItems.plugin.getItem("JOB_EQUIPMENT", "긍지_루인드2");
+                        player.getInventory().addItem(jobItem);
+                    }
                     ItemStack basicWeapon = MMOItems.plugin.getItem("SWORD", "직업무기_2" + playerClass.getName() + "0");
                     player.getInventory().addItem(basicWeapon);
                     player.sendMessage("");
@@ -80,6 +84,10 @@ public class BasicWeaponCommand implements CommandExecutor {
                 if (checkisFinished(player, 90010 + jobList.get(playerClass.getName()), mmoCoreAPI.getPlayerData(player).getLevel(), 45)) {
                     if (playerClass.getName().equals("판")) {
                         ItemStack jobItem = MMOItems.plugin.getItem("JOB_EQUIPMENT", "긍지_판3");
+                        player.getInventory().addItem(jobItem);
+                    }
+                    if (playerClass.getName().equals("루인드")) {
+                        ItemStack jobItem = MMOItems.plugin.getItem("JOB_EQUIPMENT", "긍지_루인드3");
                         player.getInventory().addItem(jobItem);
                     }
                     ItemStack basicWeapon = MMOItems.plugin.getItem("SWORD", "직업무기_3" + playerClass.getName() + "0");
@@ -98,6 +106,10 @@ public class BasicWeaponCommand implements CommandExecutor {
                         ItemStack jobItem = MMOItems.plugin.getItem("JOB_EQUIPMENT", "긍지_판4");
                         player.getInventory().addItem(jobItem);
                     }
+                    if (playerClass.getName().equals("루인드")) {
+                        ItemStack jobItem = MMOItems.plugin.getItem("JOB_EQUIPMENT", "긍지_루인드4");
+                        player.getInventory().addItem(jobItem);
+                    }
                     ItemStack basicWeapon = MMOItems.plugin.getItem("SWORD", "직업무기_4" + playerClass.getName() + "0");
                     player.getInventory().addItem(basicWeapon);
                     player.sendMessage("");
@@ -114,6 +126,10 @@ public class BasicWeaponCommand implements CommandExecutor {
                         ItemStack jobItem = MMOItems.plugin.getItem("JOB_EQUIPMENT", "긍지_판5");
                         player.getInventory().addItem(jobItem);
                     }
+                    if (playerClass.getName().equals("루인드")) {
+                        ItemStack jobItem = MMOItems.plugin.getItem("JOB_EQUIPMENT", "긍지_루인드5");
+                        player.getInventory().addItem(jobItem);
+                    }
                     ItemStack basicWeapon = MMOItems.plugin.getItem("SWORD", "직업무기_5" + playerClass.getName() + "0");
                     player.getInventory().addItem(basicWeapon);
                     player.sendMessage("§e 기본템 지급이 완료되었습니다. +0 강화 등급으로는 언제든 복구가 가능하나, 강화 이후에는 해당 강화 등급으로 복구가 불가하니 주의해주세요.");
@@ -125,6 +141,10 @@ public class BasicWeaponCommand implements CommandExecutor {
             case "1":
                 if (playerClass.getName().equals("판")) {
                     ItemStack jobItem = MMOItems.plugin.getItem("JOB_EQUIPMENT", "긍지_판1");
+                    player.getInventory().addItem(jobItem);
+                }
+                if (playerClass.getName().equals("루인드")) {
+                    ItemStack jobItem = MMOItems.plugin.getItem("JOB_EQUIPMENT", "긍지_루인드1");
                     player.getInventory().addItem(jobItem);
                 }
                 ItemStack basicWeapon = MMOItems.plugin.getItem("SWORD", "직업무기_1" + playerClass.getName() + "0");
