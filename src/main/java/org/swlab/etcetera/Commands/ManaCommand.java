@@ -1,6 +1,5 @@
 package org.swlab.etcetera.Commands;
 
-import net.Indyuce.mmocore.MMOCore;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
 import net.Indyuce.mmocore.api.player.PlayerData;
 import org.bukkit.command.Command;
@@ -9,7 +8,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.swlab.etcetera.EtCetera;
-import org.swlab.etcetera.Util.CommandUtil;
 
 public class ManaCommand implements CommandExecutor {
     @Override

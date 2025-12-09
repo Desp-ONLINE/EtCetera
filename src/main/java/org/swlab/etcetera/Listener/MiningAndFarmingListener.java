@@ -6,7 +6,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.desp.mining.event.MiningEvent;
-import org.khw3268480.farming.Farming;
 import org.khw3268480.farming.event.FarmingEvent;
 import org.swlab.etcetera.EtCetera;
 

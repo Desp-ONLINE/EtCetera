@@ -1,26 +1,15 @@
 package org.swlab.etcetera;
 
-import com.binggre.mmotimeraid.api.TimeRaidClearEvent;
-import com.binggre.mmotimeraid.objects.TimeRaid;
 import com.binggre.velocitysocketclient.VelocityClient;
 import com.mongodb.client.MongoCollection;
 import fr.nocsy.mcpets.api.MCPetsAPI;
 import fr.nocsy.mcpets.data.Pet;
-import io.lumine.mythic.api.mobs.MythicMob;
-import io.lumine.mythic.api.skills.Skill;
-import io.lumine.mythic.api.skills.SkillCaster;
-import io.lumine.mythic.api.skills.SkillMetadata;
-import io.lumine.mythic.bukkit.MythicBukkit;
-import io.lumine.mythic.lib.api.player.MMOPlayerData;
-import net.Indyuce.mmocore.api.MMOCoreAPI;
-import net.Indyuce.mmocore.api.player.PlayerData;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.swlab.etcetera.Commands.*;
 import org.swlab.etcetera.Convinience.SkillCooldownNotice;
 import org.swlab.etcetera.Convinience.TipNotice;
@@ -31,7 +20,10 @@ import org.swlab.etcetera.Placeholder.LevelPlaceholder;
 import org.swlab.etcetera.Util.PetUtil;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Set;
 
 public final class EtCetera extends JavaPlugin {
 
@@ -165,7 +157,10 @@ public final class EtCetera extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ModelEngineListener(), this);
         Bukkit.getPluginManager().registerEvents(new JumpMapListener(), this);
         Bukkit.getPluginManager().registerEvents(new GoldItemListener(), this);
-        Bukkit.getPluginManager().registerEvents(new TimeDungeonListener(), this);
+        if (Bukkit.getPluginManager().isPluginEnabled("MMOGuild")) {
+            Bukkit.getPluginManager().registerEvents(new TimeDungeonListener(), this);
+
+        }
         Bukkit.getPluginManager().registerEvents(new AFKListener(), this);
     }
 

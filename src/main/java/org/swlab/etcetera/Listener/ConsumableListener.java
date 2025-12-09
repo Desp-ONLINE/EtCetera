@@ -1,7 +1,6 @@
 package org.swlab.etcetera.Listener;
 
 import net.Indyuce.mmoitems.api.event.item.ConsumableConsumedEvent;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.potion.PotionEffectType;

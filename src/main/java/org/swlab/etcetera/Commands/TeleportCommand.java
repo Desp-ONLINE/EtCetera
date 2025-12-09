@@ -1,7 +1,6 @@
 package org.swlab.etcetera.Commands;
 
 import com.mongodb.client.MongoCollection;
-import io.r2dbc.spi.Parameter;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
 import org.bson.Document;
 import org.bukkit.command.Command;
@@ -13,10 +12,8 @@ import org.jetbrains.annotations.NotNull;
 import org.swlab.etcetera.Database.DatabaseRegister;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Util.CommandUtil;
-import org.swlab.etcetera.Util.PetUtil;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.HashMap;

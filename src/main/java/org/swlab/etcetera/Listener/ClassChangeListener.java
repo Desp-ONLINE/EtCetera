@@ -16,7 +16,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.swlab.etcetera.EtCetera;
-import org.swlab.etcetera.Util.CommandUtil;
 import org.swlab.etcetera.Util.NameTagUtil;
 
 

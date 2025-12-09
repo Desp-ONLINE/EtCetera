@@ -2,18 +2,13 @@ package org.swlab.etcetera.Commands;
 
 import com.binggre.binggreapi.utils.ColorManager;
 import me.clip.placeholderapi.PlaceholderAPI;
-import net.Indyuce.mmocore.api.MMOCoreAPI;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Util.CommandUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class VersusCommand implements CommandExecutor {
     @Override

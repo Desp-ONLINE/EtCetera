@@ -1,22 +1,12 @@
 package org.swlab.etcetera.Placeholder;
 
 import com.binggre.binggreapi.utils.ColorManager;
-import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
-import net.Indyuce.mmoitems.ItemStats;
-import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.stat.data.AbilityData;
-import net.Indyuce.mmoitems.stat.data.AbilityListData;
-import net.Indyuce.mmoitems.stat.data.type.StatData;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.swlab.etcetera.EtCetera;
-import org.swlab.etcetera.Listener.LeapListener;
 
-import java.util.Iterator;
 import java.util.Objects;
 
 public class LevelPlaceholder extends PlaceholderExpansion {

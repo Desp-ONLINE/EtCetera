@@ -2,10 +2,8 @@ package org.swlab.etcetera.Placeholder;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import net.Indyuce.mmocore.api.MMOCoreAPI;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.Type;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.Indyuce.mmoitems.stat.data.AbilityListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
@@ -16,10 +14,8 @@ import org.jetbrains.annotations.NotNull;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Listener.LeapListener;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Objects;
-import java.util.UUID;
 
 public class CooldownPlaceholder extends PlaceholderExpansion {
 

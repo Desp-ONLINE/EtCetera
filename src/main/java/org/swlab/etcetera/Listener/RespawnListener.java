@@ -6,8 +6,6 @@ import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.desp.IDEPass.api.IDEPassAPI;
-import org.desp.IDEPass.dto.IDEPassUserDataDto;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Util.CommandUtil;
 

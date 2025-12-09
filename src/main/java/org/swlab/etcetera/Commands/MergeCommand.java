@@ -2,7 +2,6 @@ package org.swlab.etcetera.Commands;
 
 import fr.skytasul.quests.BeautyQuests;
 import fr.skytasul.quests.structure.QuestImplementation;
-import net.Indyuce.mmocore.MMOCore;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

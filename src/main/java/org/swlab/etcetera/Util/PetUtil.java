@@ -1,12 +1,7 @@
 package org.swlab.etcetera.Util;
 
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import fr.nocsy.mcpets.MCPets;
-import fr.nocsy.mcpets.api.MCPetsAPI;
-import fr.nocsy.mcpets.data.Pet;
 import org.bson.Document;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.swlab.etcetera.Database.DatabaseRegister;
 

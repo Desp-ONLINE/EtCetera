@@ -3,11 +3,10 @@ package org.swlab.etcetera.Listener;
 import com.binggre.binggreapi.utils.ColorManager;
 import com.binggre.binggreapi.utils.EconomyManager;
 import net.Indyuce.mmoitems.MMOItems;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 

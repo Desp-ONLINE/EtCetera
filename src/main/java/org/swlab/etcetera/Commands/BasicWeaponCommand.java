@@ -4,9 +4,6 @@ import fr.skytasul.quests.BeautyQuests;
 import fr.skytasul.quests.api.quests.Quest;
 import fr.skytasul.quests.api.quests.QuestsManager;
 import fr.skytasul.quests.players.PlayerQuestDatasImplementation;
-import io.lumine.mythic.lib.api.player.MMOPlayerData;
-import io.lumine.mythic.lib.api.stat.modifier.StatModifier;
-import io.lumine.mythic.lib.player.modifier.ModifierType;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
 import net.Indyuce.mmocore.api.player.profess.PlayerClass;
 import net.Indyuce.mmoitems.MMOItems;
@@ -18,10 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.swlab.etcetera.EtCetera;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
 public class BasicWeaponCommand implements CommandExecutor {
     @Override

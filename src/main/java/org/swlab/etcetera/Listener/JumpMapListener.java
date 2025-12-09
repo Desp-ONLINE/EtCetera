@@ -1,28 +1,16 @@
 package org.swlab.etcetera.Listener;
 
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.result.UpdateResult;
-import fr.skytasul.quests.api.events.QuestFinishEvent;
-import io.lumine.mythic.lib.api.player.MMOPlayerData;
-import net.Indyuce.mmocore.api.MMOCoreAPI;
-import net.Indyuce.mmocore.api.event.PlayerChangeClassEvent;
-import net.Indyuce.mmocore.api.player.PlayerData;
-import net.Indyuce.mmocore.api.player.profess.PlayerClass;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bson.Document;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.Vector;
 import org.swlab.etcetera.Database.DatabaseRegister;
-import org.swlab.etcetera.EtCetera;
 import us.ajg0702.parkour.api.events.PlayerEndParkourEvent;
-import us.ajg0702.parkour.api.events.PlayerStartParkourEvent;
 
-import java.util.*;
+import java.util.List;
 
 
 public class JumpMapListener implements Listener{

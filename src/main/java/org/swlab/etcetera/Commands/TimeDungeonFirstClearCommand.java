@@ -5,7 +5,6 @@ import com.mongodb.client.MongoCollection;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.Type;
 import org.bson.Document;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,9 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.swlab.etcetera.Listener.TimeDungeonListener;
-import org.swlab.etcetera.Util.CommandUtil;
 
-import javax.swing.text.NumberFormatter;
 import java.text.NumberFormat;
 import java.util.List;
 
