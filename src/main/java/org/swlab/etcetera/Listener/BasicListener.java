@@ -34,6 +34,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.swlab.etcetera.EtCetera;
+import org.swlab.etcetera.Repositories.UserSettingRepository;
 import org.swlab.etcetera.Util.CommandUtil;
 import org.swlab.etcetera.Util.NameTagUtil;
 import org.swlab.etcetera.Util.PetUtil;
@@ -174,10 +175,12 @@ public class BasicListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
+        Player player = e.getPlayer();
+
         e.setJoinMessage("");
-        if ((!e.getPlayer().hasPlayedBefore() && EtCetera.getChannelType().equals("lobby"))) {
+        if ((!player.hasPlayedBefore() && EtCetera.getChannelType().equals("lobby"))) {
             firstJoinCount++;
-            String text = " §f摩 #8FFFAE" + e.getPlayer().getName() + " 님께서 서버에 &e첫 접속 #8FFFAE하셨습니다! 환영해주세요!";
+            String text = " §f摩 #8FFFAE" + player.getName() + " 님께서 서버에 &e첫 접속 #8FFFAE하셨습니다! 환영해주세요!";
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 if (onlinePlayer.getName().equals("dople_L")) {
                     onlinePlayer.sendMessage("§7(오늘의 " + firstJoinCount + "번째 첫 접속자입니다.)");
@@ -189,17 +192,17 @@ public class BasicListener implements Listener {
             VelocityClient.getInstance().getConnectClient().send(FirstJoinVelocityListener.class, format);
 
 
-            if (!e.getPlayer().hasPermission("tutorial") && EtCetera.getChannelType().equals("lobby")) {
+            if (!player.hasPermission("tutorial") && EtCetera.getChannelType().equals("lobby")) {
                 Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), () -> {
-                    CommandUtil.runCommandAsOP(e.getPlayer(), "튜토리얼");
-                    e.getPlayer().sendMessage("§a 튜토리얼을 진행해주세요!");
+                    CommandUtil.runCommandAsOP(player, "튜토리얼");
+                    player.sendMessage("§a 튜토리얼을 진행해주세요!");
                 }, 200L);
             }
 
         }
         Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), () -> {
             {
-                PetUtil.loadPlayerPetData(e.getPlayer());
+                PetUtil.loadPlayerPetData(player);
 
             }
         }, 40L);
@@ -210,22 +213,23 @@ public class BasicListener implements Listener {
         Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
             @Override
             public void run() {
-                e.getPlayer().clearActivePotionEffects();
+                player.clearActivePotionEffects();
             }
         }, 20L);
         if (EtCetera.getInstance().getChannelType().equals("lobby")) {
-            CommandUtil.runCommandAsOP(e.getPlayer(), "spawn");
+            CommandUtil.runCommandAsOP(player, "spawn");
         }
         MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
-        mmoCoreAPI.getPlayerData(e.getPlayer()).setClassPoints(999);
+        mmoCoreAPI.getPlayerData(player).setClassPoints(999);
 
         Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
             @Override
             public void run() {
-                e.getPlayer().setNoDamageTicks(0);
-                e.getPlayer().setHealth(e.getPlayer().getMaxHealth());
+                player.setNoDamageTicks(0);
+                player.setHealth(player.getMaxHealth());
             }
         }, 20L);
+        UserSettingRepository.getInstance().loadUserSetting(player);
 
     }
 
@@ -249,15 +253,16 @@ public class BasicListener implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
-//        e.setQuitMessage("§c[!] §e"+e.getPlayer().getName()+"§f 님께서 서버에서 퇴장하셨습니다.");
+        Player player = e.getPlayer();
         e.setQuitMessage("");
-        Pet activePet = MCPetsAPI.getActivePet(e.getPlayer().getUniqueId());
+        Pet activePet = MCPetsAPI.getActivePet(player.getUniqueId());
         if (activePet == null) {
-            PetUtil.savePlayerPetData(e.getPlayer(), "");
+            PetUtil.savePlayerPetData(player, "");
         } else {
             String id = activePet.getId();
-            PetUtil.savePlayerPetData(e.getPlayer(), id);
+            PetUtil.savePlayerPetData(player, id);
         }
+        UserSettingRepository.getInstance().saveUserSetting(player);
 
 
     }

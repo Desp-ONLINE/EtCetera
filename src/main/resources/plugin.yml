@@ -119,3 +119,5 @@ commands:
   환던티켓지급:
   도플명령어:
   타임던전첫클리어보상:
+  설정:
+    aliases: ["tjfwjd", "사용자설정", "tkdydwktjfwjd"]

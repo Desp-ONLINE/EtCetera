@@ -45,13 +45,15 @@ public class LevelPlaceholder extends PlaceholderExpansion {
             if (level < 20) {
                 format = ColorManager.format("§f" + " #BDFFB9[Lv." + level + "] ");
             } else if (level < 45) {
-                format = ColorManager.format("§f" + " #FFFC9B[Lv." + level + "] ");
+                format = ColorManager.format("§f" + " #FFFC9B[Lv." +level + "] ");
             } else if (level < 70) {
-                format = ColorManager.format("§f" + " #E257FF[Lv." + level + "] ");
+                format = ColorManager.format("§f" + " #F1ADFF[Lv." + level + "] ");
             } else if (level < 100) {
-                format = ColorManager.format("§f" + " #FF6557[Lv." + level + "] ");
+                format = ColorManager.format("§f" + " #AC7EFF[Lv." + level + "] ");
+            }else if (level < 130) {
+                format = ColorManager.format("§f" + " #7ECBFF[Lv." + level + "] ");
             } else {
-                format = ColorManager.format("§f" + " #5C2DB2[Lv." + level + "] ");
+                format = ColorManager.format("§f" + " #7A89FF[Lv." + level + "] ");
             }
             return format;
         }

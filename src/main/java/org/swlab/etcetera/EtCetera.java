@@ -17,6 +17,7 @@ import org.swlab.etcetera.Database.DatabaseRegister;
 import org.swlab.etcetera.Listener.*;
 import org.swlab.etcetera.Placeholder.CooldownPlaceholder;
 import org.swlab.etcetera.Placeholder.LevelPlaceholder;
+import org.swlab.etcetera.Repositories.UserSettingRepository;
 import org.swlab.etcetera.Util.PetUtil;
 
 import java.text.SimpleDateFormat;
@@ -54,6 +55,7 @@ public final class EtCetera extends JavaPlugin {
         new DatabaseRegister();
         registerEvents();
         registerCommands();
+        registerRepositories();
         startDayChangeCheckScheduler();
 
         Set<OfflinePlayer> operators = Bukkit.getOperators();
@@ -71,6 +73,10 @@ public final class EtCetera extends JavaPlugin {
         VelocityClient.getInstance().getConnectClient().registerListener(FirstJoinVelocityListener.class);
     }
 
+    public void registerRepositories(){
+        new UserSettingRepository();
+    }
+
     public static String getChannelType() {
         return channelType;
     }
@@ -83,6 +89,7 @@ public final class EtCetera extends JavaPlugin {
         new PetUtil();
         for (Player player : Bukkit.getOnlinePlayers()) {
             PetUtil.loadPlayerPetData(player);
+            UserSettingRepository.getInstance().loadUserSetting(player);
         }
     }
 
@@ -92,6 +99,8 @@ public final class EtCetera extends JavaPlugin {
             if (!(activePet == null)) {
                 String id = activePet.getId();
                 PetUtil.savePlayerPetData(player, id);
+                UserSettingRepository.getInstance().saveUserSetting(player);
+
             }
         }
     }
@@ -171,6 +180,7 @@ public final class EtCetera extends JavaPlugin {
         }
         getCommand("광산").setExecutor(new MineWarpCommand());
         getCommand("던전").setExecutor(new DungeonCommand());
+        getCommand("설정").setExecutor(new UserSettingCommand());
         getCommand("아포칼립스").setExecutor(new ApocalypseCommand());
         getCommand("쓰레기통").setExecutor(new TrashcanCommand());
         getCommand("UI").setExecutor(new UICommand());

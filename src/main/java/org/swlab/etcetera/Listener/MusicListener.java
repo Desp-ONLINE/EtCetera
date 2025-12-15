@@ -26,8 +26,8 @@ public class MusicListener implements Listener {
 
     @EventHandler
     public void onServerJoin(PlayerJoinEvent e) {
-            playSound(e.getPlayer(), e.getPlayer().getWorld());
 
+        playSound(e.getPlayer(), e.getPlayer().getWorld());
     }
     @EventHandler
     public void onPlayerChangeWorld(PlayerChangedWorldEvent e){
