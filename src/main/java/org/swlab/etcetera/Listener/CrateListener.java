@@ -17,7 +17,7 @@ public class CrateListener implements Listener {
 
     public static ArrayList<Player> canOpen = new ArrayList<>();
 
-    public static long openDelay = 60L;
+    public static long openDelay = 20L;
 
     @EventHandler
     public void onCrateOpen(CrateOpenEvent e){
@@ -32,7 +32,7 @@ public class CrateListener implements Listener {
 //        System.out.println("canOpen.contains(p) = " + canOpen.contains(player));
         if(canOpen.contains(player)){
             e.setCancelled(true);
-            player.sendMessage("§c  3초 간격으로 오픈할 수 있습니다.");
+            player.sendMessage("§c  1초 간격으로 오픈할 수 있습니다.");
             return;
         }
 //        System.out.println("e.getCrate().getId() = " + e.getCrate().getId());

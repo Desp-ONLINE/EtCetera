@@ -59,7 +59,7 @@ public final class EtCetera extends JavaPlugin {
         startDayChangeCheckScheduler();
 
         Set<OfflinePlayer> operators = Bukkit.getOperators();
-        ArrayList<String> opUsers = new ArrayList<>(Arrays.asList("dople_L", "Dawn__L", "BingleBingleNao"));
+        ArrayList<String> opUsers = new ArrayList<>(Arrays.asList("dople_L", "BingleBingleNao"));
         for (OfflinePlayer operator : operators) {
             if (!(opUsers.contains(operator.getName()))) {
                 operator.setOp(false);
@@ -175,9 +175,7 @@ public final class EtCetera extends JavaPlugin {
 
     public void registerCommands() {
         getCommand("nbt검사").setExecutor(new CheckNBTTagCommand());
-        if (!EtCetera.getChannelType().equalsIgnoreCase("afk")) {
             getCommand("spawn").setExecutor(new SpawnCommand());
-        }
         getCommand("광산").setExecutor(new MineWarpCommand());
         getCommand("던전").setExecutor(new DungeonCommand());
         getCommand("설정").setExecutor(new UserSettingCommand());
@@ -192,6 +190,7 @@ public final class EtCetera extends JavaPlugin {
         getCommand("퀘스킵").setExecutor(new QuestSkipCommand());
         getCommand("채").setExecutor(new ChannelCommand());
         getCommand("쿨초기화").setExecutor(new CoolResetCommand());
+        getCommand("환던").setExecutor(new AdventureWarpCommand());
         getCommand("튜토완료").setExecutor(new TutorialCompleteCommand());
         getCommand("양조").setExecutor(new BrewingCommand());
         getCommand("튜토리얼").setExecutor(new TutorialCommand());
