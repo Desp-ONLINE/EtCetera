@@ -178,7 +178,7 @@ public class BasicListener implements Listener {
         Player player = e.getPlayer();
 
         e.setJoinMessage("");
-        if ((!player.hasPlayedBefore() && EtCetera.getChannelType().equals("lobby"))) {
+        if ((!player.hasPlayedBefore() && EtCetera.getChannelType().equals("lobby")) && EtCetera.getChannelNumber() == 1) {
             firstJoinCount++;
             String text = " §f摩 #8FFFAE" + player.getName() + " 님께서 서버에 &e첫 접속 #8FFFAE하셨습니다! 환영해주세요!";
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {

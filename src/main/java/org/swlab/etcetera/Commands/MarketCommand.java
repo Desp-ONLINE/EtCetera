@@ -18,6 +18,7 @@ import java.util.List;
 public class MarketCommand implements CommandExecutor {
 
     private long SELL_PERCENTAGE = 20;
+    private long SELL_PERCENTAGE_LOW_LOG_AMOUNT = 35;
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
@@ -113,9 +114,17 @@ public class MarketCommand implements CommandExecutor {
 //            averagePrice -= averagePrice / 100 * untransactedDays;
 //        }
 
+        long maximumPrice = 0;
+        long minimumPrice = 0;
         averagePrice *= itemInMainHand.getAmount();
-        long maximumPrice = averagePrice + averagePrice * SELL_PERCENTAGE / 100;
-        long minimumPrice = averagePrice - averagePrice * SELL_PERCENTAGE / 100;
+        if(TransactionLogRepository.getInstance().getLogAmount(id) < 5){
+            maximumPrice = averagePrice + averagePrice * SELL_PERCENTAGE_LOW_LOG_AMOUNT / 100;
+            minimumPrice = averagePrice - averagePrice * SELL_PERCENTAGE_LOW_LOG_AMOUNT / 100;
+        } else {
+            maximumPrice = averagePrice + averagePrice * SELL_PERCENTAGE / 100;
+            minimumPrice = averagePrice - averagePrice * SELL_PERCENTAGE / 100;
+        }
+
         NumberFormat formatter = NumberFormat.getInstance();
         if (averagePrice != 0) {
             if ((price > maximumPrice) || (price < minimumPrice)) {

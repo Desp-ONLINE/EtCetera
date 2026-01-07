@@ -66,6 +66,9 @@ public class UserSettingRepository {
     }
 
     public boolean isVisibleInformation(Player player) {
+        if(userSettingCache.get(player.getUniqueId().toString()) == null){
+            return false;
+        }
         return userSettingCache.get(player.getUniqueId().toString()).isVisibleInformation();
     }
 

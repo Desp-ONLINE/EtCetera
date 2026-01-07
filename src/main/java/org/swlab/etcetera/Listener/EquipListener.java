@@ -2,6 +2,7 @@ package org.swlab.etcetera.Listener;
 
 import net.Indyuce.inventory.api.event.ItemEquipEvent;
 import net.Indyuce.inventory.inventory.slot.SlotType;
+import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -20,6 +21,7 @@ import org.swlab.etcetera.Util.CommandUtil;
 public class EquipListener implements Listener {
     @EventHandler
     public void onEquipChestplate(ItemEquipEvent e) {
+
         Player player = e.getPlayer();
 
         if (e.getSlot() == null) {
@@ -64,6 +66,22 @@ public class EquipListener implements Listener {
                 leggingsMeta.setUnbreakable(true);
                 leggings.setItemMeta(leggingsMeta);
                 player.getInventory().setLeggings(leggings);
+            }
+        }
+        if(e.getInventory().getId().equals("ascend_inventory")){
+            ItemStack item = e.getItem();
+            String id = MMOItems.getID(item);
+            String slotID = e.getSlot().getId();
+            System.out.println(slotID);
+            if(slotID.equals("apocalypse2") && id.contains("성배")){
+                e.setCancelled(true);
+                player.sendMessage("§c 이 슬롯에는 아포칼립스 성배를 장착하실 수 없습니다.");
+                return;
+            }
+            if(slotID.equals("apocalypse3") && (id.contains("성배") || id.contains("로브"))){
+                e.setCancelled(true);
+                player.sendMessage("§c 이 슬롯에는 아포칼립스 성배 또는 아포칼립스 로브를 장착하실 수 없습니다.");
+                return;
             }
         }
     }

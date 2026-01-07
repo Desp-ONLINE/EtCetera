@@ -14,8 +14,10 @@ public class LevelUpListener implements Listener {
     @EventHandler
     public void onLevelup(PlayerLevelUpEvent e){
         e.getPlayer().setHealth(e.getPlayer().getMaxHealth());
+
+
         MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
-        mmoCoreAPI.getPlayerData(e.getPlayer()).giveAttributePoints(1);
+        mmoCoreAPI.getPlayerData(e.getPlayer()).giveAttributePoints(e.getNewLevel() - e.getOldLevel());
         if(e.getNewLevel() == 100){
             String message = "§e "+e.getPlayer().getName()+"§f 님께서 §c레벨 100§f을 달성하셨습니다! 축하해주세요!!";
             VelocityClient.getInstance().getConnectClient().send(BroadcastComponentVelocityListener.class, "§f");

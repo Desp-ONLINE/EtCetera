@@ -11,7 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.swlab.etcetera.Listener.TimeDungeonListener;
+import org.swlab.etcetera.Listener.FirstClearListener;
 
 import java.text.NumberFormat;
 import java.util.List;
@@ -22,7 +22,7 @@ public class TimeDungeonFirstClearCommand implements CommandExecutor {
 
         String clearedDungeonKey = strings[0];
         Player player = (Player) sender;
-        MongoCollection<Document> firstClearReward = TimeDungeonListener.firstClearReward;
+        MongoCollection<Document> firstClearReward = FirstClearListener.timeRaidFirstClearReward;
 
         player.sendMessage(ColorManager.format("#41B07A 해당 §cEXTREME #41B07A등급의 타임 던전 첫 클리어 보상 정보입니다."));
         player.sendMessage("§f");

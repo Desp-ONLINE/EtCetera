@@ -113,13 +113,18 @@ commands:
   엡실론:
     aliases: [ "dpqtlffhs" ]
   전체지급:
+  초월완료:
   퀘스킵:
   마나회복:
   쿨초기화:
   환던티켓지급:
+  일일퀘스트:
+    aliases: ["dlfdlfznptmxm", "일퀘", "dlfznp"]
   도플명령어:
   타임던전첫클리어보상:
   설정:
-    aliases: ["tjfwjd", "사용자설정", "tkdydwktjfwjd"]
+    aliases: [ "tjfwjd", "사용자설정", "tkdydwktjfwjd" ]
   환던:
-    aliases: ["ghksejs", "ㅎㄷ", "ge", "ghksdudejswjs"]
+    aliases: [ "ghksejs", "ㅎㄷ", "ge", "ghksdudejswjs" ]
+  사다리타기:
+    aliases: [ "tkekflxkrl", "보상뽑기", "qhtkdQhqrl" ]

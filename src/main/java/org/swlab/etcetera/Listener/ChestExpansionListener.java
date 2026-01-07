@@ -1,5 +1,6 @@
 package org.swlab.etcetera.Listener;
 
+import de.kinglol12345.Command.Command;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
@@ -10,11 +11,14 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.swlab.etcetera.EtCetera;
+import org.swlab.etcetera.Util.CommandUtil;
 
 public class ChestExpansionListener implements Listener {
 
     private String CASH_CHEST_EXPAND_ITEM_ID = "기타_캐시창고확장권";
     private String VOTE_CHEST_EXPAND_ITEM_ID = "기타_추천창고확장권";
+    private String GOLDEN_HARP_ITEM_ID = "기타_황금하프";
 
     @EventHandler
     public void onRightClickExpansionTicket(PlayerInteractEvent e) {
@@ -46,7 +50,7 @@ public class ChestExpansionListener implements Listener {
             }
 
             if (id.equals(VOTE_CHEST_EXPAND_ITEM_ID)) {
-                if(!player.hasPermission("mmochest.3")){
+                if (!player.hasPermission("mmochest.3")) {
                     ConsoleCommandSender consoleSender = Bukkit.getConsoleSender();
                     Bukkit.dispatchCommand(consoleSender, "lp user " + player.getName() + " permission set " + "mmochest." + 3);
                     player.sendMessage("§a   3번 창고 확장이 완료되었습니다.");
@@ -58,6 +62,25 @@ public class ChestExpansionListener implements Listener {
                     return;
                 }
                 player.sendMessage("§c 이미 3번 창고를 확장하셨습니다.");
+                return;
+            }
+
+            if (id.equals(GOLDEN_HARP_ITEM_ID)) {
+                if (!EtCetera.getChannelType().equals("lobby")) {
+                    player.sendMessage("§c 로비 채널에서만 사용 하실 수 있습니다.");
+                    return;
+                }
+                CommandUtil.runCommandAsOP(player, "인던 입장횟수초기화 " + player.getName() + " 8");
+                CommandUtil.runCommandAsOP(player, "인던 입장횟수초기화 " + player.getName() + " 9");
+                CommandUtil.runCommandAsOP(player, "인던 입장횟수초기화 " + player.getName() + " 10");
+                CommandUtil.runCommandAsOP(player, "인던 입장횟수초기화 " + player.getName() + " 11");
+                player.playSound(player, "minecraft:entity.player.levelup", 1, 1);
+                if (itemInMainHand.getAmount() > 1) {
+                    itemInMainHand.setAmount(itemInMainHand.getAmount() - 1);
+                } else {
+                    itemInMainHand.setAmount(0);
+                }
+                System.out.println("player.getName() = " + player.getName() + " 황금 하프 사용");
                 return;
             }
         }

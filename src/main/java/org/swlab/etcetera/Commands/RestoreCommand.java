@@ -15,6 +15,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.desp.babelTower.api.BabelTowerAPI;
+import org.dople.guidance.database.PlayerRepository;
+import org.dople.guidance.dto.PlayerDto;
 import org.jetbrains.annotations.NotNull;
 import org.swlab.etcetera.Database.DatabaseRegister;
 import org.swlab.etcetera.EtCetera;
@@ -35,11 +37,13 @@ public class RestoreCommand implements CommandExecutor {
         jobList.put("제피르", 5);
         jobList.put("루인드", 6);
         jobList.put("판", 7);
+        jobList.put("페이탈", 8);
         if (strings.length == 0) {
             player.sendMessage("");
             player.sendMessage(ColorManager.format("#25A79D /복구 [전직] [차수(2/3/4/각성)] §f- 해당 전직의 서를 복구받습니다. §7§o(ex: /복구 전직 2 - 2차 전직의 서를 복구 받습니다.)"));
             player.sendMessage(ColorManager.format("#25A79D /복구 버닝 §f- 버닝 완료 아이템을 복구 받습니다. 메인 퀘스트 41을 클리어 하고, 레벨이 45 이상이어야 합니다."));
             player.sendMessage(ColorManager.format("#25A79D /복구 바벨탑 §f- 내가 클리어 한 모든 바벨탑의 공략증을 획득합니다."));
+            player.sendMessage(ColorManager.format("#25A79D /복구 길라잡이 §f- 일부 받지 못한 길라잡이 보상을 수령합니다."));
             player.sendMessage("");
             return true;
         }
@@ -69,6 +73,11 @@ public class RestoreCommand implements CommandExecutor {
                 if (clearFloor >= 70) {
                     ItemStack item3 = MMOItems.plugin.getItem("MISCELLANEOUS", "퀘스트_바벨탑증표_70");
                     player.sendMessage("§a 아이템 복구가 완료되었습니다. (바벨탑 70층 공략증)");
+                    player.getInventory().addItem(item3);
+
+                }if (clearFloor >= 80) {
+                    ItemStack item3 = MMOItems.plugin.getItem("MISCELLANEOUS", "퀘스트_바벨탑증표_80");
+                    player.sendMessage("§a 아이템 복구가 완료되었습니다. (바벨탑 80층 공략증)");
                     player.getInventory().addItem(item3);
 
                 }
@@ -137,9 +146,20 @@ public class RestoreCommand implements CommandExecutor {
                 MMOMail.getInstance().getMailAPI().sendMail(player.getName(), mail);
                 player.sendMessage("§a 복구가 완료되었습니다! §7§o(/메일함)");
                 return true;
+            case "길라잡이":
+                PlayerDto playerData = PlayerRepository.getInstance().getPlayerData(player);
+                int id = playerData.getId();
+                if(id>=41){
+                    ItemStack item1 = MMOItems.plugin.getItem("TITLE", "칭호_ਜ");
+                    player.getInventory().addItem(item1);
+                } else {
+                    player.sendMessage("§c 42번째 길라잡이를 클리어 하셔야 합니다!");
+                }
+                return true;
             default:
                 player.sendMessage("");
                 player.sendMessage(ColorManager.format("#25A79D /복구 [전직] [차수] §f- 해당 전직의 서를 복구받습니다. §7§o(ex: /복구 전직 2 - 2차 전직의 서를 복구 받습니다.)"));
+                player.sendMessage(ColorManager.format("#25A79D /복구 길라잡이 §f- 일부 받지 못한 길라잡이 보상을 수령합니다."));
                 player.sendMessage(ColorManager.format("#25A79D /복구 버닝 §f- 버닝 완료 아이템을 복구 받습니다. 메인 퀘스트 41을 클리어 하고, 레벨이 45 이상이어야 합니다. "));
                 player.sendMessage("");
                 return true;

@@ -51,6 +51,7 @@ public class TeleportCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
 
         if(EtCetera.getChannelType().equals("lobby")){
+
             Player player = (Player) sender;
             MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
             insertDocument(player);

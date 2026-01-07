@@ -2,10 +2,15 @@ package org.swlab.etcetera.Listener;
 
 import com.binggre.mmodungeon.api.DungeonClearEvent;
 import com.binggre.mmodungeon.api.DungeonFailedEvent;
+import com.binggre.mmodungeon.api.DungeonQuitEvent;
+import com.binggre.mmodungeon.objects.PlayerDungeon;
 import io.lumine.mythic.lib.api.player.MMOPlayerData;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.swlab.etcetera.EtCetera;
+import org.swlab.etcetera.Util.CommandUtil;
 
 import java.util.List;
 
@@ -26,7 +31,8 @@ public class DungeonListener implements Listener {
     }
 
     @EventHandler
-    public void onDungeonClear(DungeonClearEvent e){
+    public void onDungeonClear(DungeonClearEvent e) {
+
 
         List<Player> members = e.getDungeonRoom().getMembers();
         for (Player member : members) {
@@ -34,6 +40,13 @@ public class DungeonListener implements Listener {
             mmoPlayerData.getCooldownMap().clearAllCooldowns();
         }
     }
+
+    @EventHandler
+    public void onDungeonQuit(DungeonFailedEvent e) {
+        for (Player player : e.getDungeonRoom().getMembers()) {
+            CommandUtil.runCommandAsOP(player, "spawn");
+
+        }
 //
 //    @EventHandler
 //    public void onDungeonClear(DungeonClearEvent e) {
@@ -72,4 +85,5 @@ public class DungeonListener implements Listener {
 //        }
 //    }
 
+    }
 }

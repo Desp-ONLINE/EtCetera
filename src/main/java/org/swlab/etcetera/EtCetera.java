@@ -167,7 +167,7 @@ public final class EtCetera extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new JumpMapListener(), this);
         Bukkit.getPluginManager().registerEvents(new GoldItemListener(), this);
         if (Bukkit.getPluginManager().isPluginEnabled("MMOGuild")) {
-            Bukkit.getPluginManager().registerEvents(new TimeDungeonListener(), this);
+            Bukkit.getPluginManager().registerEvents(new FirstClearListener(), this);
 
         }
         Bukkit.getPluginManager().registerEvents(new AFKListener(), this);
@@ -188,14 +188,17 @@ public final class EtCetera extends JavaPlugin {
         getCommand("도플명령어").setExecutor(new AdminCommand());
         getCommand("대결").setExecutor(new VersusCommand());
         getCommand("퀘스킵").setExecutor(new QuestSkipCommand());
+        getCommand("초월완료").setExecutor(new AscendCommand());
         getCommand("채").setExecutor(new ChannelCommand());
         getCommand("쿨초기화").setExecutor(new CoolResetCommand());
         getCommand("환던").setExecutor(new AdventureWarpCommand());
         getCommand("튜토완료").setExecutor(new TutorialCompleteCommand());
+        getCommand("일일퀘스트").setExecutor(new DailyQuestCommand());
         getCommand("양조").setExecutor(new BrewingCommand());
         getCommand("튜토리얼").setExecutor(new TutorialCommand());
         getCommand("텔레포트").setExecutor(new TeleportCommand());
         getCommand("쿠폰").setExecutor(new CouponCommand());
+        getCommand("사다리타기").setExecutor(new RandomLadderCommand());
         getCommand("합성").setExecutor(new MergeCommand());
         getCommand("전리품").setExecutor(new RewardSellCommand());
         getCommand("장사글").setExecutor(new TradeCommand());
