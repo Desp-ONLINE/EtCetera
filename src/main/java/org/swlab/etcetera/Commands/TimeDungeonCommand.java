@@ -8,12 +8,19 @@ import org.jetbrains.annotations.NotNull;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Util.CommandUtil;
 
+import java.util.Random;
+
 public class TimeDungeonCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         Player player = (Player) sender;
         if(!EtCetera.getChannelType().equals("lobby")){
-            CommandUtil.runCommandAsOP(player, "채널 워프 lobby 워프 이동 타임던전");
+            Random random = new Random();
+            int i = random.nextInt(0, 2);
+            if (i == 0) {
+                CommandUtil.runCommandAsOP(player, "채널 워프 lobby 워프 이동 타임던전");
+            }
+            CommandUtil.runCommandAsOP(player, "채널 워프 lobby2 워프 이동 타임던전");
             return true;
         }
         CommandUtil.runCommandAsOP(player, "워프 이동 타임던전");

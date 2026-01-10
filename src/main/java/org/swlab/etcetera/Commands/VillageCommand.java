@@ -12,6 +12,7 @@ import org.swlab.etcetera.Util.CommandUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class VillageCommand implements CommandExecutor, TabCompleter {
     @Override
@@ -37,7 +38,12 @@ public class VillageCommand implements CommandExecutor, TabCompleter {
                         player.sendMessage("§c  20레벨 미만은 엘븐하임에 출입할 수 없습니다.");
                         return false;
                     }
-                    CommandUtil.runCommandAsOP(player, "채널 워프 lobby 워프 이동 엘븐하임_입구");
+                    Random random = new Random();
+                    int i = random.nextInt(0, 2);
+                    if (i == 0) {
+                        CommandUtil.runCommandAsOP(player, "채널 워프 lobby 워프 이동 엘븐하임_입구");
+                    }
+                    CommandUtil.runCommandAsOP(player, "채널 워프 lobby2 워프 이동 엘븐하임_입구");
                 }
                 return false;
             case "칼리마":
@@ -53,7 +59,12 @@ public class VillageCommand implements CommandExecutor, TabCompleter {
                         player.sendMessage("§c  45레벨 미만은 칼리마에 출입할 수 없습니다.");
                         return false;
                     }
-                    CommandUtil.runCommandAsOP(player, "채널 워프 lobby 워프 이동 칼리마_입구");
+                    Random random = new Random();
+                    int i = random.nextInt(0, 2);
+                    if (i == 0) {
+                        CommandUtil.runCommandAsOP(player, "채널 워프 lobby 워프 이동 칼리마_입구");
+                    }
+                    CommandUtil.runCommandAsOP(player, "채널 워프 lobby2 워프 이동 칼리마_입구");
                 }
                 return false;
             case "인페리움":
@@ -69,7 +80,12 @@ public class VillageCommand implements CommandExecutor, TabCompleter {
                         player.sendMessage("§c  70레벨 미만은 인페리움에 출입할 수 없습니다.");
                         return false;
                     }
-                    CommandUtil.runCommandAsOP(player, "채널 워프 lobby 워프 이동 인페리움_입구");
+                    Random random = new Random();
+                    int i = random.nextInt(0, 2);
+                    if (i == 0) {
+                        CommandUtil.runCommandAsOP(player, "채널 워프 lobby 워프 이동 인페리움_입구");
+                    }
+                    CommandUtil.runCommandAsOP(player, "채널 워프 lobby2 워프 이동 인페리움_입구");
                 }
                 return false;
             case "아르크티카":
@@ -85,7 +101,12 @@ public class VillageCommand implements CommandExecutor, TabCompleter {
                         player.sendMessage("§c  100레벨 미만은 아르크티카에 출입할 수 없습니다.");
                         return false;
                     }
-                    CommandUtil.runCommandAsOP(player, "채널 워프 lobby 워프 이동 아르크티카_입구");
+                    Random random = new Random();
+                    int i = random.nextInt(0, 2);
+                    if (i == 0) {
+                        CommandUtil.runCommandAsOP(player, "채널 워프 lobby 워프 이동 아르크티카_입구");
+                    }
+                    CommandUtil.runCommandAsOP(player, "채널 워프 lobby2 워프 이동 아르크티카_입구");
                 }
                 return false;
             case "엡실론":
@@ -101,7 +122,12 @@ public class VillageCommand implements CommandExecutor, TabCompleter {
                         player.sendMessage("§c  130레벨 미만은 엡실론에 출입할 수 없습니다.");
                         return false;
                     }
-                    CommandUtil.runCommandAsOP(player, "채널 워프 lobby 워프 이동 엡실론_입구");
+                    Random random = new Random();
+                    int i = random.nextInt(0, 2);
+                    if (i == 0) {
+                        CommandUtil.runCommandAsOP(player, "채널 워프 lobby 워프 이동 엡실론_입구");
+                    }
+                    CommandUtil.runCommandAsOP(player, "채널 워프 lobby2 워프 이동 엡실론_입구");
                 }
                 return false;
         }
