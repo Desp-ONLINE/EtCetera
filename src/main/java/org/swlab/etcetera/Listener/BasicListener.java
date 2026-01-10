@@ -15,6 +15,7 @@ import io.lumine.mythic.bukkit.events.MythicProjectileHitEvent;
 import io.lumine.mythic.lib.api.event.PlayerAttackEvent;
 import io.lumine.mythic.lib.api.event.skill.PlayerCastSkillEvent;
 import io.lumine.mythic.lib.damage.DamageMetadata;
+import io.lumine.mythic.lib.glow.external.GlowAPIModule;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
 import net.Indyuce.mmocore.api.event.PlayerLevelUpEvent;
 import net.Indyuce.mmoitems.MMOItems;
@@ -33,6 +34,8 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Repositories.UserSettingRepository;
 import org.swlab.etcetera.Util.CommandUtil;
@@ -50,9 +53,9 @@ public class BasicListener implements Listener {
             return;
         }
 
-        if(e.getCause() == EntityDamageEvent.DamageCause.LAVA && e.getEntity() instanceof Player player){
+        if (e.getCause() == EntityDamageEvent.DamageCause.LAVA && e.getEntity() instanceof Player player) {
 
-            if(player.getWorld().getName().equals("raid")){
+            if (player.getWorld().getName().equals("raid")) {
                 double v = player.getMaxHealth() / 10;
                 player.damage(v);
                 e.setCancelled(true);
@@ -96,7 +99,6 @@ public class BasicListener implements Listener {
     }
 
 
-
     @EventHandler
     public void onFishingRodHitPlayer(PlayerFishEvent e) {
         if (e.getCaught() != null) {
@@ -106,8 +108,6 @@ public class BasicListener implements Listener {
             }
         }
     }
-
-
 
 
     @EventHandler
@@ -177,6 +177,7 @@ public class BasicListener implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
 
+
         e.setJoinMessage("");
         if ((!player.hasPlayedBefore() && EtCetera.getChannelType().equals("lobby")) && EtCetera.getChannelNumber() == 1) {
             firstJoinCount++;
@@ -208,8 +209,6 @@ public class BasicListener implements Listener {
         }, 40L);
 
 
-
-
         Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
             @Override
             public void run() {
@@ -235,13 +234,13 @@ public class BasicListener implements Listener {
 
     @EventHandler
     public void onRightClickToBlock(PlayerInteractEvent e) {
-            if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK)){
-                Location location = e.getClickedBlock().getLocation();
+        if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+            Location location = e.getClickedBlock().getLocation();
 
-                if(location.getBlockX() == 1193 && location.getBlockY() == 15 && location.getBlockZ() == 1229){
-                    e.getPlayer().teleport(new Location(Bukkit.getWorld("world"), 1146, 6, 1242));
-                }
+            if (location.getBlockX() == 1193 && location.getBlockY() == 15 && location.getBlockZ() == 1229) {
+                e.getPlayer().teleport(new Location(Bukkit.getWorld("world"), 1146, 6, 1242));
             }
+        }
 
 
     }
@@ -267,12 +266,35 @@ public class BasicListener implements Listener {
 
     }
 
+
+
+
     @EventHandler
-    public void potionEffectApplyEvent(EntityPotionEffectEvent e){
-        if(e.getModifiedType().equals(PotionEffectType.WITHER) && e.getEntity().getType().equals(EntityType.PLAYER)){
-            e.setCancelled(true);
+    public void onPotion(EntityPotionEffectEvent e) {
+
+        Entity entity = e.getEntity();
+
+        // 대상: 소 (다른 엔티티도 원하면 조건 제거)
+        if (!(entity instanceof Cow cow)) return;
+
+        PotionEffect newEffect = e.getNewEffect();
+        PotionEffect oldEffect = e.getOldEffect();
+
+        /* ---------------- 흉조 적용 / 갱신 ---------------- */
+        if (newEffect != null && newEffect.getType() == PotionEffectType.BAD_OMEN) {
+            cow.setGlowing(true);
+            return;
+        }
+
+        /* ---------------- 흉조 제거 / 만료 ---------------- */
+        if (oldEffect != null
+                && oldEffect.getType() == PotionEffectType.BAD_OMEN
+                && e.getAction() != EntityPotionEffectEvent.Action.ADDED) {
+
+            cow.setGlowing(false);
         }
     }
+
 
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -302,16 +324,16 @@ public class BasicListener implements Listener {
         String profess = mmoCoreAPI.getPlayerData(attacker).getProfess().getId();
         LivingEntity victim = e.getEntity();
         PotionEffect potionEffect = victim.getPotionEffect(PotionEffectType.BAD_OMEN);
-        if(victim instanceof Player player && e.getAttacker() instanceof Cow boss){
-            if(boss.hasPotionEffect(PotionEffectType.WEAKNESS)){
+        if (victim instanceof Player player && e.getAttacker() instanceof Cow boss) {
+            if (boss.hasPotionEffect(PotionEffectType.WEAKNESS)) {
                 PotionEffect potionEffect1 = boss.getPotionEffect(PotionEffectType.WEAKNESS);
                 damage -= damage * (potionEffect1.getAmplifier() + 1) * 10 / 100;
             }
         }
         if (potionEffect != null) {
-            if(profess.equals("페이탈")){
+            if (profess.equals("페이탈")) {
                 damage += damage * (potionEffect.getAmplifier() + 1) * 20 / 100;
-            } else{
+            } else {
                 damage += damage * (potionEffect.getAmplifier() + 1) * 15 / 100;
 
             }
@@ -326,14 +348,13 @@ public class BasicListener implements Listener {
         }
         if (e.getEntity() instanceof Cow) {
             if (profess.equals("인페르노")) {
-                if(e.getEntity().getFireTicks() > 0){
+                if (e.getEntity().getFireTicks() > 0) {
                     damage += damage * 15 / 100;
-                    
+
                 } else {
                     damage += damage * 5 / 100;
                 }
-            }
-            else if (profess.equals("판")) {
+            } else if (profess.equals("판")) {
                 damage += damage * 5 / 100;
             }
         }
@@ -394,7 +415,7 @@ public class BasicListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerUseNetherPortal(PlayerPortalEvent e){
+    public void onPlayerUseNetherPortal(PlayerPortalEvent e) {
         e.setCancelled(true);
     }
 
@@ -466,12 +487,13 @@ public class BasicListener implements Listener {
         }
     }
 
+
     @EventHandler
     public void onDeath(PlayerDeathEvent e) {
         Player player = e.getPlayer();
         e.setKeepInventory(true);
         e.setDeathMessage(null);
-        if(e.getPlayer().getWorld().getName().equals("raid")){
+        if (e.getPlayer().getWorld().getName().equals("raid")) {
             return;
         }
         int delay = 0;

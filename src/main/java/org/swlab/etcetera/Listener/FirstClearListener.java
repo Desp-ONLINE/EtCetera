@@ -79,6 +79,10 @@ public class FirstClearListener implements Listener {
     @EventHandler
     public void onRaidClear(DungeonClearEvent e){
 
+        boolean clear = e.getDungeonRoom().isClear();
+        if(!clear){
+            return;
+        }
         DungeonRoom dungeonRoom = e.getDungeonRoom();
         Dungeon connected = dungeonRoom.getConnected();
 

@@ -26,7 +26,7 @@ public class MarketCommand implements CommandExecutor {
         if (!EtCetera.getChannelType().equals("lobby")) {
             CommandUtil.runCommandAsOP(player, "채널 워프 lobby 시장");
         }
-        if(EtCetera.getChannelType().equals("lobby") && EtCetera.getChannelNumber() == 2){
+        if (EtCetera.getChannelType().equals("lobby") && EtCetera.getChannelNumber() == 2) {
             player.sendMessage("§c 시장 명령어는 로비 1채널에서만 사용하실 수 있습니다. §7§o(/채널 명령어를 통해 이동하실 수 있습니다.)");
             CommandUtil.runCommandAsOP(player, "채널 워프 lobby 시장");
             return false;
@@ -117,7 +117,7 @@ public class MarketCommand implements CommandExecutor {
         long maximumPrice = 0;
         long minimumPrice = 0;
         averagePrice *= itemInMainHand.getAmount();
-        if(TransactionLogRepository.getInstance().getLogAmount(id) < 5){
+        if (TransactionLogRepository.getInstance().getLogAmount(id) < 5) {
             maximumPrice = averagePrice + averagePrice * SELL_PERCENTAGE_LOW_LOG_AMOUNT / 100;
             minimumPrice = averagePrice - averagePrice * SELL_PERCENTAGE_LOW_LOG_AMOUNT / 100;
         } else {
