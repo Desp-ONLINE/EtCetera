@@ -59,7 +59,7 @@ public final class EtCetera extends JavaPlugin {
         startDayChangeCheckScheduler();
 
         Set<OfflinePlayer> operators = Bukkit.getOperators();
-        ArrayList<String> opUsers = new ArrayList<>(Arrays.asList("dople_L", "BingleBingleNao"));
+        ArrayList<String> opUsers = new ArrayList<>(Arrays.asList("dople_L", "BingleBangleSoju", "IDE_SoRim"));
         for (OfflinePlayer operator : operators) {
             if (!(opUsers.contains(operator.getName()))) {
                 operator.setOp(false);

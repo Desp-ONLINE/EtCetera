@@ -1,6 +1,7 @@
 package org.swlab.etcetera.Commands;
 
 import net.Indyuce.mmoitems.MMOItems;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -61,7 +62,7 @@ public class MarketCommand implements CommandExecutor {
                         if (!checkPriceInRange(price, player)) {
                             return false;
                         }
-                        CommandUtil.runCommandAsOP(player, "판매2 " + price);
+                        Bukkit.dispatchCommand(player, "판매2 " + price);
                     } catch (NumberFormatException | ParseException e) {
                         player.sendMessage("§c/시장 판매 <금액> : 입력이 잘못되었습니다.");
                     }
@@ -76,7 +77,7 @@ public class MarketCommand implements CommandExecutor {
                 } catch (ParseException e) {
                     throw new RuntimeException(e);
                 }
-                CommandUtil.runCommandAsOP(player, "판매2 " + price);
+                Bukkit.dispatchCommand(player, "판매2 " + price);
                 return false;
             case "회수":
                 CommandUtil.runCommandAsOP(player, "ah");
