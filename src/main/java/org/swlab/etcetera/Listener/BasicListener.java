@@ -98,6 +98,13 @@ public class BasicListener implements Listener {
         }
     }
 
+    @EventHandler
+    public void onDamage(EntityDamageEvent e){
+        if(e.getCause().equals(EntityDamageEvent.DamageCause.WITHER)){
+            e.setCancelled(true);
+        }
+    }
+
 
     @EventHandler
     public void onFishingRodHitPlayer(PlayerFishEvent e) {

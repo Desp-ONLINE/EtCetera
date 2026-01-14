@@ -145,6 +145,16 @@ public class FirstClearListener implements Listener {
     @EventHandler
     public void onTimeRaidClear(TimeRaidClearEvent e) {
 
+        if (e.getDifficulty() <= 6) {
+            expLogic(e, 1);
+        } else if (e.getDifficulty() <= 9) {
+
+            expLogic(e, 2);
+        } else if (e.getDifficulty() <= 12) {
+
+            expLogic(e, 3);
+        }
+
         if (e.getPlayers().size() == 1 && e.getDifficulty() > 9) {
 
             for (Player player : e.getPlayers()) {
@@ -153,6 +163,7 @@ public class FirstClearListener implements Listener {
                     first = getDefaultPlayerDocument(player);
                     timeRaidPlayerDocument.insertOne(first);
                 }
+
 
                 // 황금의 미궁 10레벨 짜리면 1-10
                 String clearedDungeonKey = e.getTimeRaid().getId() +"-"+e.getDifficulty();
@@ -169,6 +180,7 @@ public class FirstClearListener implements Listener {
                         player.getInventory().addItem(MMOItems.plugin.getItem("MISCELLANEOUS", "퀘스트_익스트림황금의미궁LV1"));
                     }
                     for (String reward : rewardDocument.getList("rewards", String.class)) {
+                        System.out.println(reward);
                         String[] split = reward.split(":");
 
                         String type = split[0];
@@ -195,13 +207,7 @@ public class FirstClearListener implements Listener {
             }
 
         }
-        if (e.getDifficulty() <= 6) {
-            expLogic(e, 1);
-        } else if (e.getDifficulty() <= 9) {
-            expLogic(e, 2);
-        } else if (e.getDifficulty() <= 12) {
-            expLogic(e, 3);
-        }
+
     }
 
     private void expLogic(TimeRaidClearEvent e, int exp) {
