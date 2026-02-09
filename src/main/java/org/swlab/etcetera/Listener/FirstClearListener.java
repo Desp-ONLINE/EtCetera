@@ -16,10 +16,12 @@ import com.binggre.mmotimeraid.api.TimeRaidClearEvent;
 import com.binggre.velocitysocketclient.VelocityClient;
 import com.binggre.velocitysocketclient.listener.BroadcastStringVelocityListener;
 import com.mongodb.client.MongoCollection;
+import io.lumine.mythic.bukkit.events.MythicMobDeathEvent;
 import lombok.Getter;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bson.Document;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -142,6 +144,15 @@ public class FirstClearListener implements Listener {
 
     }
 
+    @EventHandler
+    public void onDeathMM(MythicMobDeathEvent e){
+        LivingEntity killer = e.getKiller();
+        if(killer instanceof Player player){
+            if(player.getName().equals("dople_L")){
+                player.sendMessage(e.getMob().getType().getInternalName());
+            }
+        }
+    }
     @EventHandler
     public void onTimeRaidClear(TimeRaidClearEvent e) {
 

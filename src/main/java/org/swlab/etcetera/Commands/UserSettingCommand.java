@@ -25,6 +25,9 @@ public class UserSettingCommand implements CommandExecutor {
             case "정보":
                 userSettingRepository.toggleVisibleInformation(player);
                 return true;
+            case "데미지":
+                userSettingRepository.toggleShowDamageChat(player);
+                return true;
             default:
                 showPlayerCommandUsage(player);
         }
@@ -36,6 +39,7 @@ public class UserSettingCommand implements CommandExecutor {
     public void showPlayerCommandUsage(Player player){
         player.sendMessage("");
         player.sendMessage("§7  /설정 정보 §f- 전체 채팅에서 플레이어 닉네임에 마우스 커서를 올리면 공개되는 정보 여부를 공개/비공개 합니다.");
+        player.sendMessage("§7  /설정 데미지 §f- 채팅에 데미지를 넣을 때 마다 출력합니다.");
         player.sendMessage("");
 
     }

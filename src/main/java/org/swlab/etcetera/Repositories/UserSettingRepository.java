@@ -2,14 +2,8 @@ package org.swlab.etcetera.Repositories;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.ReplaceOptions;
-import lombok.Getter;
 import org.bson.Document;
-import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 import org.swlab.etcetera.Database.DatabaseRegister;
 import org.swlab.etcetera.Dto.UserSettingDTO;
 
@@ -46,8 +40,12 @@ public class UserSettingRepository {
 
         String uuid = document.getString("uuid");
         Boolean isVisibleInformation = document.getBoolean("isVisibleInformation");
+        Boolean showDamageChat = document.getBoolean("showDamageChat");
+        if(showDamageChat == null){
+            showDamageChat = false;
+        }
 
-        UserSettingDTO userSettingDTO = UserSettingDTO.builder().uuid(uuid).isVisibleInformation(isVisibleInformation).build();
+        UserSettingDTO userSettingDTO = UserSettingDTO.builder().uuid(uuid).isVisibleInformation(isVisibleInformation).showDamageChat(showDamageChat).build();
 
         userSettingCache.put(uuid, userSettingDTO);
 
@@ -64,17 +62,36 @@ public class UserSettingRepository {
         }
         userSettingCache.put(player.getUniqueId().toString(), userSettingDTO);
     }
+    public void toggleShowDamageChat(Player player) {
+        boolean isShowDamageChat = isShowDamageChat(player);
+        UserSettingDTO userSettingDTO = userSettingCache.get(player.getUniqueId().toString());
+        userSettingDTO.setShowDamageChat(!isShowDamageChat);
+        if (isShowDamageChat) {
+            player.sendMessage("§e 이제 데미지가 채팅에 출력되지 않습니다.");
+        } else {
+            player.sendMessage("§e 이제 데미지가 채팅에 출력됩니다.");
+        }
+        userSettingCache.put(player.getUniqueId().toString(), userSettingDTO);
+    }
 
     public boolean isVisibleInformation(Player player) {
-        if(userSettingCache.get(player.getUniqueId().toString()) == null){
+        if (userSettingCache.get(player.getUniqueId().toString()) == null) {
             return false;
         }
         return userSettingCache.get(player.getUniqueId().toString()).isVisibleInformation();
     }
 
+    public boolean isShowDamageChat(Player player) {
+        if (userSettingCache.get(player.getUniqueId().toString()) == null) {
+            return false;
+        }
+        return userSettingCache.get(player.getUniqueId().toString()).isShowDamageChat();
+    }
+
     public void saveUserSetting(Player player) {
         Document document = userSettingCollection.find(new Document("uuid", player.getUniqueId().toString())).first();
         document.append("isVisibleInformation", isVisibleInformation(player));
+        document.append("showDamageChat", isShowDamageChat(player));
 
         userSettingCollection.replaceOne(new Document("uuid", player.getUniqueId().toString()), document, new ReplaceOptions().upsert(true));
     }
@@ -82,7 +99,8 @@ public class UserSettingRepository {
     public Document insertDefaultDocument(Player player) {
         Document document = new Document()
                 .append("uuid", player.getUniqueId().toString())
-                .append("isVisibleInformation", true);
+                .append("isVisibleInformation", true)
+                .append("showDamageChat", true);
         userSettingCollection.insertOne(document);
 
         return document;

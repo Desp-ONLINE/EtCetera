@@ -17,7 +17,7 @@ public class CrateListener implements Listener {
 
     public static ArrayList<Player> canOpen = new ArrayList<>();
 
-    public static long openDelay = 20L;
+    public static long openDelay = 10L;
 
     @EventHandler
     public void onCrateOpen(CrateOpenEvent e){

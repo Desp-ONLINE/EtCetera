@@ -70,10 +70,10 @@ public class ChestExpansionListener implements Listener {
                     player.sendMessage("§c 로비 채널에서만 사용 하실 수 있습니다.");
                     return;
                 }
-                CommandUtil.runCommandAsOP(player, "인던 입장횟수초기화 " + player.getName() + " 8");
-                CommandUtil.runCommandAsOP(player, "인던 입장횟수초기화 " + player.getName() + " 9");
-                CommandUtil.runCommandAsOP(player, "인던 입장횟수초기화 " + player.getName() + " 10");
-                CommandUtil.runCommandAsOP(player, "인던 입장횟수초기화 " + player.getName() + " 11");
+                CommandUtil.runCommandAsOP(player, "인던 입장횟수초기화 " + player.getName() + " 109");
+                CommandUtil.runCommandAsOP(player, "인던 입장횟수초기화 " + player.getName() + " 110");
+                CommandUtil.runCommandAsOP(player, "인던 입장횟수초기화 " + player.getName() + " 111");
+                CommandUtil.runCommandAsOP(player, "인던 입장횟수초기화 " + player.getName() + " 112");
                 player.playSound(player, "minecraft:entity.player.levelup", 1, 1);
                 if (itemInMainHand.getAmount() > 1) {
                     itemInMainHand.setAmount(itemInMainHand.getAmount() - 1);

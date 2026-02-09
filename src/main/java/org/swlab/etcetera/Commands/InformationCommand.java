@@ -1,9 +1,11 @@
 package org.swlab.etcetera.Commands;
 
+import com.binggre.binggreapi.utils.ColorManager;
 import com.binggre.binggreapi.utils.NumberUtil;
 import io.lumine.mythic.lib.api.player.MMOPlayerData;
 import io.lumine.mythic.lib.api.stat.StatMap;
 import io.lumine.mythic.lib.api.stat.modifier.StatModifier;
+import org.bukkit.Color;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -31,6 +33,7 @@ public class InformationCommand implements CommandExecutor {
         double movementSpeed = Math.round(statMap.getStat("MOVEMENT_SPEED") * 100) / 100.0;
 
         double additionalExperience = Math.round(statMap.getStat("ADDITIONAL_EXPERIENCE") * 100) / 100.0;
+        double customBossdamage = Math.round(statMap.getStat("CUSTOM_BOSSDAMAGE") * 100) / 100.0;
 
         long maxHealth = Math.round(health);
         NumberFormat numberFormat = NumberFormat.getInstance();
@@ -62,6 +65,10 @@ public class InformationCommand implements CommandExecutor {
         player.sendMessage(" ");
         player.sendMessage("§f  Ӻ §a경험치 획득량: §f+" + numberFormat.format(additionalExperience) + "%");
         sendDetailedInfo(player, statMap, "ADDITIONAL_EXPERIENCE");
+
+        player.sendMessage(" ");
+        player.sendMessage(ColorManager.format("§f  ｦ #8C5FBA보스 대상 공격력: §f+") + numberFormat.format(customBossdamage) + "%");
+        sendDetailedInfo(player, statMap, "CUSTOM_BOSSDAMAGE");
 
         player.sendMessage("§7§o    ※ /스텟 을 통한 스텟은 따로 표시되지 않습니다.");
 

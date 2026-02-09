@@ -2,6 +2,7 @@ package org.swlab.etcetera.Listener;
 
 import com.binggre.binggreapi.utils.ColorManager;
 import com.binggre.mmotimereset.api.DailyResetEvent;
+import com.binggre.mmotimereset.api.WeeklyResetEvent;
 import com.binggre.velocitysocketclient.VelocityClient;
 import de.kinglol12345.GUIPlus.events.GUIClickEvent;
 import fr.nocsy.mcpets.api.MCPetsAPI;
@@ -9,11 +10,15 @@ import fr.nocsy.mcpets.data.Pet;
 import fr.phoenixdevt.profiles.event.ProfileSelectEvent;
 import io.lumine.mythic.api.adapters.AbstractEntity;
 import io.lumine.mythic.api.skills.SkillCaster;
+import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.bukkit.adapters.BukkitPlayer;
 import io.lumine.mythic.bukkit.events.MythicDamageEvent;
 import io.lumine.mythic.bukkit.events.MythicProjectileHitEvent;
+import io.lumine.mythic.core.mobs.ActiveMob;
+import io.lumine.mythic.core.skills.auras.AuraRegistry;
 import io.lumine.mythic.lib.api.event.PlayerAttackEvent;
 import io.lumine.mythic.lib.api.event.skill.PlayerCastSkillEvent;
+import io.lumine.mythic.lib.api.player.MMOPlayerData;
 import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.glow.external.GlowAPIModule;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
@@ -37,6 +42,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import org.swlab.etcetera.EtCetera;
+import org.swlab.etcetera.Repositories.RaidCoinRepository;
 import org.swlab.etcetera.Repositories.UserSettingRepository;
 import org.swlab.etcetera.Util.CommandUtil;
 import org.swlab.etcetera.Util.NameTagUtil;
@@ -44,63 +50,14 @@ import org.swlab.etcetera.Util.PetUtil;
 
 public class BasicListener implements Listener {
 
+
     int firstJoinCount = 0;
 
-    @EventHandler
-    public void cancelInstantAttack(EntityDamageEvent e) {
-        if (e.getCause() == EntityDamageEvent.DamageCause.FIRE || e.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK) {
-            e.setCancelled(true);
-            return;
-        }
 
-        if (e.getCause() == EntityDamageEvent.DamageCause.LAVA && e.getEntity() instanceof Player player) {
-
-            if (player.getWorld().getName().equals("raid")) {
-                double v = player.getMaxHealth() / 10;
-                player.damage(v);
-                e.setCancelled(true);
-                return;
-            }
-        }
-        if (e.getCause() == EntityDamageEvent.DamageCause.FALL) {
-            e.setCancelled(true);
-            return;
-        }
-//        if (e.getCause() == EntityDamageEvent.DamageCause.SUFFOCATION) {
-//            if (!(e.getEntity() instanceof Player)) {
-//                e.getEntity().remove();
-//            }
-//        }
-        //로비채널에서 world에선 데미지 입는거 cancel
-        if ((e.getEntity().getWorld().getName().equals("world") || e.getEntity().getWorld().getName().equals("fishing") || e.getEntity().getWorld().getName().equals("tuto")) && EtCetera.getChannelType().equals("lobby") && e.getEntity() instanceof Player) {
-            e.setCancelled(true);
-        }
-    }
 
     @EventHandler
-    public void onChunkUnload(ChunkUnloadEvent e) {
-        if (e.getWorld().getName().equals("raid")) {
-
-        }
-//        e.getChunk().addPluginChunkTicket(EtCetera.getInstance());
-    }
-
-    @EventHandler
-    public void onMythicHitEvent(MythicDamageEvent e) {
-        if (!e.getTarget().getWorld().getName().equals("raid")) {
-            return;
-        }
-        SkillCaster caster = e.getCaster();
-        AbstractEntity target = e.getTarget();
-        if (caster.getEntity().isPlayer() && target.isPlayer()) {
-            e.setCancelled(true);
-
-        }
-    }
-
-    @EventHandler
-    public void onDamage(EntityDamageEvent e){
-        if(e.getCause().equals(EntityDamageEvent.DamageCause.WITHER)){
+    public void onDamage(EntityDamageEvent e) {
+        if (e.getCause().equals(EntityDamageEvent.DamageCause.WITHER)) {
             e.setCancelled(true);
         }
     }
@@ -159,6 +116,17 @@ public class BasicListener implements Listener {
             e.setCancelled(true);
         }
     }
+    
+    @EventHandler
+    public void onDying(PlayerInteractEntityEvent e){
+        if(e.getPlayer().isOp()){
+            return;
+        }
+        if(e.getRightClicked() instanceof Wolf wolf){
+            e.setCancelled(true);
+        }
+    }
+
 
 
     @EventHandler
@@ -235,8 +203,15 @@ public class BasicListener implements Listener {
                 player.setHealth(player.getMaxHealth());
             }
         }, 20L);
-        UserSettingRepository.getInstance().loadUserSetting(player);
 
+        UserSettingRepository.getInstance().loadUserSetting(player);
+        RaidCoinRepository.getInstance().loadUserData(player);
+
+    }
+
+    @EventHandler
+    public void onWeeklyChange(WeeklyResetEvent e){
+        RaidCoinRepository.getInstance().resetDatas();
     }
 
     @EventHandler
@@ -269,11 +244,10 @@ public class BasicListener implements Listener {
             PetUtil.savePlayerPetData(player, id);
         }
         UserSettingRepository.getInstance().saveUserSetting(player);
+        RaidCoinRepository.getInstance().saveUserData(player);
 
 
     }
-
-
 
 
     @EventHandler
@@ -302,103 +276,6 @@ public class BasicListener implements Listener {
         }
     }
 
-
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerAttack(PlayerAttackEvent e) {
-
-        if (!e.getAttacker().getPlayer().isOp()) {
-            if (e.getEntity() instanceof Player) {
-                e.setCancelled(true);
-            }
-        }
-        MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
-        double damage = e.getDamage().getDamage();
-
-
-        if (EtCetera.getChannelType().equals("dungeon")) {
-            if (e.getAttacker() instanceof Player && e.getEntity() instanceof Player) {
-                e.setCancelled(true);
-            }
-        }
-        if (EtCetera.getChannelType().equals("dungeon") && e.getEntity() instanceof Player) {
-            e.setCancelled(true);
-            return;
-        }
-
-
-        Player attacker = e.getAttacker().getPlayer();
-        String profess = mmoCoreAPI.getPlayerData(attacker).getProfess().getId();
-        LivingEntity victim = e.getEntity();
-        PotionEffect potionEffect = victim.getPotionEffect(PotionEffectType.BAD_OMEN);
-        if (victim instanceof Player player && e.getAttacker() instanceof Cow boss) {
-            if (boss.hasPotionEffect(PotionEffectType.WEAKNESS)) {
-                PotionEffect potionEffect1 = boss.getPotionEffect(PotionEffectType.WEAKNESS);
-                damage -= damage * (potionEffect1.getAmplifier() + 1) * 10 / 100;
-            }
-        }
-        if (potionEffect != null) {
-            if (profess.equals("페이탈")) {
-                damage += damage * (potionEffect.getAmplifier() + 1) * 20 / 100;
-            } else {
-                damage += damage * (potionEffect.getAmplifier() + 1) * 15 / 100;
-
-            }
-        }
-        if (e.getEntity() instanceof Zombie) {
-            if (profess.equals("파우스트")) {
-                damage += damage * 11 / 100;
-            }
-            if (profess.equals("제피르")) {
-                damage += damage * 8 / 100;
-            }
-        }
-        if (e.getEntity() instanceof Cow) {
-            if (profess.equals("인페르노")) {
-                if (e.getEntity().getFireTicks() > 0) {
-                    damage += damage * 15 / 100;
-
-                } else {
-                    damage += damage * 5 / 100;
-                }
-            } else if (profess.equals("판")) {
-                damage += damage * 5 / 100;
-            }
-        }
-        if (attacker.hasPotionEffect(PotionEffectType.INCREASE_DAMAGE)) {
-            damage += damage * ((attacker.getPotionEffect(PotionEffectType.INCREASE_DAMAGE).getAmplifier() + 1) * 10) / 100;
-        }
-        double originalDamage = e.getDamage().getDamage();
-        DamageMetadata damageMetadata = e.getDamage().add(damage - originalDamage);
-        double fixedDamage = Math.round(damageMetadata.getDamage());
-
-        boolean skillCriticalStrike = e.getAttack().getDamage().isSkillCriticalStrike();
-
-        if (victim.getType().equals(EntityType.COW)) {
-//            DamageIndicatorUtil.summonTextDisplay(attacker, fixedDamage, e.getEntity(), skillCriticalStrike);
-        }
-
-
-        if (skillCriticalStrike) {
-            e.getAttacker().getPlayer().sendTitle("", "§f                                                                   ᎌ §6" + fixedDamage, 5, 10, 5);
-            return;
-        }
-        attacker.sendTitle("", "§f                                                                   ᎈ §c" + fixedDamage, 5, 10, 5);
-
-
-    }
-
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void cancelInstantAttack(EntityDamageByEntityEvent e) {
-        if (e.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK && e.getDamager() instanceof Player) { // 기본공격 캔슬
-            e.setCancelled(true);
-            return;
-        }
-        if ((e.getEntity().getWorld().getName().equals("world") || e.getEntity().getWorld().getName().equals("fishing") || e.getEntity().getWorld().getName().equals("tuto")) && EtCetera.getChannelType().equals("lobby") && e.getEntity() instanceof Player) {
-            e.setCancelled(true);
-        }
-    }
 
     @EventHandler
     public void onFireTick(BlockIgniteEvent e) {

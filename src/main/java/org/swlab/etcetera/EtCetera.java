@@ -17,6 +17,7 @@ import org.swlab.etcetera.Database.DatabaseRegister;
 import org.swlab.etcetera.Listener.*;
 import org.swlab.etcetera.Placeholder.CooldownPlaceholder;
 import org.swlab.etcetera.Placeholder.LevelPlaceholder;
+import org.swlab.etcetera.Repositories.RaidCoinRepository;
 import org.swlab.etcetera.Repositories.UserSettingRepository;
 import org.swlab.etcetera.Util.PetUtil;
 
@@ -67,6 +68,7 @@ public final class EtCetera extends JavaPlugin {
         }
         startAutoNotice();
         loadAllDatas();
+        RaidCoinRepository.getInstance().loadCoinData();
         SkillCooldownNotice.scheduleStart();
 
 
@@ -90,7 +92,10 @@ public final class EtCetera extends JavaPlugin {
         for (Player player : Bukkit.getOnlinePlayers()) {
             PetUtil.loadPlayerPetData(player);
             UserSettingRepository.getInstance().loadUserSetting(player);
+            DataLoadListener.getInstance().putPlayerData(player);
+            RaidCoinRepository.getInstance().loadUserData(player);
         }
+
     }
 
     public void saveAllDatas() {
@@ -99,9 +104,10 @@ public final class EtCetera extends JavaPlugin {
             if (!(activePet == null)) {
                 String id = activePet.getId();
                 PetUtil.savePlayerPetData(player, id);
-                UserSettingRepository.getInstance().saveUserSetting(player);
 
             }
+            UserSettingRepository.getInstance().saveUserSetting(player);
+            RaidCoinRepository.getInstance().saveUserData(player);
         }
     }
 
@@ -160,11 +166,14 @@ public final class EtCetera extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new BabelListener(), this);
         Bukkit.getPluginManager().registerEvents(new ClassChangeListener(), this);
         Bukkit.getPluginManager().registerEvents(new MiningAndFarmingListener(), this);
+        Bukkit.getPluginManager().registerEvents(new DamageListener(), this);
         Bukkit.getPluginManager().registerEvents(new DialogSendListener(), this);
         Bukkit.getPluginManager().registerEvents(new ChestExpansionListener(), this);
         Bukkit.getPluginManager().registerEvents(new ConsumableListener(), this);
+        Bukkit.getPluginManager().registerEvents(new DataLoadListener(), this);
         Bukkit.getPluginManager().registerEvents(new ModelEngineListener(), this);
         Bukkit.getPluginManager().registerEvents(new JumpMapListener(), this);
+        Bukkit.getPluginManager().registerEvents(new UpgradeListener(), this);
         Bukkit.getPluginManager().registerEvents(new GoldItemListener(), this);
         if (Bukkit.getPluginManager().isPluginEnabled("MMOGuild")) {
             Bukkit.getPluginManager().registerEvents(new FirstClearListener(), this);
@@ -181,10 +190,12 @@ public final class EtCetera extends JavaPlugin {
         getCommand("설정").setExecutor(new UserSettingCommand());
         getCommand("아포칼립스").setExecutor(new ApocalypseCommand());
         getCommand("쓰레기통").setExecutor(new TrashcanCommand());
+        getCommand("일괄분해").setExecutor(new DecompositeCommand());
         getCommand("UI").setExecutor(new UICommand());
         getCommand("마나회복").setExecutor(new ManaCommand());
         getCommand("장비").setExecutor(new AccCommand());
         getCommand("강화").setExecutor(new ReinforceCommand());
+        getCommand("보스코인").setExecutor(new RaidCoinCommand());
         getCommand("도플명령어").setExecutor(new AdminCommand());
         getCommand("대결").setExecutor(new VersusCommand());
         getCommand("퀘스킵").setExecutor(new QuestSkipCommand());

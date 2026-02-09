@@ -67,6 +67,10 @@ public class BasicWeaponCommand implements CommandExecutor {
                         ItemStack jobItem = MMOItems.plugin.getItem("JOB_EQUIPMENT", "긍지_오베론2");
                         player.getInventory().addItem(jobItem);
                     }
+                    if (playerClass.getName().equals("제피르")) {
+                        ItemStack jobItem = MMOItems.plugin.getItem("JOB_EQUIPMENT", "긍지_제피르2");
+                        player.getInventory().addItem(jobItem);
+                    }
                     ItemStack basicWeapon = MMOItems.plugin.getItem("SWORD", "직업무기_2" + playerClass.getName() + "0");
                     player.getInventory().addItem(basicWeapon);
                     player.sendMessage("");
@@ -90,6 +94,9 @@ public class BasicWeaponCommand implements CommandExecutor {
                     }
                     if (playerClass.getName().equals("오베론")) {
                         ItemStack jobItem = MMOItems.plugin.getItem("JOB_EQUIPMENT", "긍지_오베론3");
+                        player.getInventory().addItem(jobItem);
+                    }if (playerClass.getName().equals("제피르")) {
+                        ItemStack jobItem = MMOItems.plugin.getItem("JOB_EQUIPMENT", "긍지_제피르3");
                         player.getInventory().addItem(jobItem);
                     }
                     ItemStack basicWeapon = MMOItems.plugin.getItem("SWORD", "직업무기_3" + playerClass.getName() + "0");
@@ -115,6 +122,9 @@ public class BasicWeaponCommand implements CommandExecutor {
                     if (playerClass.getName().equals("오베론")) {
                         ItemStack jobItem = MMOItems.plugin.getItem("JOB_EQUIPMENT", "긍지_오베론4");
                         player.getInventory().addItem(jobItem);
+                    }if (playerClass.getName().equals("제피르")) {
+                        ItemStack jobItem = MMOItems.plugin.getItem("JOB_EQUIPMENT", "긍지_제피르4");
+                        player.getInventory().addItem(jobItem);
                     }
                     ItemStack basicWeapon = MMOItems.plugin.getItem("SWORD", "직업무기_4" + playerClass.getName() + "0");
                     player.getInventory().addItem(basicWeapon);
@@ -138,6 +148,9 @@ public class BasicWeaponCommand implements CommandExecutor {
                     }if (playerClass.getName().equals("오베론")) {
                         ItemStack jobItem = MMOItems.plugin.getItem("JOB_EQUIPMENT", "긍지_오베론5");
                         player.getInventory().addItem(jobItem);
+                    }if (playerClass.getName().equals("제피르")) {
+                        ItemStack jobItem = MMOItems.plugin.getItem("JOB_EQUIPMENT", "긍지_제피르5");
+                        player.getInventory().addItem(jobItem);
                     }
                     ItemStack basicWeapon = MMOItems.plugin.getItem("SWORD", "직업무기_5" + playerClass.getName() + "0");
                     player.getInventory().addItem(basicWeapon);
@@ -158,6 +171,9 @@ public class BasicWeaponCommand implements CommandExecutor {
                 }
                 if (playerClass.getName().equals("오베론")) {
                     ItemStack jobItem = MMOItems.plugin.getItem("JOB_EQUIPMENT", "긍지_오베론1");
+                    player.getInventory().addItem(jobItem);
+                }if (playerClass.getName().equals("제피르")) {
+                    ItemStack jobItem = MMOItems.plugin.getItem("JOB_EQUIPMENT", "긍지_제피르1");
                     player.getInventory().addItem(jobItem);
                 }
                 ItemStack basicWeapon = MMOItems.plugin.getItem("SWORD", "직업무기_1" + playerClass.getName() + "0");

@@ -41,7 +41,7 @@ public class RestoreCommand implements CommandExecutor {
         if (strings.length == 0) {
             player.sendMessage("");
             player.sendMessage(ColorManager.format("#25A79D /복구 [전직] [차수(2/3/4/각성)] §f- 해당 전직의 서를 복구받습니다. §7§o(ex: /복구 전직 2 - 2차 전직의 서를 복구 받습니다.)"));
-            player.sendMessage(ColorManager.format("#25A79D /복구 버닝 §f- 버닝 완료 아이템을 복구 받습니다. 메인 퀘스트 41을 클리어 하고, 레벨이 45 이상이어야 합니다."));
+//            player.sendMessage(ColorManager.format("#25A79D /복구 버닝 §f- 버닝 완료 아이템을 복구 받습니다. 메인 퀘스트 41을 클리어 하고, 레벨이 45 이상이어야 합니다."));
             player.sendMessage(ColorManager.format("#25A79D /복구 바벨탑 §f- 내가 클리어 한 모든 바벨탑의 공략증을 획득합니다."));
             player.sendMessage(ColorManager.format("#25A79D /복구 길라잡이 §f- 일부 받지 못한 길라잡이 보상을 수령합니다."));
             player.sendMessage("");
@@ -80,7 +80,12 @@ public class RestoreCommand implements CommandExecutor {
                     player.sendMessage("§a 아이템 복구가 완료되었습니다. (바벨탑 80층 공략증)");
                     player.getInventory().addItem(item3);
 
-                }
+                }if (clearFloor >= 90) {
+                ItemStack item3 = MMOItems.plugin.getItem("MISCELLANEOUS", "퀘스트_바벨탑증표_90");
+                player.sendMessage("§a 아이템 복구가 완료되었습니다. (바벨탑 90층 공략증)");
+                player.getInventory().addItem(item3);
+
+            }
                 return false;
             case "전직":
                 if (strings[1].equals("2")) {
@@ -123,29 +128,29 @@ public class RestoreCommand implements CommandExecutor {
                         return false;
                     }
                 }
-            case "버닝":
-                DatabaseRegister databaseRegister = DatabaseRegister.getInstance();
-                MongoCollection<Document> burningLog = databaseRegister.getMongoDatabase().getCollection("BurningLog");
-                Document first = burningLog.find(new Document("uuid", player.getUniqueId().toString())).first();
-                if (first != null) {
-                    player.sendMessage("§c 이미 붉은 특수 물약을 획득했습니다.");
-                    return false;
-                }
-                MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
-                int level = mmoCoreAPI.getPlayerData(player).getLevel();
-                if (!(BeautyQuests.getInstance().getPlayersManager().getAccount(player).getQuestDatas(BeautyQuests.getInstance().getAPI().getQuestsManager().getQuest(41)).isFinished()) && level < 45) {
-                    player.sendMessage("§c 레벨이 45보다 낮거나, 메인 퀘스트 41을 아직 클리어 하지 않으셨습니다!");
-                    return false;
-                }
-                Document document = new Document("uuid", player.getUniqueId().toString()).append("received", true);
-                burningLog.insertOne(document);
-                ItemStack item = MMOItems.plugin.getItem("MISCELLANEOUS", "기타_붉은특수물약");
-                List<ItemStack> itemStackList = new ArrayList<>();
-                itemStackList.add(item);
-                Mail mail = MMOMail.getInstance().getMailAPI().createMail("관리자", "버닝 아이템 보상입니다.", 0, itemStackList);
-                MMOMail.getInstance().getMailAPI().sendMail(player.getName(), mail);
-                player.sendMessage("§a 복구가 완료되었습니다! §7§o(/메일함)");
-                return true;
+//            case "버닝":
+//                DatabaseRegister databaseRegister = DatabaseRegister.getInstance();
+//                MongoCollection<Document> burningLog = databaseRegister.getMongoDatabase().getCollection("BurningLog");
+//                Document first = burningLog.find(new Document("uuid", player.getUniqueId().toString())).first();
+//                if (first != null) {
+//                    player.sendMessage("§c 이미 붉은 특수 물약을 획득했습니다.");
+//                    return false;
+//                }
+//                MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
+//                int level = mmoCoreAPI.getPlayerData(player).getLevel();
+//                if (!(BeautyQuests.getInstance().getPlayersManager().getAccount(player).getQuestDatas(BeautyQuests.getInstance().getAPI().getQuestsManager().getQuest(41)).isFinished()) && level < 45) {
+//                    player.sendMessage("§c 레벨이 45보다 낮거나, 메인 퀘스트 41을 아직 클리어 하지 않으셨습니다!");
+//                    return false;
+//                }
+//                Document document = new Document("uuid", player.getUniqueId().toString()).append("received", true);
+//                burningLog.insertOne(document);
+//                ItemStack item = MMOItems.plugin.getItem("MISCELLANEOUS", "기타_붉은특수물약");
+//                List<ItemStack> itemStackList = new ArrayList<>();
+//                itemStackList.add(item);
+//                Mail mail = MMOMail.getInstance().getMailAPI().createMail("관리자", "버닝 아이템 보상입니다.", 0, itemStackList);
+//                MMOMail.getInstance().getMailAPI().sendMail(player.getName(), mail);
+//                player.sendMessage("§a 복구가 완료되었습니다! §7§o(/메일함)");
+//                return true;
             case "길라잡이":
                 PlayerDto playerData = PlayerRepository.getInstance().getPlayerData(player);
                 int id = playerData.getId();
@@ -160,7 +165,7 @@ public class RestoreCommand implements CommandExecutor {
                 player.sendMessage("");
                 player.sendMessage(ColorManager.format("#25A79D /복구 [전직] [차수] §f- 해당 전직의 서를 복구받습니다. §7§o(ex: /복구 전직 2 - 2차 전직의 서를 복구 받습니다.)"));
                 player.sendMessage(ColorManager.format("#25A79D /복구 길라잡이 §f- 일부 받지 못한 길라잡이 보상을 수령합니다."));
-                player.sendMessage(ColorManager.format("#25A79D /복구 버닝 §f- 버닝 완료 아이템을 복구 받습니다. 메인 퀘스트 41을 클리어 하고, 레벨이 45 이상이어야 합니다. "));
+//                player.sendMessage(ColorManager.format("#25A79D /복구 버닝 §f- 버닝 완료 아이템을 복구 받습니다. 메인 퀘스트 41을 클리어 하고, 레벨이 45 이상이어야 합니다. "));
                 player.sendMessage("");
                 return true;
 
