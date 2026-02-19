@@ -26,13 +26,16 @@ import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Repositories.UserSettingRepository;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class DamageListener implements Listener {
 
 
-    HashMap<String, Double> damageMultipliers = new HashMap<>(Map.of("adamas_genesis", 0.08, "adamas_dominance", 0.15));
+    //    HashMap<String, Double> damageMultipliers = new HashMap<>(Map.of("adamas_genesis", 0.08, "adamas_dominance", 0.15));
+    ArrayList<String> damageMultipliers = new ArrayList<>(Arrays.asList("adamas"));
 
     @EventHandler
     public void cancelInstantAttack(EntityDamageEvent e) {
@@ -92,11 +95,10 @@ public class DamageListener implements Listener {
         // 보스데미지 연산 ( 우선 1순위 )
         MMOPlayerData mmoPlayerData = MMOPlayerData.get(attacker);
 
-        if(victim.getType().equals(EntityType.COW)){
+        if (victim.getType().equals(EntityType.COW)) {
             double customBossdamage = mmoPlayerData.getStatMap().getStat("CUSTOM_BOSSDAMAGE");
             damage += damage * (customBossdamage) / 100;
         }
-
 
 
         // 나약함 연산 ( 유저가 가하는 ㅔㄷ미지랑 관련 x )
@@ -149,9 +151,13 @@ public class DamageListener implements Listener {
         double multiply = 1;
 
 
-        for (String auraKey : damageMultipliers.keySet()) {
-            if (auraRegistry.hasAura(auraKey)) {
-                multiply += damageMultipliers.get(auraKey);
+        for (String auraKey : damageMultipliers) {
+            for (String auraKeys : auraRegistry.getAuras().keySet()) {
+                if (auraKeys.startsWith(auraKey)) {
+                    String replace = auraKeys.replace(auraKey + "_", "");
+                    double i = Double.parseDouble(replace);
+                    multiply += (i / 100);
+                }
             }
         }
         damage *= multiply;

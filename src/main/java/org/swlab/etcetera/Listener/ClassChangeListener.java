@@ -36,7 +36,7 @@ public class ClassChangeListener implements Listener{
             player.getInventory().addItem(basicArmor);
             player.getInventory().addItem(basicWeapon);
             mmoCoreAPI.getPlayerData(player).setClassPoints(999);
-            NameTagUtil.setPlayerNameTag(player);
+//            NameTagUtil.setPlayerNameTag(player);
         }, 20L);
     }
     @EventHandler

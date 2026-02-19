@@ -133,6 +133,8 @@ public class InformationCommand implements CommandExecutor {
                 return "펫 도감";
             case "Decoration":
                 return "치장";
+            case "ContributeTower":
+                return "공헌의 탑";
             default:
                 return "스텟";
         }

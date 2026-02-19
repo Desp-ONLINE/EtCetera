@@ -1,44 +1,57 @@
 package org.swlab.etcetera.Util;
 
-import com.binggre.binggreapi.utils.ColorManager;
-import me.clip.placeholderapi.PlaceholderAPI;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
 import net.Indyuce.mmocore.api.player.PlayerData;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 import org.swlab.etcetera.EtCetera;
 
 public class NameTagUtil {
 
     public static void setPlayerNameTag(Player player) {
         Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), () -> {
-            if(!player.isOnline()){
+            if (!player.isOnline()) {
                 return;
             }
-            String job = PlaceholderAPI.setPlaceholders(player, "%Title_class%");
+
             MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
             PlayerData playerData = mmoCoreAPI.getPlayerData(player);
-
-
             int level = playerData.getLevel();
-            String format = "";
+
+            TextColor levelColor;
             if (level < 20) {
-                format = ColorManager.format("§f" + " #BDFFB9[Lv." + level + "] ");
+                levelColor = TextColor.fromHexString("#BDFFB9");
             } else if (level < 45) {
-                format = ColorManager.format("§f" + " #FFFC9B[Lv." +level + "] ");
+                levelColor = TextColor.fromHexString("#FFFC9B");
             } else if (level < 70) {
-                format = ColorManager.format("§f" + " #E257FF[Lv." + level + "] ");
+                levelColor = TextColor.fromHexString("#F1ADFF");
             } else if (level < 100) {
-                format = ColorManager.format("§f" + " #5C2DB2[Lv." + level + "] ");
-            }else if (level < 130) {
-                format = ColorManager.format("§f" + " #7A89FF[Lv." + level + "] ");
+                levelColor = TextColor.fromHexString("#AC7EFF");
+            } else if (level < 130) {
+                levelColor = TextColor.fromHexString("#7ECBFF");
+            } else if (level < 160) {
+                levelColor = TextColor.fromHexString("#7A89FF");
             } else {
-                format = ColorManager.format("§f" + " #223783[Lv." + level + "] ");
+                levelColor = TextColor.fromHexString("#5D64CB");
             }
 
+            Component prefix = Component.text("[Lv." + level + "] ", levelColor);
 
+            Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+            String teamName = "nt_" + player.getUniqueId().toString().replace("-", "").substring(0, 13);
+            Team team = scoreboard.getTeam(teamName);
+            if (team == null) {
+                team = scoreboard.registerNewTeam(teamName);
+            }
+
+            team.prefix(prefix);
+            if (!team.hasEntry(player.getName())) {
+                team.addEntry(player.getName());
+            }
         }, 20L);
-
-
     }
 }

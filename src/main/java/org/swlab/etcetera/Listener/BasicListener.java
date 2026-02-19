@@ -7,6 +7,8 @@ import com.binggre.velocitysocketclient.VelocityClient;
 import de.kinglol12345.GUIPlus.events.GUIClickEvent;
 import fr.nocsy.mcpets.api.MCPetsAPI;
 import fr.nocsy.mcpets.data.Pet;
+import fr.phoenixdevt.mmoprofiles.bukkit.MMOProfiles;
+import fr.phoenixdevt.mmoprofiles.bukkit.profile.ProfileListImpl;
 import fr.phoenixdevt.profiles.event.ProfileSelectEvent;
 import io.lumine.mythic.api.adapters.AbstractEntity;
 import io.lumine.mythic.api.skills.SkillCaster;
@@ -145,7 +147,7 @@ public class BasicListener implements Listener {
     public void onLevelUp(PlayerLevelUpEvent e) {
         Player player = e.getPlayer();
         player.playSound(player, "uisounds:congratulations", 1.0F, 1.0F);
-        NameTagUtil.setPlayerNameTag(player);
+//        NameTagUtil.setPlayerNameTag(player);
     }
 
     @EventHandler
@@ -154,18 +156,21 @@ public class BasicListener implements Listener {
 
 
         e.setJoinMessage("");
-        if ((!player.hasPlayedBefore() && EtCetera.getChannelType().equals("lobby")) && EtCetera.getChannelNumber() == 1) {
-            firstJoinCount++;
-            String text = " §f摩 #8FFFAE" + player.getName() + " 님께서 서버에 &e첫 접속 #8FFFAE하셨습니다! 환영해주세요!";
-            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                if (onlinePlayer.getName().equals("dople_L")) {
-                    onlinePlayer.sendMessage("§7(오늘의 " + firstJoinCount + "번째 첫 접속자입니다.)");
-                }
-            }
-            String format = ColorManager.format(text);
-            Bukkit.broadcastMessage(format);
 
-            VelocityClient.getInstance().getConnectClient().send(FirstJoinVelocityListener.class, format);
+
+
+        if ((!player.hasPlayedBefore() && EtCetera.getChannelType().equals("lobby")) && EtCetera.getChannelNumber() == 1) {
+//            firstJoinCount++;
+//            String text = " §f摩 #8FFFAE" + player.getName() + " 님께서 서버에 &e첫 접속 #8FFFAE하셨습니다! 환영해주세요!";
+//            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+//                if (onlinePlayer.getName().equals("dople_L")) {
+//                    onlinePlayer.sendMessage("§7(오늘의 " + firstJoinCount + "번째 첫 접속자입니다.)");
+//                }
+//            }
+//            String format = ColorManager.format(text);
+//            Bukkit.broadcastMessage(format);
+
+//            VelocityClient.getInstance().getConnectClient().send(FirstJoinVelocityListener.class, format);
 
 
             if (!player.hasPermission("tutorial") && EtCetera.getChannelType().equals("lobby")) {
@@ -286,7 +291,7 @@ public class BasicListener implements Listener {
     public void onProfileLoad(ProfileSelectEvent e) {
         Player player = e.getPlayer();
         player.setHealth(player.getMaxHealth());
-        NameTagUtil.setPlayerNameTag(player);
+//        NameTagUtil.setPlayerNameTag(player);
 
         if (!e.getPlayer().hasPermission("tutorial") && EtCetera.getChannelType().equals("lobby")) {
             CommandUtil.runCommandAsOP(e.getPlayer(), "튜토리얼");

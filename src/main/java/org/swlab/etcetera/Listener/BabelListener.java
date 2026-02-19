@@ -3,11 +3,13 @@ package org.swlab.etcetera.Listener;
 import com.binggre.binggreapi.utils.ColorManager;
 import com.binggre.velocitysocketclient.VelocityClient;
 import com.binggre.velocitysocketclient.listener.BroadcastStringVelocityListener;
+import io.lumine.mythic.lib.api.player.MMOPlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.desp.babelTower.event.BabelClearEvent;
+import org.desp.babelTower.event.BabelFailEvent;
 
 
 public class BabelListener implements Listener {
@@ -15,6 +17,9 @@ public class BabelListener implements Listener {
     public void onBabelClear(BabelClearEvent e){
         Player player = e.getPlayer();
         int floor = e.getFloor();
+
+        MMOPlayerData mmoPlayerData = MMOPlayerData.get(player.getUniqueId());
+        mmoPlayerData.getCooldownMap().clearAllCooldowns();
 
         String emptyLine = ColorManager.format("#FF3737§n                                                                              §f");
         String emptyMessage = "";
@@ -30,5 +35,14 @@ public class BabelListener implements Listener {
             VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, broadcastMessage);
             VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, emptyLine);
         }
+    }
+
+    @EventHandler
+    public void onBabelClear(BabelFailEvent e){
+        Player player = e.getPlayer();
+
+        MMOPlayerData mmoPlayerData = MMOPlayerData.get(player.getUniqueId());
+        mmoPlayerData.getCooldownMap().clearAllCooldowns();
+
     }
 }

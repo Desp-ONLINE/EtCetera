@@ -1,5 +1,6 @@
 package org.swlab.etcetera.Commands;
 
+import net.Indyuce.mmocore.api.MMOCoreAPI;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -25,6 +26,13 @@ public class MarketCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         Player player = (Player) commandSender;
+
+        MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
+        int level = mmoCoreAPI.getPlayerData(player).getLevel();
+        if(level <= 1){
+            player.sendMessage("§c 1레벨인 경우 시장을 이용하실 수 없습니다.");
+            return false;
+        }
         if (strings.length == 0) {
             CommandUtil.runCommandAsOP(player, "시장2");
             player.sendMessage("§7 > 아이템 판매는 §e/시장 판매 <금액> §7명령어를 통해 손에 든 아이템을 판매할 수 있습니다. (3000만과 같이 \"만\"글자를 붙여서 사용할 수 있습니다.)");

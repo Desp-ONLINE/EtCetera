@@ -192,6 +192,7 @@ public final class EtCetera extends JavaPlugin {
         getCommand("쓰레기통").setExecutor(new TrashcanCommand());
         getCommand("일괄분해").setExecutor(new DecompositeCommand());
         getCommand("UI").setExecutor(new UICommand());
+        getCommand("공헌의탑").setExecutor(new ContributeTowerCommand());
         getCommand("마나회복").setExecutor(new ManaCommand());
         getCommand("장비").setExecutor(new AccCommand());
         getCommand("강화").setExecutor(new ReinforceCommand());
