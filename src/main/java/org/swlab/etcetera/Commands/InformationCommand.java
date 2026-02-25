@@ -124,7 +124,11 @@ public class InformationCommand implements CommandExecutor {
             case "MMOCollectionBookCouple":
                 return "인연";
             case "MMOItems":
+                return "(구) 장비 시스템";
+            case "Equipment":
                 return "장비";
+            case "ItemSet":
+                return "세트 효과";
             case "Alliance":
                 return "얼라이언스";
             case "MMOGuild":

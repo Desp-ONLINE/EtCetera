@@ -1,9 +1,11 @@
 package org.swlab.etcetera.Listener;
 
 import net.Indyuce.mmoitems.api.event.item.ConsumableConsumedEvent;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.potion.PotionEffectType;
+import org.dople.dataSync.inventory.InventorySyncListener;
 import org.swlab.etcetera.EtCetera;
 
 public class ConsumableListener implements Listener{
@@ -16,9 +18,14 @@ public class ConsumableListener implements Listener{
             return;
         }
         if(e.getMMOItem().getId().equals("기타_루비")){
+            Player player = e.getPlayer();
             if(EtCetera.getChannelType().equals("dungeon")){
                 e.setCancelled(true);
                 e.getPlayer().sendMessage("§c 로비에서만 사용 가능합니다.");
+            }
+            if(InventorySyncListener.isDataLoading(player)){
+                player.sendMessage("§c 데이터가 로드중입니다.");
+                return;
             }
         }
     }

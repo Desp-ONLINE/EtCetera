@@ -11,9 +11,8 @@ commands:
   던전:
     aliases: [ "사냥", "사냥터", "ejswjs", "tksid", "tksidxj", "ㄷㅈ", "ew" ]
   쓰레기통:
-    aliases: [ "쓰" ]
-  장비:
-    aliases: [ "장비창", "wkdql", "wkdqlckd", "acc", "ㅈㅂ", "wq" ]
+    aliases: [ "쓰" ,"Tmfprlxhd","Tm" ]
+  장비2:
   강화:
     aliases: [ "rkdghk", "ㄱㅎ", "rg" ]
   합성:
@@ -71,13 +70,13 @@ commands:
   펫:
     aliases: [ "vpt" ]
   엘븐하임:
-    aliases: [ "dpfqmsgkdla", "엘븐" ]
+    aliases: [ "dpfqmsgkdla", "엘븐", "dpfqms" ]
   칼리마:
     aliases: [ "zkfflak" ]
   인페리움:
-    aliases: [ "dlsvpfldna", "인페" ]
+    aliases: [ "dlsvpfldna", "인페", "dlsvp" ]
   아르크티카:
-    aliases: [ "dkfmzmxlzk", "아르크" ]
+    aliases: [ "dkfmzmxlzk", "아르크","dkfmzm" ]
   훈련장:
     aliases: [ "훈련", "gnsfuswkd", "gnsfus", "epalwlxptmxm", "데미지테스트" ]
   도움말:
@@ -118,6 +117,7 @@ commands:
   마나회복:
   쿨초기화:
   일괄분해:
+    aliases: ["dlfrhkfqnsgo"]
   환던티켓지급:
   일일퀘스트:
     aliases: [ "dlfdlfznptmxm", "일퀘", "dlfznp" ]
@@ -131,3 +131,4 @@ commands:
     aliases: [ "tkekflxkrl", "보상뽑기", "qhtkdQhqrl" ]
   보스코인:
   공헌의탑:
+    aliases: ["rhdgjsdmlxkq", "공탑", "rhdxkq"]

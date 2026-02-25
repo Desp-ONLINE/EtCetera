@@ -133,53 +133,28 @@ public class EquipListener implements Listener {
         return true;
     }
 
-    @EventHandler
-    public void disableUnequipLeggingsAndBoots(InventoryClickEvent e) {
-        Player player = (Player) e.getWhoClicked();
-        if (e.getView().getType().equals(InventoryType.CRAFTING)) {
-            if (e.getSlot() >= 36 && e.getSlot() <= 39) {
-                e.setCancelled(true);
-                player.sendMessage("§c 장비창을 통한 장/탈착만 가능합니다.");
-                CommandUtil.runCommandAsOP(player, "mmoinventory");
-            }
-        }
+//    @EventHandler
+//    public void disableUnequipLeggingsAndBoots(InventoryClickEvent e) {
+//        Player player = (Player) e.getWhoClicked();
+//        if (e.getView().getType().equals(InventoryType.CRAFTING)) {
+//            if (e.getSlot() >= 36 && e.getSlot() <= 39) {
+//                e.setCancelled(true);
+//                player.sendMessage("§c 장비창을 통한 장/탈착만 가능합니다.");
+//                CommandUtil.runCommandAsOP(player, "mmoinventory");
+//            }
+//        }
+//
+//
+//        if (e.getView().getType() == InventoryType.CRAFTING) {
+//            if (e.getClick() == ClickType.SHIFT_LEFT || e.getClick() == ClickType.SHIFT_RIGHT) {
+//                ItemStack currentItem = e.getCurrentItem();
+//                if (currentItem != null && isArmor(currentItem.getType())) {
+//                    e.setCancelled(true);
+//                    player.sendMessage("§c SHIFT+클릭을 통한 장착은 불가능합니다.");
+//                }
+//            }
+//        }
+//    }
 
 
-        if (e.getView().getType() == InventoryType.CRAFTING) {
-            if (e.getClick() == ClickType.SHIFT_LEFT || e.getClick() == ClickType.SHIFT_RIGHT) {
-                ItemStack currentItem = e.getCurrentItem();
-                if (currentItem != null && isArmor(currentItem.getType())) {
-                    e.setCancelled(true);
-                    player.sendMessage("§c SHIFT+클릭을 통한 장착은 불가능합니다.");
-                }
-            }
-        }
-    }
-
-    @EventHandler
-    public void onPlayerRightClick(PlayerInteractEvent event) {
-        Player player = event.getPlayer();
-        Action action = event.getAction();
-        ItemStack item = event.getItem();
-
-        // 손에 아이템이 없거나, 왼손 사용 이벤트라면 무시
-        if (item == null || event.getHand() == EquipmentSlot.OFF_HAND) return;
-
-        // 우클릭으로 갑옷 장착 시도 감지
-        if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
-            if (isArmor(item.getType())) {
-                event.setCancelled(true);
-                player.sendMessage("§c 장비창을 통한 장착만 가능합니다.");
-                CommandUtil.runCommandAsOP(player, "mmoinventory");
-            }
-        }
-    }
-
-    // 갑옷인지 확인하는 함수
-    private boolean isArmor(Material material) {
-        return material.name().endsWith("_HELMET") ||
-                material.name().endsWith("_CHESTPLATE") ||
-                material.name().endsWith("_LEGGINGS") ||
-                material.name().endsWith("_BOOTS");
-    }
 }

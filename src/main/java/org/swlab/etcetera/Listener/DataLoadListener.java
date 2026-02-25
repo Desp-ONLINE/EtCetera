@@ -64,7 +64,6 @@ public class DataLoadListener implements Listener {
     public void onPlayerJoin(ProfileSelectEvent event) {
         Player player = event.getPlayer();
         isDataLoaded.put(player, true);
-        System.out.println("player = " + player);
     }
 
     @EventHandler

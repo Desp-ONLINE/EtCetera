@@ -1,10 +1,16 @@
 package org.swlab.etcetera.Commands;
 
 import com.binggre.binggreapi.utils.ColorManager;
+import com.binggre.mongolibraryplugin.MongoLibraryPlugin;
 import com.binggre.mmomail.MMOMail;
 import com.binggre.mmomail.objects.Mail;
 import com.mongodb.client.MongoCollection;
 import fr.skytasul.quests.BeautyQuests;
+import net.Indyuce.inventory.MMOInventory;
+import net.Indyuce.inventory.player.CustomInventoryData;
+import net.Indyuce.inventory.player.InventoryItem;
+import net.Indyuce.inventory.player.InventoryLookupMode;
+import net.Indyuce.inventory.player.PlayerData;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
 import net.Indyuce.mmocore.api.player.profess.PlayerClass;
 import net.Indyuce.mmoitems.MMOItems;
@@ -26,6 +32,23 @@ import java.util.HashMap;
 import java.util.List;
 
 public class RestoreCommand implements CommandExecutor {
+
+    public RestoreCommand() {
+        upgradeLogCollection = MongoLibraryPlugin.getInst()
+                .getMongoClient()
+                .getDatabase("SystemLog")
+                .getCollection("UpgradeLog");
+        upgradeCollection = MongoLibraryPlugin.getInst()
+                .getMongoClient()
+                .getDatabase("Upgrade")
+                .getCollection("Weapons");
+//        accRestoredCollection = MongoLibraryPlugin.getInst().getMongoClient().getDatabase("EtCetera").getCollection("AccRestored");
+    }
+
+    MongoCollection<Document> upgradeLogCollection;
+    MongoCollection<Document> upgradeCollection;
+//    MongoCollection<Document> accRestoredCollection;
+
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         Player player = (Player) commandSender;
@@ -75,17 +98,19 @@ public class RestoreCommand implements CommandExecutor {
                     player.sendMessage("§a 아이템 복구가 완료되었습니다. (바벨탑 70층 공략증)");
                     player.getInventory().addItem(item3);
 
-                }if (clearFloor >= 80) {
+                }
+                if (clearFloor >= 80) {
                     ItemStack item3 = MMOItems.plugin.getItem("MISCELLANEOUS", "퀘스트_바벨탑증표_80");
                     player.sendMessage("§a 아이템 복구가 완료되었습니다. (바벨탑 80층 공략증)");
                     player.getInventory().addItem(item3);
 
-                }if (clearFloor >= 90) {
-                ItemStack item3 = MMOItems.plugin.getItem("MISCELLANEOUS", "퀘스트_바벨탑증표_90");
-                player.sendMessage("§a 아이템 복구가 완료되었습니다. (바벨탑 90층 공략증)");
-                player.getInventory().addItem(item3);
+                }
+                if (clearFloor >= 90) {
+                    ItemStack item3 = MMOItems.plugin.getItem("MISCELLANEOUS", "퀘스트_바벨탑증표_90");
+                    player.sendMessage("§a 아이템 복구가 완료되었습니다. (바벨탑 90층 공략증)");
+                    player.getInventory().addItem(item3);
 
-            }
+                }
                 return false;
             case "전직":
                 if (strings[1].equals("2")) {
@@ -154,13 +179,58 @@ public class RestoreCommand implements CommandExecutor {
             case "길라잡이":
                 PlayerDto playerData = PlayerRepository.getInstance().getPlayerData(player);
                 int id = playerData.getId();
-                if(id>=41){
+                if (id >= 41) {
                     ItemStack item1 = MMOItems.plugin.getItem("TITLE", "칭호_ਜ");
                     player.getInventory().addItem(item1);
                 } else {
                     player.sendMessage("§c 42번째 길라잡이를 클리어 하셔야 합니다!");
                 }
                 return true;
+            case "방어구":
+
+                List<Document> armorUpgradeLogs = upgradeLogCollection.find(
+                        new Document("success", true)
+                                .append("uuid", player.getUniqueId().toString())
+                                .append("item_id", new Document("$regex", "^방어구"))
+                ).into(new ArrayList<>());
+
+                Document bestArmorLog = armorUpgradeLogs.stream()
+                        .filter(log -> log.getString("item_id") != null)
+                        .max((a, b) -> compareArmorItemId(a.getString("item_id"), b.getString("item_id")))
+                        .orElse(null);
+
+                if (bestArmorLog != null) {
+
+                    Document first = upgradeCollection.find(new Document("beforeWeapon", bestArmorLog.getString("item_id"))).first();
+                    String afterWeapon = first.getString("afterWeapon");
+
+                    ItemStack armor = MMOItems.plugin.getItem("ARMOR", afterWeapon);
+                    player.getInventory().addItem(armor);
+                }
+                return true;
+//            case "123123ㄱㄴㄷ":
+//
+//                if(isRestored(player)){
+//                    player.sendMessage("§c 이미 복구가 완료되었습니다.");
+//                    return true;
+//                }
+//
+//
+//                PlayerData playerData1 = MMOInventory.plugin.getDataManager().get(player);
+//                List<InventoryItem> items = playerData1.getItems(InventoryLookupMode.IGNORE_RESTRICTIONS);
+//                List<ItemStack> itemStacks = new ArrayList<>();
+//                for (InventoryItem item : items) {
+//                    ItemStack itemStack = item.getItemStack();
+//                    itemStacks.add(itemStack);
+//                }
+//
+//                Mail mail = MMOMail.getInstance().getMailAPI().createMail("관리자", "기존 장비창 오류 아이템 복구입니다.", 0, itemStacks);
+//                MMOMail.getInstance().getMailAPI().sendMail(player.getName(), mail);
+//
+//                player.sendMessage("§a 기존 장비 데이터 복구가 완료되었습니다.");
+//
+//
+//                return true;
             default:
                 player.sendMessage("");
                 player.sendMessage(ColorManager.format("#25A79D /복구 [전직] [차수] §f- 해당 전직의 서를 복구받습니다. §7§o(ex: /복구 전직 2 - 2차 전직의 서를 복구 받습니다.)"));
@@ -170,5 +240,42 @@ public class RestoreCommand implements CommandExecutor {
                 return true;
 
         }
+    }
+
+//    public boolean isRestored(Player player) {
+//        return accRestoredCollection.find(new Document("uuid", player.getUniqueId().toString())).first() != null;
+//    }
+
+    private int compareArmorItemId(String left, String right) {
+        return Integer.compare(getArmorScore(left), getArmorScore(right));
+    }
+
+    private int getArmorScore(String itemId) {
+        if (itemId == null) return Integer.MIN_VALUE;
+
+        String prefix = "방어구_";
+        if (!itemId.startsWith(prefix)) return Integer.MIN_VALUE;
+
+        String body = itemId.substring(prefix.length());
+        int splitIndex = body.length();
+        while (splitIndex > 0 && Character.isDigit(body.charAt(splitIndex - 1))) {
+            splitIndex--;
+        }
+
+        String tier = body.substring(0, splitIndex);
+        String numberPart = body.substring(splitIndex);
+        int level = numberPart.isEmpty() ? -1 : Integer.parseInt(numberPart);
+
+        int tierOrder = switch (tier) {
+            case "모험가" -> 0;
+            case "숙련자" -> 1;
+            case "영웅" -> 2;
+            case "군주" -> 3;
+            case "태고" -> 4;
+            case "지배자" -> 5;
+            default -> -1;
+        };
+
+        return tierOrder * 10000 + level;
     }
 }

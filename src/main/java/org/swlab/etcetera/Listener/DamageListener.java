@@ -1,6 +1,7 @@
 package org.swlab.etcetera.Listener;
 
 import com.binggre.binggreapi.utils.NumberUtil;
+import fr.maxlego08.zauctionhouse.api.utils.Priority;
 import io.lumine.mythic.api.adapters.AbstractEntity;
 import io.lumine.mythic.api.skills.SkillCaster;
 import io.lumine.mythic.bukkit.MythicBukkit;
@@ -20,6 +21,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.swlab.etcetera.EtCetera;
@@ -236,6 +238,21 @@ public class DamageListener implements Listener {
         if ((e.getEntity().getWorld().getName().equals("world") || e.getEntity().getWorld().getName().equals("fishing") || e.getEntity().getWorld().getName().equals("tuto")) && EtCetera.getChannelType().equals("lobby") && e.getEntity() instanceof Player) {
             e.setCancelled(true);
         }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onDeathEvent(PlayerDeathEvent e){
+        Player player = e.getPlayer();
+        if(player.getName().equals("dople_L")){
+            if(player.hasPotionEffect(PotionEffectType.HERO_OF_THE_VILLAGE)){
+                player.removePotionEffect(PotionEffectType.HERO_OF_THE_VILLAGE);
+                e.setCancelled(true);
+                player.setHealth(player.getMaxHealth() / 30);
+                player.sendMessage("§a    특수 효과로 죽음을 한번 면했습니다.");
+
+            }
+        }
+
     }
 
 

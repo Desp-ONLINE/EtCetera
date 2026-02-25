@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.dople.dataSync.inventory.InventorySyncListener;
 import org.swlab.etcetera.EtCetera;
 import su.nightexpress.excellentcrates.api.event.CrateOpenEvent;
 
@@ -33,6 +34,10 @@ public class CrateListener implements Listener {
         if(canOpen.contains(player)){
             e.setCancelled(true);
             player.sendMessage("§c  1초 간격으로 오픈할 수 있습니다.");
+            return;
+        }
+        if(InventorySyncListener.isDataLoading(player)){
+            player.sendMessage("§c 데이터가 로드중입니다.");
             return;
         }
 //        System.out.println("e.getCrate().getId() = " + e.getCrate().getId());

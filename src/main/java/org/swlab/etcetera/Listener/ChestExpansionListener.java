@@ -11,6 +11,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.dople.dataSync.inventory.InventorySyncListener;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Util.CommandUtil;
 
@@ -31,6 +32,10 @@ public class ChestExpansionListener implements Listener {
         }
         if (e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR) {
             if (id.equals(CASH_CHEST_EXPAND_ITEM_ID)) {
+                if(InventorySyncListener.isDataLoading(player)){
+                    player.sendMessage("§c 데이터가 로드중입니다.");
+                    return;
+                }
                 for (int i = 4; i < 13; i++) {
                     if (!player.hasPermission("mmochest." + i)) {
                         ConsoleCommandSender consoleSender = Bukkit.getConsoleSender();
@@ -50,6 +55,10 @@ public class ChestExpansionListener implements Listener {
             }
 
             if (id.equals(VOTE_CHEST_EXPAND_ITEM_ID)) {
+                if(InventorySyncListener.isDataLoading(player)){
+                    player.sendMessage("§c 데이터가 로드중입니다.");
+                    return;
+                }
                 if (!player.hasPermission("mmochest.3")) {
                     ConsoleCommandSender consoleSender = Bukkit.getConsoleSender();
                     Bukkit.dispatchCommand(consoleSender, "lp user " + player.getName() + " permission set " + "mmochest." + 3);
@@ -66,8 +75,12 @@ public class ChestExpansionListener implements Listener {
             }
 
             if (id.equals(GOLDEN_HARP_ITEM_ID)) {
-                if (!EtCetera.getChannelType().equals("lobby")) {
-                    player.sendMessage("§c 로비 채널에서만 사용 하실 수 있습니다.");
+                if(!EtCetera.getChannelType().equals("lobby")){
+                    player.sendMessage("§c 로비에서만 사용하실 수 있습니다.");
+                    return;
+                }
+                if(InventorySyncListener.isDataLoading(player)){
+                    player.sendMessage("§c 데이터가 로드중입니다.");
                     return;
                 }
                 CommandUtil.runCommandAsOP(player, "인던 입장횟수초기화 " + player.getName() + " 109");
