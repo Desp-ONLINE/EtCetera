@@ -25,6 +25,11 @@ public class CrateListener implements Listener {
         Player player = e.getPlayer();
         QuestsAPI api = QuestsAPI.getAPI();
         Quest quest = api.getQuestsManager().getQuest(10);
+        if(InventorySyncListener.isDataLoading(player)){
+            player.sendMessage("§c 데이터 로드중입니다.");
+            e.setCancelled(true);
+            return;
+        }
         if(!BeautyQuests.getInstance().getPlayersManager().getAccount(player).hasQuestDatas(quest)){
             player.sendMessage("§c  9번 메인 퀘스트를 먼저 클리어하세요!");
             e.setCancelled(true);

@@ -8,6 +8,7 @@ import com.mongodb.client.model.ReplaceOptions;
 import net.Indyuce.mmoitems.MMOItems;
 import net.Indyuce.mmoitems.api.item.mmoitem.MMOItem;
 import org.bson.Document;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.swlab.etcetera.Database.DatabaseRegister;
@@ -38,7 +39,11 @@ public class RaidCoinRepository {
     public static final MongoCollection<Document> raidCoinDataCollection = DatabaseRegister.getInstance().getMongoDatabase().getCollection("RaidCoinData");
 
     public void resetDatas() {
+        raidCoinDataCache.clear();
         raidCoinPlayerCollection.deleteMany(new Document());
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            loadUserData(player);
+        }
     }
 
     public void loadCoinData() {
@@ -119,15 +124,15 @@ public class RaidCoinRepository {
         }
         List<ItemStack> items = new ArrayList<>();
 
-        ItemStack item = MMOItems.plugin.getItem("MISCELLANEOUS", "기타_송편");
+        ItemStack item = MMOItems.plugin.getItem("MISCELLANEOUS", "기타_보스코인");
         item.setAmount(normalRewardGapAmount);
         items.add(item);
 
         MailAPI mailAPI = MMOMail.getInstance().getMailAPI();
 
-        Mail mail = mailAPI.createMail("시스템", "§f송편 이벤트 보상입니다.", 0, items);
+        Mail mail = mailAPI.createMail("시스템", "§f보스 코인 이벤트 보상입니다.", 0, items);
         mailAPI.sendMail(player.getName(), mail);
-        player.sendMessage("§e    [ EVENT ]§f 송편 §6" + normalRewardGapAmount + "§f개를 획득했습니다.");
+        player.sendMessage("§e    [ EVENT ]§f 보스 코인 §6" + normalRewardGapAmount + "§f개를 획득했습니다.");
 
 
         return true;
@@ -142,16 +147,16 @@ public class RaidCoinRepository {
         }
         List<ItemStack> items = new ArrayList<>();
 
-        ItemStack item = MMOItems.plugin.getItem("MISCELLANEOUS", "기타_황금송편");
+        ItemStack item = MMOItems.plugin.getItem("MISCELLANEOUS", "기타_상급보스코인");
         item.setAmount(specialRewardGapAmount);
         items.add(item);
 
         MailAPI mailAPI = MMOMail.getInstance().getMailAPI();
 
-        Mail mail = mailAPI.createMail("시스템", "§f황금 송편 이벤트 보상입니다.", 0, items);
+        Mail mail = mailAPI.createMail("시스템", "§f상급 보스 코인 이벤트 보상입니다.", 0, items);
         mailAPI.sendMail(player.getName(), mail);
 
-        player.sendMessage("§e    [ EVENT ]§e 황금 송편 §6" + specialRewardGapAmount + "§e개를 획득했습니다.");
+        player.sendMessage("§e    [ EVENT ]§c 상급 보스 코인 §6" + specialRewardGapAmount + "§e개를 획득했습니다.");
 
 
         return true;

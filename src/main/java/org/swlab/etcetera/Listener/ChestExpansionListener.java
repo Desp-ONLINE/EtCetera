@@ -87,6 +87,7 @@ public class ChestExpansionListener implements Listener {
                 CommandUtil.runCommandAsOP(player, "인던 입장횟수초기화 " + player.getName() + " 110");
                 CommandUtil.runCommandAsOP(player, "인던 입장횟수초기화 " + player.getName() + " 111");
                 CommandUtil.runCommandAsOP(player, "인던 입장횟수초기화 " + player.getName() + " 112");
+                CommandUtil.runCommandAsOP(player, "인던 입장횟수초기화 " + player.getName() + " 113");
                 player.playSound(player, "minecraft:entity.player.levelup", 1, 1);
                 if (itemInMainHand.getAmount() > 1) {
                     itemInMainHand.setAmount(itemInMainHand.getAmount() - 1);

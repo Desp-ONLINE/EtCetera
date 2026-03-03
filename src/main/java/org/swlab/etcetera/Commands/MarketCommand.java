@@ -1,5 +1,8 @@
 package org.swlab.etcetera.Commands;
 
+import com.binggre.binggreapi.utils.ColorManager;
+import com.binggre.mmomail.MMOMail;
+import com.binggre.mmomail.objects.Mail;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.Bukkit;
@@ -29,7 +32,7 @@ public class MarketCommand implements CommandExecutor {
 
         MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
         int level = mmoCoreAPI.getPlayerData(player).getLevel();
-        if(level <= 1){
+        if (level <= 1) {
             player.sendMessage("§c 1레벨인 경우 시장을 이용하실 수 없습니다.");
             return false;
         }

@@ -69,6 +69,8 @@ commands:
     aliases: [ "znvhs" ]
   펫:
     aliases: [ "vpt" ]
+  길드레이드:
+      aliases: [ "rlfemfpdlem", "길레", "rlffp" ]
   엘븐하임:
     aliases: [ "dpfqmsgkdla", "엘븐", "dpfqms" ]
   칼리마:
