@@ -1,8 +1,5 @@
 package org.swlab.etcetera.Commands;
 
-import com.binggre.binggreapi.utils.ColorManager;
-import com.binggre.mmomail.MMOMail;
-import com.binggre.mmomail.objects.Mail;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.Bukkit;
@@ -16,15 +13,13 @@ import org.jetbrains.annotations.NotNull;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Util.CommandUtil;
 
-import javax.swing.text.Document;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.List;
 
 public class MarketCommand implements CommandExecutor {
 
-    private long SELL_PERCENTAGE = 20;
-    private long SELL_PERCENTAGE_LOW_LOG_AMOUNT = 35;
+    private long BASIC_GAP = 20;
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
@@ -118,21 +113,41 @@ public class MarketCommand implements CommandExecutor {
         long maximumPrice = 0;
         long minimumPrice = 0;
         averagePrice *= itemInMainHand.getAmount();
-        if (TransactionLogRepository.getInstance().getLogAmount(id) < 5) {
-            maximumPrice = averagePrice + averagePrice * SELL_PERCENTAGE_LOW_LOG_AMOUNT / 100;
-            minimumPrice = averagePrice - averagePrice * SELL_PERCENTAGE_LOW_LOG_AMOUNT / 100;
-        } else {
-            maximumPrice = averagePrice + averagePrice * SELL_PERCENTAGE / 100;
-            minimumPrice = averagePrice - averagePrice * SELL_PERCENTAGE / 100;
-        }
+        maximumPrice = averagePrice + averagePrice * BASIC_GAP / 100;
+        minimumPrice = averagePrice - averagePrice * BASIC_GAP / 100;
 
         NumberFormat formatter = NumberFormat.getInstance();
         if (averagePrice != 0) {
             if ((price > maximumPrice) || (price < minimumPrice)) {
-                player.sendMessage("§6[ 시장 경제 시스템 ] §e" + formatter.format(minimumPrice) + " §c~ §e" + formatter.format(maximumPrice) + " §c사이의 금액으로만 판매 할 수 있습니다. §7§o(평균 거래가의 " + SELL_PERCENTAGE + "% 로 판매가 제한되어 있습니다.)");
+                player.sendMessage("§6[ 시장 경제 시스템 ] §e" + formatter.format(minimumPrice) + " §c~ §e" + formatter.format(maximumPrice) + " §c사이의 금액으로만 판매 할 수 있습니다. §7§o(평균 거래가의 " + BASIC_GAP + "% 로 판매가 제한되어 있습니다.)");
                 return false;
             }
         }
         return true;
+    }
+
+    public long getGap(String mmoitemID) {
+
+        int volume = TransactionLogRepository
+                .getInstance()
+                .getItemLogAmountWeekly(mmoitemID);
+
+        // 최대 거래량 제한 (600 초과 방지)
+        int maxVolume = 600;
+        volume = Math.min(volume, maxVolume);
+
+        double minGap = 10.0;
+        double maxGap = 50.0;
+
+        // 로그 정규화
+        double t = Math.log(1.0 + volume) / Math.log(1.0 + maxVolume);
+
+        // 50 → 10 으로 감소
+        double gap = maxGap - (maxGap - minGap) * t;
+
+        // 안전 클램프
+        gap = Math.max(minGap, Math.min(maxGap, gap));
+
+        return Math.round(gap);
     }
 }

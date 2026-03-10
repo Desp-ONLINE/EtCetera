@@ -2,6 +2,7 @@ package org.swlab.etcetera.Listener;
 
 import com.binggre.binggreapi.utils.ColorManager;
 import com.binggre.mmodungeon.api.DungeonClearEvent;
+import com.binggre.mmodungeon.objects.PlayerDungeon;
 import com.binggre.mmodungeon.objects.base.Dungeon;
 import com.binggre.mmodungeon.objects.base.DungeonRoom;
 import com.binggre.mmoguild.MMOGuild;
@@ -61,8 +62,6 @@ public class FirstClearListener implements Listener {
     }
 
 
-
-
     public void updateTimeRaidPlayerDocument(Player player, Document document, String clearedDungeonKey) {
         List<String> list = document.getList("cleared", String.class);
         list.add(clearedDungeonKey);
@@ -70,6 +69,7 @@ public class FirstClearListener implements Listener {
 
         timeRaidPlayerDocument.replaceOne(new Document("uuid", player.getUniqueId().toString()), document);
     }
+
     public void updateRaidPlayerDocument(Player player, Document document, String clearedDungeonKey) {
         List<String> list = document.getList("cleared", String.class);
         list.add(clearedDungeonKey);
@@ -79,39 +79,35 @@ public class FirstClearListener implements Listener {
     }
 
     @EventHandler
-    public void onRaidClear(DungeonClearEvent e){
+    public void onRaidClear(DungeonClearEvent e) {
 
-        boolean clear = e.getDungeonRoom().isClear();
-        if(!clear){
-            return;
-        }
-        DungeonRoom dungeonRoom = e.getDungeonRoom();
-        Dungeon connected = dungeonRoom.getConnected();
+        List<PlayerDungeon> playerDungeons = e.getPlayerDungeons();
+        for (PlayerDungeon playerDungeon : playerDungeons) {
+            Player player = playerDungeon.toPlayer();
+            boolean clear = e.getDungeonRoom().getController().isClear();
+            if (!clear) {
+                return;
+            }
+            if (playerDungeons.size() > 1 || e.getDungeonRoom().getParent().getReplayDay() == 1) {
+                return;
+            }
+            int life = e.getDungeonRoom().getController().getLife();
+            if (life != e.getDungeonRoom().getParent().getLife()) {
+                return;
+            }
+            String raidName = e.getDungeonRoom().getParent().getName();
 
-        if(dungeonRoom.getMembers().size() >= 2 || connected.getReplayDay() == 1){
-            return;
-        }
-        if(dungeonRoom.getConnected().getLife() != dungeonRoom.getLife()){
-            return;
-        }
-        String raidName = connected.getName();
+            Document raidDocument = raidFirstClearReward.find(new Document("id", raidName)).first();
+            List<String> list = raidDocument.getList("rewards", String.class);
 
-
-
-
-
-        Document raidDocument = raidFirstClearReward.find(new Document("id", raidName)).first();
-        List<String> list = raidDocument.getList("rewards", String.class);
-
-        for (Player player : dungeonRoom.getMembers()) {
-            String broadcastMessage = "§c  [ RAID CHALLENGE ] §f"+player.getName() +" 님께서 §6"+raidName+" §f레이드 챌린지에 성공하셨습니다!";
+            String broadcastMessage = "§c  [ RAID CHALLENGE ] §f" + player.getName() + " 님께서 §6" + raidName + " §f레이드 챌린지에 성공하셨습니다!";
 
             Document playerDocument = raidPlayerDocument.find(new Document("uuid", player.getUniqueId().toString())).first();
             if (playerDocument == null) {
                 playerDocument = getDefaultPlayerDocument(player);
                 raidPlayerDocument.insertOne(playerDocument);
             }
-            if(playerDocument.getList("cleared", String.class).contains(raidName)){
+            if (playerDocument.getList("cleared", String.class).contains(raidName)) {
                 return;
             }
 
@@ -145,14 +141,15 @@ public class FirstClearListener implements Listener {
     }
 
     @EventHandler
-    public void onDeathMM(MythicMobDeathEvent e){
+    public void onDeathMM(MythicMobDeathEvent e) {
         LivingEntity killer = e.getKiller();
-        if(killer instanceof Player player){
-            if(player.getName().equals("dople_L")){
+        if (killer instanceof Player player) {
+            if (player.getName().equals("dople_L")) {
                 player.sendMessage(e.getMob().getType().getInternalName());
             }
         }
     }
+
     @EventHandler
     public void onTimeRaidClear(TimeRaidClearEvent e) {
 
@@ -177,17 +174,17 @@ public class FirstClearListener implements Listener {
 
 
                 // 황금의 미궁 10레벨 짜리면 1-10
-                String clearedDungeonKey = e.getTimeRaid().getId() +"-"+e.getDifficulty();
+                String clearedDungeonKey = e.getTimeRaid().getId() + "-" + e.getDifficulty();
 
                 List<String> list = first.getList("cleared", String.class);
-                if(list.contains(clearedDungeonKey)) {
+                if (list.contains(clearedDungeonKey)) {
                     return;
                 } else {
                     Document rewardDocument = timeRaidFirstClearReward.find(new Document("id", clearedDungeonKey)).first();
                     Integer gold = rewardDocument.getInteger("gold");
                     Integer exp = rewardDocument.getInteger("exp");
                     ArrayList<ItemStack> itemList = new ArrayList<>();
-                    if(e.getDifficulty() == 10){
+                    if (e.getDifficulty() == 10) {
                         player.getInventory().addItem(MMOItems.plugin.getItem("MISCELLANEOUS", "퀘스트_익스트림황금의미궁LV1"));
                     }
                     for (String reward : rewardDocument.getList("rewards", String.class)) {
@@ -208,9 +205,9 @@ public class FirstClearListener implements Listener {
                     Mail mail = mailAPI.createMail("시스템", "타임 던전 첫 클리어 보상입니다. (" + e.getTimeRaid().getName() + ", Lv." + e.getDifficulty(), gold, itemList);
                     mailAPI.sendMail(player.getName(), mail);
 
-                    player.sendMessage(ColorManager.format("#41B07A  타임 던전: §f"+e.getTimeRaid().getName()+" §7§o(Lv."+e.getDifficulty()+") #41B07A첫 클리어 보상이 메일로 지급되었습니다! §7§o(/메일함 또는 /ㅁ)"));
+                    player.sendMessage(ColorManager.format("#41B07A  타임 던전: §f" + e.getTimeRaid().getName() + " §7§o(Lv." + e.getDifficulty() + ") #41B07A첫 클리어 보상이 메일로 지급되었습니다! §7§o(/메일함 또는 /ㅁ)"));
 
-                    System.out.println("player = " + player.getName() + " 타임 던전 첫 클리어 보상 지급 완료: "+clearedDungeonKey);
+                    System.out.println("player = " + player.getName() + " 타임 던전 첫 클리어 보상 지급 완료: " + clearedDungeonKey);
 
                     updateTimeRaidPlayerDocument(player, first, clearedDungeonKey);
                 }

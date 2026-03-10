@@ -13,6 +13,7 @@ import io.lumine.mythic.lib.api.player.MMOPlayerData;
 import io.lumine.mythic.lib.api.stat.StatInstance;
 import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.damage.DamageType;
+import io.lumine.mythic.lib.player.PlayerMetadata;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.*;
@@ -68,10 +69,13 @@ public class DamageListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerAttack(PlayerAttackEvent e) {
-
-        if (!e.getAttacker().getPlayer().isOp()) {
-            if (e.getEntity() instanceof Player) {
-                e.setCancelled(true);
+        PlayerMetadata eAttacker = e.getAttacker();
+        LivingEntity eVictim = e.getEntity();
+        if (!eAttacker.getPlayer().isOp()) {
+            if (eVictim instanceof Player) {
+                if(!EtCetera.getChannelType().equals("pvp")){
+                    e.setCancelled(true);
+                }
             }
         }
         MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
@@ -79,7 +83,7 @@ public class DamageListener implements Listener {
 
 
         if (EtCetera.getChannelType().equals("dungeon")) {
-            if (e.getAttacker() instanceof Player && e.getEntity() instanceof Player) {
+            if (eAttacker instanceof Player && eVictim instanceof Player) {
                 e.setCancelled(true);
             }
         }
@@ -241,16 +245,19 @@ public class DamageListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onDeathEvent(PlayerDeathEvent e){
+    public void onDeathEvent(PlayerDeathEvent e) {
         Player player = e.getPlayer();
-        if(player.getName().equals("dople_L")){
-            if(player.hasPotionEffect(PotionEffectType.HERO_OF_THE_VILLAGE)){
-                player.removePotionEffect(PotionEffectType.HERO_OF_THE_VILLAGE);
-                e.setCancelled(true);
-                player.setHealth(player.getMaxHealth() / 30);
-                player.sendMessage("§a    특수 효과로 죽음을 한번 면했습니다.");
+        if (player.hasPotionEffect(PotionEffectType.HERO_OF_THE_VILLAGE)) {
+            player.removePotionEffect(PotionEffectType.HERO_OF_THE_VILLAGE);
+            e.setCancelled(true);
+            Bukkit.getScheduler().runTaskLaterAsynchronously(EtCetera.getInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    player.setHealth(player.getMaxHealth() * 0.3);
+                }
+            }, 1L);
+            player.sendMessage("§a    특수 효과로 죽음을 한번 면했습니다.");
 
-            }
         }
 
     }

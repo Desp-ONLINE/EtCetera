@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Util.CommandUtil;
 
-public class EnderchestCommand implements CommandExecutor {
+public class EnderChestCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         Player player = (Player) commandSender;

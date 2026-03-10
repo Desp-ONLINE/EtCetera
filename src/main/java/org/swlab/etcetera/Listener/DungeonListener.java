@@ -45,16 +45,6 @@ public class DungeonListener implements Listener {
 //    private HashMap<Player, LocalDateTime> firstClearCooldown = new HashMap<>();
 
 
-    @EventHandler
-    public void onDungeonFail(DungeonFailedEvent e) {
-
-        List<Player> members = e.getDungeonRoom().getMembers();
-        for (Player member : members) {
-            MMOPlayerData mmoPlayerData = MMOPlayerData.get(member.getUniqueId());
-            mmoPlayerData.getCooldownMap().clearAllCooldowns();
-        }
-        e.setCancelledAmount(true);
-    }
 
 //    @EventHandler
 //    public void onDungeonCooldown(DungeonJoinEvent e) {
@@ -88,24 +78,23 @@ public class DungeonListener implements Listener {
     @EventHandler
     public void onDungeonClear(DungeonClearEvent e) {
 
-        List<Player> members = e.getDungeonRoom().getMembers();
-        for (Player member : members) {
-            MMOPlayerData mmoPlayerData = MMOPlayerData.get(member.getUniqueId());
+        List<PlayerDungeon> playerDungeons = e.getPlayerDungeons();
+        for (PlayerDungeon playerDungeon : playerDungeons) {
+            Player player = playerDungeon.toPlayer();
+            MMOPlayerData mmoPlayerData = MMOPlayerData.get(player.getUniqueId());
             mmoPlayerData.getCooldownMap().clearAllCooldowns();
-            if (!e.getDungeonRoom().isClear()) {
+            if (!e.getDungeonRoom().getController().isClear()) {
                 return;
             }
-            if (members.size() > 1) {
+            if (playerDungeons.size() > 1) {
                 return;
             }
-            boolean a = RaidCoinRepository.getInstance().giveNormalReward(member, e.getDungeonRoom().getConnected().getName());
-            boolean b = RaidCoinRepository.getInstance().giveSpecialReward(member, e.getDungeonRoom().getConnected().getName());
-
+            boolean a = RaidCoinRepository.getInstance().giveNormalReward(player, e.getDungeonRoom().getParent().getName());
+            boolean b = RaidCoinRepository.getInstance().giveSpecialReward(player, e.getDungeonRoom().getParent().getName());
             if (a || b) {
-                RaidCoinRepository.getInstance().updateUserRaidData(member, e.getDungeonRoom().getConnected().getName());
+                RaidCoinRepository.getInstance().updateUserRaidData(player, e.getDungeonRoom().getParent().getName());
             }
         }
-
 
     }
 
@@ -295,10 +284,15 @@ public class DungeonListener implements Listener {
 
     @EventHandler
     public void onDungeonQuit(DungeonFailedEvent e) {
-        for (Player player : e.getDungeonRoom().getMembers()) {
+        List<PlayerDungeon> playerDungeons = e.getPlayerDungeons();
+        for (PlayerDungeon playerDungeon : playerDungeons) {
+            Player player = playerDungeon.toPlayer();
             CommandUtil.runCommandAsOP(player, "spawn");
-
+            MMOPlayerData mmoPlayerData = MMOPlayerData.get(player.getUniqueId());
+            mmoPlayerData.getCooldownMap().clearAllCooldowns();
+            e.setCancelledAmount(true);
         }
+
     }
 
 //    @EventHandler

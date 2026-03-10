@@ -160,19 +160,6 @@ public class BasicListener implements Listener {
 
 
         if ((!player.hasPlayedBefore() && EtCetera.getChannelType().equals("lobby")) && EtCetera.getChannelNumber() == 1) {
-//            firstJoinCount++;
-//            String text = " §f摩 #8FFFAE" + player.getName() + " 님께서 서버에 &e첫 접속 #8FFFAE하셨습니다! 환영해주세요!";
-//            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-//                if (onlinePlayer.getName().equals("dople_L")) {
-//                    onlinePlayer.sendMessage("§7(오늘의 " + firstJoinCount + "번째 첫 접속자입니다.)");
-//                }
-//            }
-//            String format = ColorManager.format(text);
-//            Bukkit.broadcastMessage(format);
-
-//            VelocityClient.getInstance().getConnectClient().send(FirstJoinVelocityListener.class, format);
-
-
             if (!player.hasPermission("tutorial") && EtCetera.getChannelType().equals("lobby")) {
                 Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), () -> {
                     CommandUtil.runCommandAsOP(player, "튜토리얼");
@@ -184,7 +171,6 @@ public class BasicListener implements Listener {
         Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), () -> {
             {
                 PetUtil.loadPlayerPetData(player);
-
             }
         }, 40L);
 
@@ -195,7 +181,7 @@ public class BasicListener implements Listener {
                 player.clearActivePotionEffects();
             }
         }, 20L);
-        if (EtCetera.getInstance().getChannelType().equals("lobby")) {
+        if (EtCetera.getChannelType().equals("lobby") || EtCetera.getChannelType().equals("pvp") ) {
             CommandUtil.runCommandAsOP(player, "spawn");
         }
         MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());

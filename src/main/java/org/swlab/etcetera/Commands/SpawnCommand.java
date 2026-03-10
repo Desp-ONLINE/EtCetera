@@ -19,11 +19,12 @@ public class SpawnCommand implements CommandExecutor {
             Player player = (Player) sender;
             CommandUtil.runCommandAsOP(player, "warp 로비");
             return false;
-        } else {
+
+        }  else {
             Random random = new Random();
             int i = random.nextInt(0, 2);
             Player player = (Player) sender;
-            if(i == 0){
+            if (i == 0) {
                 CommandUtil.runCommandAsOP(player, "채널 워프 lobby warp 로비");
             }
             CommandUtil.runCommandAsOP(player, "채널 워프 lobby2 warp 로비");
