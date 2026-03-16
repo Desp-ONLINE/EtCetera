@@ -71,11 +71,10 @@ public class DamageListener implements Listener {
     public void onPlayerAttack(PlayerAttackEvent e) {
         PlayerMetadata eAttacker = e.getAttacker();
         LivingEntity eVictim = e.getEntity();
-        if (!eAttacker.getPlayer().isOp()) {
-            if (eVictim instanceof Player) {
-                if(!EtCetera.getChannelType().equals("pvp")){
-                    e.setCancelled(true);
-                }
+        if (eVictim instanceof Player) {
+            System.out.println("EtCetera.getChannelType() = " + EtCetera.getChannelType());
+            if (!EtCetera.getChannelType().equals("pvp")) {
+                e.setCancelled(true);
             }
         }
         MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
@@ -86,10 +85,6 @@ public class DamageListener implements Listener {
             if (eAttacker instanceof Player && eVictim instanceof Player) {
                 e.setCancelled(true);
             }
-        }
-        if (EtCetera.getChannelType().equals("dungeon") && e.getEntity() instanceof Player) {
-            e.setCancelled(true);
-            return;
         }
 
 
@@ -263,15 +258,5 @@ public class DamageListener implements Listener {
     }
 
 
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onMythicHitEvent(MythicDamageEvent e) {
 
-        SkillCaster caster = e.getCaster();
-        AbstractEntity target = e.getTarget();
-        if (caster.getEntity().isPlayer() && target.isPlayer()) {
-            e.setCancelled(true);
-        }
-
-
-    }
 }

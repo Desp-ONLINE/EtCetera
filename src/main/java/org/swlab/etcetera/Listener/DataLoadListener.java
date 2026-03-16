@@ -27,6 +27,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.*;
+import org.dople.dataSync.event.DataLoadEvent;
 import org.swlab.etcetera.EtCetera;
 import su.nightexpress.excellentcrates.api.event.CrateOpenEvent;
 
@@ -61,13 +62,7 @@ public class DataLoadListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerJoin(ProfileSelectEvent event) {
-        Player player = event.getPlayer();
-        isDataLoaded.put(player, true);
-    }
-
-    @EventHandler
-    public void onPlayerJoin(ProfileCreateEvent event) {
+    public void onPlayerJoin(DataLoadEvent event) {
         Player player = event.getPlayer();
         isDataLoaded.put(player, true);
     }
@@ -88,85 +83,85 @@ public class DataLoadListener implements Listener {
     }
 
 
-    @EventHandler
-    public void onCommand(PlayerCommandPreprocessEvent e) {
-        Player player = e.getPlayer();
-        if (e.getMessage().equals("/직업") || e.getMessage().equals("/wlrdjq") || e.getMessage().equals("/채널") || e.getMessage().equals("/cosjf")) {
-            return;
-        }
-
-        if (e.getMessage().equals("/창고") || e.getMessage().equals("/ckdrh") || e.getMessage().equals("/cr") || e.getMessage().equals("/ㅊㄱ")) {
-            if (getPlayerLevel(player) <= 1) {
-                e.setCancelled(true);
-                player.sendMessage("§c 1레벨인 경우 창고를 이용하실 수 없습니다.");
-                return;
-            }
-        }
-
-        if (validCheck(player)) {
-            player.sendMessage("§c 데이터가 로드 중이거나 로드에 실패했거나, 직업이 없습니다. 직업을 선택하시거나, 채널을 이동 해주세요. (/직업) (/채널)");
-            e.setCancelled(true);
-        }
-    }
-
-    @EventHandler
-    public void onCommand(InventoryClickEvent e) {
-        Player player = (Player) e.getWhoClicked();
-        if (e.getView().getTitle().equals("직업 선택")) {
-            return;
-        }
-        if (e.getView().getTitle().equals("채널 선택")) {
-            return;
-        }
-//        if(e.getClickedInventory().getHolder() instanceof Chest){
-//            if(getPlayerLevel(player) <= 1){
+//    @EventHandler
+//    public void onCommand(PlayerCommandPreprocessEvent e) {
+//        Player player = e.getPlayer();
+//        if (e.getMessage().equals("/직업") || e.getMessage().equals("/wlrdjq") || e.getMessage().equals("/채널") || e.getMessage().equals("/cosjf")) {
+//            return;
+//        }
+//
+//        if (e.getMessage().equals("/창고") || e.getMessage().equals("/ckdrh") || e.getMessage().equals("/cr") || e.getMessage().equals("/ㅊㄱ")) {
+//            if (getPlayerLevel(player) <= 1) {
 //                e.setCancelled(true);
 //                player.sendMessage("§c 1레벨인 경우 창고를 이용하실 수 없습니다.");
 //                return;
 //            }
 //        }
-        if (validCheck(player)) {
-            if (e.getClickedInventory().getType().equals(InventoryType.PLAYER)) {
-                e.setCancelled(true);
-                player.sendMessage("§c 데이터가 로드 중이거나 로드에 실패했거나, 직업이 없습니다. 직업을 선택하시거나, 채널을 이동 해주세요. (/직업) (/채널)");
-            }
-        }
-    }
-
-    @EventHandler
-    public void onCommand(InventoryOpenEvent e) {
-        Player player = (Player) e.getPlayer();
-
-        if (e.getView().getTitle().equals("직업 선택")) {
-            return;
-        }
-        if (e.getView().getTitle().equals("채널 선택")) {
-            return;
-        }
-        if (e.getView().getTitle().equals("창고")) {
-            if (getPlayerLevel(player) <= 1) {
-                e.setCancelled(true);
-                player.sendMessage("§c 1레벨인 경우 창고를 이용하실 수 없습니다.");
-                return;
-            }
-        }
-
-        if (validCheck(player)) {
-            player.sendMessage("§c 데이터가 로드 중이거나 로드에 실패했거나, 직업이 없습니다. 직업을 선택하시거나, 채널을 이동 해주세요. (/직업)");
-
-            e.setCancelled(true);
-        }
-    }
-
-    @EventHandler
-    public void onCommand(PlayerInteractEvent e) {
-        Player player = e.getPlayer();
-
-        if (validCheck(player)) {
-            player.sendMessage("§c 데이터가 로드 중이거나 로드에 실패했거나, 직업이 없습니다. 직업을 선택하시거나, 채널을 이동 해주세요. (/직업)");
-            e.setCancelled(true);
-        }
-    }
+//
+//        if (validCheck(player)) {
+//            player.sendMessage("§c 데이터가 로드 중이거나 로드에 실패했거나, 직업이 없습니다. 직업을 선택하시거나, 채널을 이동 해주세요. (/직업) (/채널)");
+//            e.setCancelled(true);
+//        }
+//    }
+//
+//    @EventHandler
+//    public void onCommand(InventoryClickEvent e) {
+//        Player player = (Player) e.getWhoClicked();
+//        if (e.getView().getTitle().equals("직업 선택")) {
+//            return;
+//        }
+//        if (e.getView().getTitle().equals("채널 선택")) {
+//            return;
+//        }
+////        if(e.getClickedInventory().getHolder() instanceof Chest){
+////            if(getPlayerLevel(player) <= 1){
+////                e.setCancelled(true);
+////                player.sendMessage("§c 1레벨인 경우 창고를 이용하실 수 없습니다.");
+////                return;
+////            }
+////        }
+//        if (validCheck(player)) {
+//            if (e.getClickedInventory().getType().equals(InventoryType.PLAYER)) {
+//                e.setCancelled(true);
+//                player.sendMessage("§c 데이터가 로드 중이거나 로드에 실패했거나, 직업이 없습니다. 직업을 선택하시거나, 채널을 이동 해주세요. (/직업) (/채널)");
+//            }
+//        }
+//    }
+//
+//    @EventHandler
+//    public void onCommand(InventoryOpenEvent e) {
+//        Player player = (Player) e.getPlayer();
+//
+//        if (e.getView().getTitle().equals("직업 선택")) {
+//            return;
+//        }
+//        if (e.getView().getTitle().equals("채널 선택")) {
+//            return;
+//        }
+//        if (e.getView().getTitle().equals("창고")) {
+//            if (getPlayerLevel(player) <= 1) {
+//                e.setCancelled(true);
+//                player.sendMessage("§c 1레벨인 경우 창고를 이용하실 수 없습니다.");
+//                return;
+//            }
+//        }
+//
+//        if (validCheck(player)) {
+//            player.sendMessage("§c 데이터가 로드 중이거나 로드에 실패했거나, 직업이 없습니다. 직업을 선택하시거나, 채널을 이동 해주세요. (/직업)");
+//
+//            e.setCancelled(true);
+//        }
+//    }
+//
+//    @EventHandler
+//    public void onCommand(PlayerInteractEvent e) {
+//        Player player = e.getPlayer();
+//
+//        if (validCheck(player)) {
+//            player.sendMessage("§c 데이터가 로드 중이거나 로드에 실패했거나, 직업이 없습니다. 직업을 선택하시거나, 채널을 이동 해주세요. (/직업)");
+//            e.setCancelled(true);
+//        }
+//    }
 
 
     @EventHandler

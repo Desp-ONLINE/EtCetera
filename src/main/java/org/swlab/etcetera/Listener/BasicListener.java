@@ -43,6 +43,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
+import org.dople.dataSync.event.DataLoadEvent;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Repositories.RaidCoinRepository;
 import org.swlab.etcetera.Repositories.UserSettingRepository;
@@ -78,7 +79,11 @@ public class BasicListener implements Listener {
 
     @EventHandler
     public void cancelPlayerDebuff(MythicProjectileHitEvent e) {
-        if (e.getProjectile().getData().getCaster().getEntity().isPlayer()) {
+        AbstractEntity entity = e.getProjectile().getData().getCaster().getEntity();
+        if(EtCetera.getChannelType().equalsIgnoreCase("pvp")){
+            return;
+        }
+        if (entity.isPlayer()) {
             if (e.getEntity().isPlayer()) {
                 MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
                 if (mmoCoreAPI.isInSameParty((Player) e.getProjectile().getData().getCaster().getEntity().asPlayer().getBukkitEntity(), (Player) e.getEntity().asPlayer().getBukkitEntity())) {
@@ -110,6 +115,7 @@ public class BasicListener implements Listener {
             }
         }
     }
+
 
 
     @EventHandler
@@ -241,10 +247,27 @@ public class BasicListener implements Listener {
     }
 
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPotion(EntityPotionEffectEvent e) {
 
         Entity entity = e.getEntity();
+
+
+        // 남은 시간이 기존게 더 길고, 레벨도 높으면 안덮어씌우게.
+
+        if(entity instanceof Player player){
+            PotionEffect oldEffect = e.getOldEffect();
+            PotionEffect newEffect = e.getNewEffect();
+            if(newEffect == null){
+                return;
+            }
+            PotionEffect currentPotionEffect = player.getPotionEffect(oldEffect.getType());
+            if((currentPotionEffect.getDuration() > newEffect.getDuration()) &&
+                    (currentPotionEffect.getAmplifier() > newEffect.getAmplifier() )){
+                e.setCancelled(true);
+                return;
+            }
+        }
 
         // 대상: 소 (다른 엔티티도 원하면 조건 제거)
         if (!(entity instanceof Cow cow)) return;
@@ -274,7 +297,7 @@ public class BasicListener implements Listener {
     }
 
     @EventHandler
-    public void onProfileLoad(ProfileSelectEvent e) {
+    public void onProfileLoad(DataLoadEvent e) {
         Player player = e.getPlayer();
         player.setHealth(player.getMaxHealth());
 //        NameTagUtil.setPlayerNameTag(player);

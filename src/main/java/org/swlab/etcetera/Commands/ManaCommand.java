@@ -15,11 +15,20 @@ public class ManaCommand implements CommandExecutor {
         Player player = (Player) commandSender;
         MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
         PlayerData playerData = mmoCoreAPI.getPlayerData(player);
-        if(strings.length < 1){
+        if (strings.length < 1) {
             return false;
         }
-        double v = Double.parseDouble(strings[0]);
-        playerData.giveMana(v);
-        return false;
+        if (strings[0].contains("%")) {
+            String replace = strings[0].replace("%", "");
+            double v = Double.parseDouble(replace);
+            double maxMana = playerData.getStats().getStat("MAX_MANA");
+            playerData.giveMana(maxMana * (v / 100));
+            return true;
+        } else {
+            double v = Double.parseDouble(strings[0]);
+            playerData.giveMana(v);
+            return false;
+        }
+
     }
 }

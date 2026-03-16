@@ -21,8 +21,9 @@ public class BrewingCommand implements CommandExecutor {
         int i = random.nextInt(0, 2);
         if (i == 0) {
             CommandUtil.runCommandAsOP(player, "채널 워프 lobby 워프 이동 양조");
+        } else {
+            CommandUtil.runCommandAsOP(player, "채널 워프 lobby2 워프 이동 양조");
         }
-        CommandUtil.runCommandAsOP(player, "채널 워프 lobby2 워프 이동 양조");
         return true;
     }
 }
