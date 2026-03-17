@@ -261,6 +261,9 @@ public class BasicListener implements Listener {
             if(newEffect == null){
                 return;
             }
+            if(oldEffect == null){
+                return;
+            }
             PotionEffect currentPotionEffect = player.getPotionEffect(oldEffect.getType());
             if((currentPotionEffect.getDuration() > newEffect.getDuration()) &&
                     (currentPotionEffect.getAmplifier() > newEffect.getAmplifier() )){

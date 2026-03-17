@@ -26,9 +26,18 @@ public class RaidCoinCommand implements CommandExecutor {
                 return false;
             }
             if(sender.hasPermission("*")){
-                RaidCoinRepository.getInstance().giveNormalReward(player, strings[1]);
-                RaidCoinRepository.getInstance().giveSpecialReward(player, strings[1]);
-                RaidCoinRepository.getInstance().updateUserRaidData(player, strings[1]);
+                String s1 = strings[1] + " " + strings[2];
+                System.out.println("s1 = " + s1);
+                if(strings.length == 3){
+                    RaidCoinRepository.getInstance().giveNormalReward(player, strings[1]+" "+strings[2]);
+                    RaidCoinRepository.getInstance().giveSpecialReward(player, strings[1]+" "+strings[2]);
+                    RaidCoinRepository.getInstance().updateUserRaidData(player, strings[1]+" "+strings[2]);
+                } else {
+                    RaidCoinRepository.getInstance().giveNormalReward(player, strings[1]);
+                    RaidCoinRepository.getInstance().giveSpecialReward(player, strings[1]);
+                    RaidCoinRepository.getInstance().updateUserRaidData(player, strings[1]);
+                }
+
             }
             return true;
         }

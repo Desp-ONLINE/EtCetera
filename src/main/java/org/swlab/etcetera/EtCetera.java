@@ -158,6 +158,7 @@ public final class EtCetera extends JavaPlugin {
 
         }
         Bukkit.getPluginManager().registerEvents(new LeapListener(), this);
+        Bukkit.getPluginManager().registerEvents(new MimicListener(), this);
         Bukkit.getPluginManager().registerEvents(new BasicListener(), this);
         Bukkit.getPluginManager().registerEvents(new PetListener(), this);
         Bukkit.getPluginManager().registerEvents(new EquipListener(), this);
