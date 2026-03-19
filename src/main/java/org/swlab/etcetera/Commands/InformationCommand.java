@@ -33,6 +33,7 @@ public class InformationCommand implements CommandExecutor {
         double movementSpeed = Math.round(statMap.getStat("MOVEMENT_SPEED") * 100) / 100.0;
 
         double additionalExperience = Math.round(statMap.getStat("ADDITIONAL_EXPERIENCE") * 100) / 100.0;
+        double maxMana = Math.round(statMap.getStat("MAX_MANA") * 100) / 100.0;
         double customBossdamage = Math.round(statMap.getStat("CUSTOM_BOSSDAMAGE") * 100) / 100.0;
 
         long maxHealth = Math.round(health);
@@ -65,6 +66,10 @@ public class InformationCommand implements CommandExecutor {
         player.sendMessage(" ");
         player.sendMessage("§f  Ӻ §a경험치 획득량: §f+" + numberFormat.format(additionalExperience) + "%");
         sendDetailedInfo(player, statMap, "ADDITIONAL_EXPERIENCE");
+
+        player.sendMessage(" ");
+        player.sendMessage(ColorManager.format("&3  &fᎤ #2B5389최대 마나: §f+" + numberFormat.format(maxMana)));
+        sendDetailedInfo(player, statMap, "MAX_MANA");
 
         player.sendMessage(" ");
         player.sendMessage(ColorManager.format("§f  ｦ #8C5FBA보스 대상 공격력: §f+") + numberFormat.format(customBossdamage) + "%");
@@ -105,7 +110,7 @@ public class InformationCommand implements CommandExecutor {
                 continue;
             }
             resultMessage += "§7§o" + getStatSource(entry.getKey()) + ": §f§o" + (String.format("%.1f", entry.getValue()));
-            if (!statName.equals("MAX_HEALTH")) {
+            if (!statName.equals("MAX_HEALTH") && !statName.equals("MAX_MANA")) {
                 resultMessage += "%  |  ";
                 continue;
             }

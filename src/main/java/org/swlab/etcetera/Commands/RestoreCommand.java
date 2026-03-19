@@ -110,6 +110,16 @@ public class RestoreCommand implements CommandExecutor {
                     player.sendMessage("§a 아이템 복구가 완료되었습니다. (바벨탑 90층 공략증)");
                     player.getInventory().addItem(item3);
 
+                }if (clearFloor >= 95) {
+                    ItemStack item3 = MMOItems.plugin.getItem("MISCELLANEOUS", "퀘스트_바벨탑증표_95");
+                    player.sendMessage("§a 아이템 복구가 완료되었습니다. (바벨탑 95층 공략증)");
+                    player.getInventory().addItem(item3);
+
+                }if (clearFloor >= 100) {
+                    ItemStack item3 = MMOItems.plugin.getItem("MISCELLANEOUS", "퀘스트_바벨탑증표_100");
+                    player.sendMessage("§a 아이템 복구가 완료되었습니다. (바벨탑 100층 공략증)");
+                    player.getInventory().addItem(item3);
+
                 }
                 return false;
             case "전직":

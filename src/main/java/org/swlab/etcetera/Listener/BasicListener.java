@@ -187,8 +187,11 @@ public class BasicListener implements Listener {
                 player.clearActivePotionEffects();
             }
         }, 20L);
-        if (EtCetera.getChannelType().equals("lobby") || EtCetera.getChannelType().equals("pvp") ) {
+        if (EtCetera.getChannelType().equals("lobby")) {
             CommandUtil.runCommandAsOP(player, "spawn");
+        }
+        else if (EtCetera.getChannelType().equalsIgnoreCase("pvp")){
+            CommandUtil.runCommandAsOP(player, "warp pvp");
         }
         MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
         mmoCoreAPI.getPlayerData(player).setClassPoints(999);
@@ -393,7 +396,12 @@ public class BasicListener implements Listener {
     public void onDeath(PlayerDeathEvent e) {
         Player player = e.getPlayer();
         e.setKeepInventory(true);
-        e.setDeathMessage(null);
+        if(!EtCetera.getChannelType().equalsIgnoreCase("pvp")){
+            e.setDeathMessage(null);
+        }
+        else {
+            e.setDeathMessage(ColorManager.format("§c  [ ⚔ PvP ] #FFD700"+e.getPlayer().getKiller().getName()+" #FFFFFF님께서 #FF4C4C"+e.getPlayer().getName()+"#FFFFFF 님을 처치했습니다."));
+        }
         if (e.getPlayer().getWorld().getName().equals("raid")) {
             return;
         }
