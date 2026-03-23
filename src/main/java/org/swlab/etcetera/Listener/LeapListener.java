@@ -30,8 +30,6 @@ public class LeapListener implements Listener {
     }
 
 
-
-
     @EventHandler
     public void onItemSwap(PlayerSwapHandItemsEvent e) {
         Player p = e.getPlayer();
@@ -51,12 +49,12 @@ public class LeapListener implements Listener {
                 return;
             }
             Vector vector;
-            if (EtCetera.getChannelType().equals("lobby")) {
-                if (p.getWorld().getName().equals("adventures")){
+            if(EtCetera.getChannelType().equalsIgnoreCase("pvp")){
+                vector = p.getLocation().getDirection().normalize().multiply(1.3).setY(0.3);
+            }
+            else if (EtCetera.getChannelType().equals("lobby")) {
+                if (p.getWorld().getName().equals("adventures")) {
                     return;
-                }
-                else if (p.getWorld().getName().equals("pvp")) {
-                    vector = p.getLocation().getDirection().normalize().multiply(1.3).setY(0.5);
                 } else {
                     vector = p.getLocation().getDirection().normalize().multiply(2.2).setY(0.5);
                 }
@@ -70,7 +68,7 @@ public class LeapListener implements Listener {
     }
 
 
-    public void runEffect(Player player){
+    public void runEffect(Player player) {
         player.playSound(player.getLocation(), Sound.ENTITY_PHANTOM_FLAP, 2.0f, 2.2f);
 
         player.getWorld().spawnParticle(
@@ -81,11 +79,13 @@ public class LeapListener implements Listener {
                 0.01                                              // 속도
         );
     }
+
     public boolean isCooldown(UUID uuid) {
         long now = System.currentTimeMillis();
         return !cooldowns.containsKey(uuid) || now - cooldowns.get(uuid) >= 3000;
     }
-    public void addCooldown(UUID uuid){
+
+    public void addCooldown(UUID uuid) {
         long now = System.currentTimeMillis();
         cooldowns.put(uuid, now);
     }

@@ -17,6 +17,7 @@ import org.swlab.etcetera.Database.DatabaseRegister;
 import org.swlab.etcetera.Listener.*;
 import org.swlab.etcetera.Placeholder.CooldownPlaceholder;
 import org.swlab.etcetera.Placeholder.LevelPlaceholder;
+import org.swlab.etcetera.Repositories.MimicRepository;
 import org.swlab.etcetera.Repositories.RaidCoinRepository;
 import org.swlab.etcetera.Repositories.UserSettingRepository;
 import org.swlab.etcetera.Util.PetUtil;
@@ -69,6 +70,7 @@ public final class EtCetera extends JavaPlugin {
         startAutoNotice();
         loadAllDatas();
         RaidCoinRepository.getInstance().loadCoinData();
+        MimicRepository.getInstance().loadData();
         SkillCooldownNotice.scheduleStart();
 
 
@@ -77,6 +79,7 @@ public final class EtCetera extends JavaPlugin {
 
     public void registerRepositories(){
         new UserSettingRepository();
+        new MimicRepository();
     }
 
     public static String getChannelType() {

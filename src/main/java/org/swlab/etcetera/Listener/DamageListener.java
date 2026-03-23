@@ -72,7 +72,6 @@ public class DamageListener implements Listener {
         PlayerMetadata eAttacker = e.getAttacker();
         LivingEntity eVictim = e.getEntity();
         if (eVictim instanceof Player) {
-            System.out.println("EtCetera.getChannelType() = " + EtCetera.getChannelType());
             if (!EtCetera.getChannelType().equals("pvp")) {
                 e.setCancelled(true);
             }
@@ -142,55 +141,40 @@ public class DamageListener implements Listener {
             damage += damage * ((attacker.getPotionEffect(PotionEffectType.INCREASE_DAMAGE).getAmplifier() + 1) * 10) / 100;
         }
         ActiveMob mythicMobInstance = MythicBukkit.inst().getMobManager().getMythicMobInstance(e.getEntity());
-        if (mythicMobInstance == null) {
-            return;
+        if (mythicMobInstance != null) {
+            AuraRegistry auraRegistry = mythicMobInstance.getAuraRegistry();
+
+            double multiply = 1;
+
+
+            for (String auraKey : damageMultipliers) {
+                for (String auraKeys : auraRegistry.getAuras().keySet()) {
+                    if (auraKeys.startsWith(auraKey)) {
+                        String replace = auraKeys.replace(auraKey + "_", "");
+                        double i = Double.parseDouble(replace);
+                        multiply += (i / 100);
+                    }
+                }
+            }
+            damage *= multiply;
         }
 
         // 최종데미지 증가
-        AuraRegistry auraRegistry = mythicMobInstance.getAuraRegistry();
-
-        double multiply = 1;
 
 
-        for (String auraKey : damageMultipliers) {
-            for (String auraKeys : auraRegistry.getAuras().keySet()) {
-                if (auraKeys.startsWith(auraKey)) {
-                    String replace = auraKeys.replace(auraKey + "_", "");
-                    double i = Double.parseDouble(replace);
-                    multiply += (i / 100);
-                }
-            }
-        }
-        damage *= multiply;
-
-
-//        if (e.getAttack().getDamage().getInitialPacket().hasType(DamageType.WEAPON)) {
-//            e.getAttack().getDamage().registerSkillCriticalStrike();
-//        }
         boolean skillCriticalStrike = e.getAttack().getDamage().isSkillCriticalStrike();
-//        if (attacker.isOp()) {
-//            attacker.sendMessage(""+skillCriticalStrike);
-//            if(skillCriticalStrike){
-//                MMOPlayerData mmoPlayerData = MMOPlayerData.get(attacker);
-//
-//                double skillCriticalStrikePower = mmoPlayerData.getStatMap().getStat("SKILL_CRITICAL_STRIKE_POWER");
-//                attacker.sendMessage(skillCriticalStrikePower + "");
-//                attacker.sendMessage("" + damage);
-//                damage *= 1 + (skillCriticalStrikePower / 100);
-//            }
-//
-//
-//        }
+
 
         double originalDamage = e.getDamage().getDamage();
         DamageMetadata damageMetadata = e.getDamage().add(damage - originalDamage);
         double fixedDamage = Math.round(damageMetadata.getDamage());
 
 
+
         if (skillCriticalStrike) {
 
             if (UserSettingRepository.getInstance().isShowDamageChat(attacker)) {
-                if (victim instanceof Cow) {
+                if (victim instanceof Cow || victim instanceof Player) {
                     Bukkit.getScheduler().runTaskLaterAsynchronously(EtCetera.getInstance(), new Runnable() {
                         @Override
                         public void run() {
@@ -205,7 +189,7 @@ public class DamageListener implements Listener {
         }
         if (UserSettingRepository.getInstance().isShowDamageChat(attacker)) {
             if (UserSettingRepository.getInstance().isShowDamageChat(attacker)) {
-                if (victim instanceof Cow) {
+                if (victim instanceof Cow || victim instanceof Player) {
                     Bukkit.getScheduler().runTaskLaterAsynchronously(EtCetera.getInstance(), new Runnable() {
                         @Override
                         public void run() {
