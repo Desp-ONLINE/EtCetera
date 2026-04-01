@@ -101,8 +101,27 @@ public class DungeonListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onDungeonEnter(DungeonJoinEvent e) {
         Integer dungeonID = e.getDungeon().getId();
-
         boolean joinable = true;
+
+        if(dungeonID == 114 || dungeonID == 109){
+            for (PlayerDungeon playerDungeon : e.getPlayerDungeons()) {
+                PlayerClearLog exKanaloaClearLog = playerDungeon.getClearLog(114);
+                PlayerClearLog kanaloaClearLog = playerDungeon.getClearLog(109);
+
+                if(!exKanaloaClearLog.isJoinableDate()){
+                    joinable = false;
+                }
+                if(!kanaloaClearLog.isJoinableDate()){
+                    joinable = false;
+                }
+            }
+            if (!joinable) {
+                e.setCancelMessage("§c 이미 금주에 카날로아 레이드를 완료하셨습니다.");
+                e.setCancelled(true);
+                return;
+            }
+        }
+
         if (jinRegionCommandersDungeonID.contains(dungeonID)) {
             for (PlayerDungeon playerDungeon : e.getPlayerDungeons()) {
                 for (Integer i : jinRegionCommandersDungeonID) {
@@ -115,6 +134,7 @@ public class DungeonListener implements Listener {
             if (!joinable) {
                 e.setCancelMessage("§c 이미 진 레기온의 군단장 레이드를 오늘 플레이 하셨습니다.");
                 e.setCancelled(true);
+                return;
             }
         }
 

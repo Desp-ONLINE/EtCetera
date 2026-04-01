@@ -123,29 +123,17 @@ public class InformationCommand implements CommandExecutor {
     }
 
     public String getStatSource(String key) {
-        switch (key) {
-            case "CollectionBook":
-                return "도감";
-            case "MMOCollectionBookCouple":
-                return "인연";
-            case "MMOItems":
-                return "(구) 장비 시스템";
-            case "Equipment":
-                return "장비";
-            case "ItemSet":
-                return "세트 효과";
-            case "Alliance":
-                return "얼라이언스";
-            case "MMOGuild":
-                return "길드";
-            case "PetCollection":
-                return "펫 도감";
-            case "Decoration":
-                return "치장";
-            case "ContributeTower":
-                return "공헌의 탑";
-            default:
-                return "스텟";
-        }
+        if (key.startsWith("CollectionBook")) return "도감";
+        if (key.startsWith("MMOCollectionBookCouple")) return "인연";
+        if (key.startsWith("MMOItems")) return "(구) 장비 시스템";
+        if (key.startsWith("Equipment")) return "장비";
+        if (key.startsWith("ItemSet")) return "세트 효과";
+        if (key.startsWith("Alliance")) return "얼라이언스";
+        if (key.startsWith("MMOGuild")) return "길드";
+        if (key.startsWith("PetCollection")) return "펫 도감";
+        if (key.startsWith("Decoration")) return "치장";
+        if (key.startsWith("DecoPotential")) return "치장 코어";
+        if (key.startsWith("ContributeTower")) return "공헌의 탑";
+        return "스텟";
     }
 }

@@ -14,39 +14,35 @@ public class VersusCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         Player player = (Player) sender;
-        if (!EtCetera.getChannelType().equals("pvp")) {
-            player.sendMessage("§c (/pvp) 채널 에서만 이용하실 수 있습니다.");
-            return false;
-        }
-        return true;
-    }
-}
-
-
-
-
-
-
-
-
-//        if(EtCetera.getChannelNumber() == 2){
-//            player.sendMessage("§c 영혼의 대결은 로비 1채널에서만 사용하실 수 있습니다. §7§o(/채널 명령어를 통해 이동하실 수 있습니다.)");
+//        if (!EtCetera.getChannelType().equals("pvp")) {
+//            player.sendMessage("§c (/pvp) 채널 에서만 이용하실 수 있습니다.");
 //            return false;
 //        }
-//        if (args.length == 0) {
-//            player.sendMessage(ColorManager.format("#5798FF /대결 매칭 &f- 영혼의 대결 매칭 대기열에 입/퇴장합니다. &7&o(입장 후 입력 시 퇴장됩니다.)"));
-//            player.sendMessage(ColorManager.format("#5798FF /대결 정보 &f- 내 영혼의 대결 정보를 확인합니다."));
-//            player.sendMessage(ColorManager.format("#5798FF /대결 랭킹 &f- 영혼의 대결 랭킹을 확인합니다."));
-//            player.sendMessage(ColorManager.format("#5798FF /대결 티어 &f- 영혼의 대결 티어 승점 기준을 확인합니다."));
-//            player.sendMessage("");
-//            player.sendMessage(ColorManager.format("#5798FF [!] 영혼의 대결 보상은 위키에서 확인하실 수 있습니다!"));
-//            player.sendMessage("");
-//            return true;
-//        }
-//        switch (args[0]) {
-//            case "매칭":
-//                CommandUtil.runCommandAsOP(player, "아포칼립스매치 매칭");
-//                break;
+        if (args.length == 0) {
+            player.sendMessage(ColorManager.format("#5798FF /대결 매칭 &f- 대결 매칭 대기열에 입장합니다."));
+            player.sendMessage(ColorManager.format("#5798FF /대결 취소 &f- 대결 매칭 대기열에 퇴장합니다."));
+            player.sendMessage(ColorManager.format("#5798FF /대결 관전 <닉네임> &f- 대전 중인 해당 플레이어의 경기를 관전합니다."));
+//            player.sendMessage(ColorManager.format("#5798FF /대결 정보 &f- 내 대결 정보를 확인합니다."));
+//            player.sendMessage(ColorManager.format("#5798FF /대결 랭킹 &f- 대결 랭킹을 확인합니다."));
+//            player.sendMessage(ColorManager.format("#5798FF /대결 티어 &f- 대결 티어 승점 기준을 확인합니다."));
+            player.sendMessage("");
+            player.sendMessage(ColorManager.format("#5798FF [!] 대결 보상은 위키에서 확인하실 수 있습니다!"));
+            player.sendMessage("");
+            return true;
+        }
+        switch (args[0]) {
+            case "매칭":
+                CommandUtil.runCommandAsOP(player, "rank queue");
+                break;
+            case "취소":
+                CommandUtil.runCommandAsOP(player, "rank leave");
+                break;
+            case "관전":
+                if(args[1].isEmpty()){
+                    player.sendMessage(ColorManager.format("#5798FF /대결 관전 <닉네임> &f- 대전 중인 해당 플레이어의 경기를 관전합니다."));
+                    break;
+                }
+                CommandUtil.runCommandAsOP(player,"rank spectate "+args[1]);
 //            case "정보":
 //                String top = PlaceholderAPI.setPlaceholders(player, "%Versus_myTop%");
 //                String score = PlaceholderAPI.setPlaceholders(player, "%Versus_myScore%");
@@ -84,9 +80,9 @@ public class VersusCommand implements CommandExecutor {
 //                player.sendMessage("");
 //                player.sendMessage(ColorManager.format("#5798FF [영혼의 대결] &f 랭킹 정보입니다."));
 //                player.sendMessage("");
-//                player.sendMessage(ColorManager.format("&a  &7&o영광의 &a1위: &f" + tier1 + " " + name1 + " §8| &e" + score1 + "점 &7&o ( 상위 " + top1 + " ) &3승률: &f"+rate1));
-//                player.sendMessage(ColorManager.format("&a  &7&o열정의 &b2위: &f" + tier2 + " " + name2 + " §8| &e" + score2 + "점 &7&o ( 상위 " + top2 + " ) &3승률: &f"+rate2));
-//                player.sendMessage(ColorManager.format("&a  &7&o기적의 &e3위: &f" + tier3 + " " + name3 + " §8| &e" + score3 + "점 &7&o ( 상위 " + top3 + " ) &3승률: &f"+rate3));
+//                player.sendMessage(ColorManager.format("&a  &7&o영광의 &a1위: &f" + tier1 + " " + name1 + " §8| &e" + score1 + "점 &7&o ( 상위 " + top1 + " ) &3승률: &f" + rate1));
+//                player.sendMessage(ColorManager.format("&a  &7&o열정의 &b2위: &f" + tier2 + " " + name2 + " §8| &e" + score2 + "점 &7&o ( 상위 " + top2 + " ) &3승률: &f" + rate2));
+//                player.sendMessage(ColorManager.format("&a  &7&o기적의 &e3위: &f" + tier3 + " " + name3 + " §8| &e" + score3 + "점 &7&o ( 상위 " + top3 + " ) &3승률: &f" + rate3));
 //                player.sendMessage("");
 //                break;
 //            case "티어":
@@ -101,9 +97,21 @@ public class VersusCommand implements CommandExecutor {
 //                player.sendMessage(ColorManager.format("§f  њ #7544A9마스터: &f승점 #7544A975&f점 이상"));
 //                player.sendMessage("");
 //                break;
-//
-//
-//        }
+
+
+        }
+        return true;
+    }
+}
+
+
+
+
+
+
+
+
+
 ////        CommandUtil.runCommandAsOP(player, "아포칼립스매치 매칭");
 ////        player.sendMessage("§3[영혼의 대결] §7§o(BETA) §f/대결 을 한번 더 입력하여 매칭에서 퇴장하실 수 있습니다.");
 //        return true;
