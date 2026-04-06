@@ -124,7 +124,7 @@ public class RaidCoinRepository {
         }
         List<ItemStack> items = new ArrayList<>();
 
-        ItemStack item = MMOItems.plugin.getItem("MISCELLANEOUS", "기타_보스코인");
+        ItemStack item = MMOItems.plugin.getItem("MISCELLANEOUS", "기타_보스코인2");
         item.setAmount(normalRewardGapAmount);
         items.add(item);
 
@@ -147,7 +147,7 @@ public class RaidCoinRepository {
         }
         List<ItemStack> items = new ArrayList<>();
 
-        ItemStack item = MMOItems.plugin.getItem("MISCELLANEOUS", "기타_상급보스코인");
+        ItemStack item = MMOItems.plugin.getItem("MISCELLANEOUS", "기타_상급보스코인2");
         item.setAmount(specialRewardGapAmount);
         items.add(item);
 
