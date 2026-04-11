@@ -3,26 +3,13 @@ package org.swlab.etcetera.Listener;
 import com.binggre.binggreapi.utils.ColorManager;
 import com.binggre.mmotimereset.api.DailyResetEvent;
 import com.binggre.mmotimereset.api.WeeklyResetEvent;
-import com.binggre.velocitysocketclient.VelocityClient;
 import de.kinglol12345.GUIPlus.events.GUIClickEvent;
 import fr.nocsy.mcpets.api.MCPetsAPI;
 import fr.nocsy.mcpets.data.Pet;
-import fr.phoenixdevt.mmoprofiles.bukkit.MMOProfiles;
-import fr.phoenixdevt.mmoprofiles.bukkit.profile.ProfileListImpl;
-import fr.phoenixdevt.profiles.event.ProfileSelectEvent;
 import io.lumine.mythic.api.adapters.AbstractEntity;
-import io.lumine.mythic.api.skills.SkillCaster;
-import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.bukkit.adapters.BukkitPlayer;
-import io.lumine.mythic.bukkit.events.MythicDamageEvent;
 import io.lumine.mythic.bukkit.events.MythicProjectileHitEvent;
-import io.lumine.mythic.core.mobs.ActiveMob;
-import io.lumine.mythic.core.skills.auras.AuraRegistry;
-import io.lumine.mythic.lib.api.event.PlayerAttackEvent;
 import io.lumine.mythic.lib.api.event.skill.PlayerCastSkillEvent;
-import io.lumine.mythic.lib.api.player.MMOPlayerData;
-import io.lumine.mythic.lib.damage.DamageMetadata;
-import io.lumine.mythic.lib.glow.external.GlowAPIModule;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
 import net.Indyuce.mmocore.api.event.PlayerLevelUpEvent;
 import net.Indyuce.mmoitems.MMOItems;
@@ -37,18 +24,14 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
-import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
 import org.dople.dataSync.event.DataLoadEvent;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Repositories.RaidCoinRepository;
 import org.swlab.etcetera.Repositories.UserSettingRepository;
 import org.swlab.etcetera.Util.CommandUtil;
-import org.swlab.etcetera.Util.NameTagUtil;
 import org.swlab.etcetera.Util.PetUtil;
 
 public class BasicListener implements Listener {
@@ -120,7 +103,7 @@ public class BasicListener implements Listener {
 
     @EventHandler
     public void skillOnVillage(PlayerCastSkillEvent e) {
-        if (EtCetera.getInstance().getChannelType().equals("lobby") && (e.getPlayer().getWorld().getName().equals("world") || e.getPlayer().getWorld().getName().equals("fishing") || e.getPlayer().getWorld().getName().equals("jump")) || e.getPlayer().getWorld().getName().equals("pandora")) {
+        if (EtCetera.getInstance().getChannelType().equals("lobby") && (e.getPlayer().getWorld().getName().equals("tuto")||e.getPlayer().getWorld().getName().equals("world") || e.getPlayer().getWorld().getName().equals("fishing") || e.getPlayer().getWorld().getName().equals("jump")) || e.getPlayer().getWorld().getName().equals("pandora")) {
             e.setCancelled(true);
         }
     }
