@@ -38,7 +38,7 @@ public class DamageListener implements Listener {
 
 
     //    HashMap<String, Double> damageMultipliers = new HashMap<>(Map.of("adamas_genesis", 0.08, "adamas_dominance", 0.15));
-    ArrayList<String> damageMultipliers = new ArrayList<>(Arrays.asList("adamas"));
+    ArrayList<String> damageMultipliers = new ArrayList<>(Arrays.asList("adamas", "oberon_mythic"));
 
     @EventHandler
     public void cancelInstantAttack(EntityDamageEvent e) {
