@@ -30,6 +30,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.dople.dataSync.event.DataLoadEvent;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Repositories.RaidCoinRepository;
+import org.swlab.etcetera.Repositories.TutorialRepository;
 import org.swlab.etcetera.Repositories.UserSettingRepository;
 import org.swlab.etcetera.Util.CommandUtil;
 import org.swlab.etcetera.Util.PetUtil;
@@ -146,17 +147,8 @@ public class BasicListener implements Listener {
 
         e.setJoinMessage("");
 
+        TutorialRepository.getInstance().loadTutorialData(player);
 
-
-        if ((!player.hasPlayedBefore() && EtCetera.getChannelType().equals("lobby")) && EtCetera.getChannelNumber() == 1) {
-            if (!player.hasPermission("tutorial") && EtCetera.getChannelType().equals("lobby")) {
-                Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), () -> {
-                    CommandUtil.runCommandAsOP(player, "튜토리얼");
-                    player.sendMessage("§a 튜토리얼을 진행해주세요!");
-                }, 200L);
-            }
-
-        }
         Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), () -> {
             {
                 PetUtil.loadPlayerPetData(player);
@@ -291,8 +283,13 @@ public class BasicListener implements Listener {
         player.setHealth(player.getMaxHealth());
 //        NameTagUtil.setPlayerNameTag(player);
 
-        if (!e.getPlayer().hasPermission("tutorial") && EtCetera.getChannelType().equals("lobby")) {
-            CommandUtil.runCommandAsOP(e.getPlayer(), "튜토리얼");
+        if (EtCetera.getChannelType().equals("lobby")) {
+            if (!TutorialRepository.getInstance().isTutorialCompleted(player)) {
+                Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), () -> {
+                    CommandUtil.runCommandAsOP(player, "튜토리얼");
+                    player.sendMessage("§a 튜토리얼을 진행해주세요!");
+                }, 100L);
+            }
         }
     }
 
@@ -326,22 +323,42 @@ public class BasicListener implements Listener {
 
     @EventHandler
     public void cancelInteractItem(PlayerInteractEvent e) {
-        if (!e.getPlayer().isOp()) {
+        if (!e.getPlayer().hasPermission("*")) {
             if (e.getClickedBlock() == null) {
                 return;
             }
             if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getClickedBlock().getType().isInteractable()) {
-                if (e.getClickedBlock().getType().equals(Material.CHEST)) {
+                Material type = e.getClickedBlock().getType();
+                if (isChestBlock(type)) {
                     if (!e.getPlayer().getWorld().getName().equals("adventures")) {
                         e.setCancelled(true);
                     }
                 } else {
                     e.setCancelled(true);
-
-
                 }
             }
         }
+    }
+
+    @EventHandler
+    public void cancelChestMinecartInteract(PlayerInteractEntityEvent e) {
+        if (!e.getPlayer().hasPermission("*")) {
+            Entity entity = e.getRightClicked();
+            EntityType type = entity.getType();
+            if (type == EntityType.MINECART_CHEST || type == EntityType.MINECART_HOPPER) {
+                if (!e.getPlayer().getWorld().getName().equals("adventures")) {
+                    e.setCancelled(true);
+                }
+            }
+        }
+    }
+
+    private boolean isChestBlock(Material type) {
+        return type == Material.CHEST
+                || type == Material.TRAPPED_CHEST
+                || type == Material.ENDER_CHEST
+                || type == Material.BARREL
+                || type.name().contains("SHULKER_BOX");
     }
 
     @EventHandler

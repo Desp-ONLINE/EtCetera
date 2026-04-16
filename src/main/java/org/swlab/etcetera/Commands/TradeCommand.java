@@ -2,8 +2,14 @@ package org.swlab.etcetera.Commands;
 
 import com.binggre.binggreapi.utils.ColorManager;
 import com.binggre.velocitysocketclient.VelocityClient;
+import com.binggre.velocitysocketclient.listener.BroadcastComponentVelocityListener;
 import com.binggre.velocitysocketclient.listener.BroadcastStringVelocityListener;
 import com.mongodb.client.MongoCollection;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.hover.content.Text;
+import net.md_5.bungee.chat.ComponentSerializer;
 import org.bson.Document;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -28,40 +34,25 @@ public class TradeCommand implements CommandExecutor {
             player.sendMessage("§c 아직 쿨타임이 " + getCooldown(player) + "초 남았습니다.");
             return false;
         }
-        String divideLine = "";
-        String format = "";
+        String divideLine;
+        String format;
         switch (args[0]) {
             case "구매":
                 format = ColorManager.format("&f Ϟ #98FF76 [구매해요!] " + sender.getName() + "§f: " + mergeContext(args));
                 divideLine = ColorManager.format("#98FF76§m                                                                                        §f");
-                Bukkit.broadcastMessage(divideLine);
-                Bukkit.broadcastMessage(format);
-                Bukkit.broadcastMessage(divideLine);
-                VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, divideLine);
-                VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, format);
-                VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, divideLine);
+                broadcastClickableTradeMessage(divideLine, format, sender.getName());
                 addCooldown(player);
                 return true;
             case "판매":
                 format = ColorManager.format("&f ϙ #FFEC76 [판매해요!] " + sender.getName() + "§f: " + mergeContext(args));
                 divideLine = ColorManager.format("#FFEC76§m                                                                                        §f");
-                Bukkit.broadcastMessage(divideLine);
-                Bukkit.broadcastMessage(format);
-                Bukkit.broadcastMessage(divideLine);
-                VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, divideLine);
-                VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, format);
-                VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, divideLine);
+                broadcastClickableTradeMessage(divideLine, format, sender.getName());
                 addCooldown(player);
                 return true;
             case "구인":
                 format = ColorManager.format("&f ϗ #7D9A99 [사람구해요!] " + sender.getName() + "§f: " + mergeContext(args));
                 divideLine = ColorManager.format("#7D9A99§m                                                                                        §f");
-                Bukkit.broadcastMessage(divideLine);
-                Bukkit.broadcastMessage(format);
-                Bukkit.broadcastMessage(divideLine);
-                VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, divideLine);
-                VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, format);
-                VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, divideLine);
+                broadcastClickableTradeMessage(divideLine, format, sender.getName());
                 addCooldown(player);
                 return true;
             default:
@@ -69,6 +60,23 @@ public class TradeCommand implements CommandExecutor {
                 player.sendMessage(commandnotice);
                 return false;
         }
+    }
+
+    private void broadcastClickableTradeMessage(String divideLine, String format, String senderName) {
+        TextComponent messageComponent = new TextComponent(TextComponent.fromLegacyText(format));
+        messageComponent.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/귓 " + senderName + " "));
+        messageComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§e클릭하여 귓속말 보내기")));
+
+        for (Player online : Bukkit.getOnlinePlayers()) {
+            online.sendMessage(divideLine);
+            online.spigot().sendMessage(messageComponent);
+            online.sendMessage(divideLine);
+        }
+
+        String messageJson = ComponentSerializer.toString(messageComponent);
+        VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, divideLine);
+        VelocityClient.getInstance().getConnectClient().send(BroadcastComponentVelocityListener.class, messageJson);
+        VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, divideLine);
     }
 
     public String mergeContext(String[] args) {

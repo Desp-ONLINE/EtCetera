@@ -19,6 +19,7 @@ import org.swlab.etcetera.Placeholder.CooldownPlaceholder;
 import org.swlab.etcetera.Placeholder.LevelPlaceholder;
 import org.swlab.etcetera.Repositories.MimicRepository;
 import org.swlab.etcetera.Repositories.RaidCoinRepository;
+import org.swlab.etcetera.Repositories.TutorialRepository;
 import org.swlab.etcetera.Repositories.UserSettingRepository;
 import org.swlab.etcetera.Util.PetUtil;
 
@@ -79,6 +80,7 @@ public final class EtCetera extends JavaPlugin {
 
     public void registerRepositories(){
         new UserSettingRepository();
+        new TutorialRepository();
         new MimicRepository();
     }
 
@@ -95,6 +97,7 @@ public final class EtCetera extends JavaPlugin {
         for (Player player : Bukkit.getOnlinePlayers()) {
             PetUtil.loadPlayerPetData(player);
             UserSettingRepository.getInstance().loadUserSetting(player);
+            TutorialRepository.getInstance().loadTutorialData(player);
             DataLoadListener.getInstance().putPlayerData(player);
             RaidCoinRepository.getInstance().loadUserData(player);
         }
@@ -231,7 +234,6 @@ public final class EtCetera extends JavaPlugin {
         getCommand("기본템").setExecutor(new BasicWeaponCommand());
         getCommand("퀘스트").setExecutor(new QuestCommand());
         getCommand("g").setExecutor(new GuildChatCommand());
-        getCommand("훈련장").setExecutor(new TrainingCommand());
         getCommand("마을").setExecutor(new VillageCommand());
         getCommand("마을").setTabCompleter(new VillageCommand());
         getCommand("메뉴").setExecutor(new MenuCommand());
