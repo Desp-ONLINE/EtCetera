@@ -16,6 +16,7 @@ public class FarmingCommand implements CommandExecutor {
         Player player = (Player) commandSender;
         if(EtCetera.getChannelType().equals("lobby")){
             CommandUtil.runCommandAsOP(player, "워프 이동 채집");
+            return true;
         }
         Random random = new Random();
         int i = random.nextInt(0, 2);

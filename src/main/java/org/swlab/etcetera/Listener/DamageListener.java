@@ -14,6 +14,7 @@ import io.lumine.mythic.lib.api.stat.StatInstance;
 import io.lumine.mythic.lib.damage.DamageMetadata;
 import io.lumine.mythic.lib.damage.DamageType;
 import io.lumine.mythic.lib.player.PlayerMetadata;
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.*;
@@ -112,7 +113,11 @@ public class DamageListener implements Listener {
         PotionEffect potionEffect = victim.getPotionEffect(PotionEffectType.BAD_OMEN);
         if (potionEffect != null) {
             if (profess.equals("페이탈")) {
-                damage += damage * (potionEffect.getAmplifier() + 1) * 20 / 100;
+                if (PlaceholderAPI.setPlaceholders(attacker, "%MASTERY_FATAL_MYTHIC_1%").equals("true")) {
+                    damage += damage * (potionEffect.getAmplifier() + 1) * 22 / 100;
+                } else {
+                    damage += damage * (potionEffect.getAmplifier() + 1) * 20 / 100;
+                }
             } else {
                 damage += damage * (potionEffect.getAmplifier() + 1) * 15 / 100;
             }
@@ -128,8 +133,11 @@ public class DamageListener implements Listener {
         if (e.getEntity() instanceof Cow) {
             if (profess.equals("인페르노")) {
                 if (e.getEntity().getFireTicks() > 0) {
-                    damage += damage * 15 / 100;
-
+                    if (PlaceholderAPI.setPlaceholders(attacker, "%MASTERY_INFERNO_MYTHIC_1%").equals("true")) {
+                        damage += damage * 20 / 100;
+                    } else {
+                        damage += damage * 15 / 100;
+                    }
                 } else {
                     damage += damage * 5 / 100;
                 }
@@ -168,7 +176,6 @@ public class DamageListener implements Listener {
         double originalDamage = e.getDamage().getDamage();
         DamageMetadata damageMetadata = e.getDamage().add(damage - originalDamage);
         double fixedDamage = Math.round(damageMetadata.getDamage());
-
 
 
         if (skillCriticalStrike) {
@@ -240,7 +247,6 @@ public class DamageListener implements Listener {
         }
 
     }
-
 
 
 }

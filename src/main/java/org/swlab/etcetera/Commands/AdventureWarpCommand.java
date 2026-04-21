@@ -18,6 +18,7 @@ public class AdventureWarpCommand implements CommandExecutor {
         Player player = (Player) sender;
         if(EtCetera.getChannelType().equals("lobby")){
             CommandUtil.runCommandAsOP(player, "워프 이동 환영던전");
+            return true;
         }
         Random random = new Random();
         int i = random.nextInt(0, 2);
