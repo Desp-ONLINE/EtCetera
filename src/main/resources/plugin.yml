@@ -116,11 +116,13 @@ commands:
   퀘스킵:
   마나회복:
   쿨초기화:
+  일괄판매:
+    aliases: ["ㅇㄱㅍㅁ", "drva", "dlfrhkfvksao"]
   일괄분해:
     aliases: ["dlfrhkfqnsgo"]
   환던티켓지급:
   일일퀘스트:
-    aliases: [ "dlfdlfznptmxm", "일퀘", "dlfznp" ]
+    aliases: [ "dlfdlfznptmxm", "일퀘", "dlfznp", "ㅇㅇㅋㅅㅌ", "ㅇㅋ", "dz", "ddztx" ]
   도플명령어:
   타임던전첫클리어보상:
   설정:

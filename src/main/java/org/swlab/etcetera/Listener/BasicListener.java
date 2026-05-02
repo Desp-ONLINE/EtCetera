@@ -35,10 +35,16 @@ import org.swlab.etcetera.Repositories.UserSettingRepository;
 import org.swlab.etcetera.Util.CommandUtil;
 import org.swlab.etcetera.Util.PetUtil;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+
 public class BasicListener implements Listener {
 
 
     int firstJoinCount = 0;
+
+    private final Set<UUID> blindnessStacking = new HashSet<>();
 
 
 
@@ -225,26 +231,21 @@ public class BasicListener implements Listener {
     }
 
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onPotion(EntityPotionEffectEvent e) {
 
         Entity entity = e.getEntity();
 
-
         // 남은 시간이 기존게 더 길고, 레벨도 높으면 안덮어씌우게.
-
-        if(entity instanceof Player player){
+        if (entity instanceof Player player) {
             PotionEffect oldEffect = e.getOldEffect();
             PotionEffect newEffect = e.getNewEffect();
-            if(newEffect == null){
-                return;
-            }
-            if(oldEffect == null){
-                return;
-            }
+            if (newEffect == null) return;
+            if (oldEffect == null) return;
             PotionEffect currentPotionEffect = player.getPotionEffect(oldEffect.getType());
-            if((currentPotionEffect.getDuration() > newEffect.getDuration()) &&
-                    (currentPotionEffect.getAmplifier() > newEffect.getAmplifier() )){
+            if (currentPotionEffect != null
+                    && currentPotionEffect.getDuration() > newEffect.getDuration()
+                    && currentPotionEffect.getAmplifier() > newEffect.getAmplifier()) {
                 e.setCancelled(true);
                 return;
             }
@@ -255,6 +256,33 @@ public class BasicListener implements Listener {
 
         PotionEffect newEffect = e.getNewEffect();
         PotionEffect oldEffect = e.getOldEffect();
+
+        /* ---------------- 실명 누적 ---------------- */
+        if (newEffect != null && oldEffect != null
+                && newEffect.getType() == PotionEffectType.BLINDNESS
+                && oldEffect.getType() == PotionEffectType.BLINDNESS) {
+            UUID cowId = cow.getUniqueId();
+            if (blindnessStacking.contains(cowId)) {
+                return;
+            }
+            PotionEffect current = cow.getPotionEffect(PotionEffectType.BLINDNESS);
+            if (current != null) {
+                int totalDuration = current.getDuration() + newEffect.getDuration();
+                int amp = Math.max(current.getAmplifier(), newEffect.getAmplifier());
+                e.setCancelled(true);
+                Bukkit.getConsoleSender().sendMessage("§7[Debug] 소 실명 누적: "
+                        + current.getDuration() + " + " + newEffect.getDuration()
+                        + " = " + totalDuration + "tick");
+                blindnessStacking.add(cowId);
+                Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), () -> {
+                    cow.addPotionEffect(new PotionEffect(
+                            PotionEffectType.BLINDNESS, totalDuration, amp,
+                            newEffect.isAmbient(), newEffect.hasParticles(), newEffect.hasIcon()));
+                    blindnessStacking.remove(cowId);
+                }, 1L);
+                return;
+            }
+        }
 
         /* ---------------- 흉조 적용 / 갱신 ---------------- */
         if (newEffect != null && newEffect.getType() == PotionEffectType.BAD_OMEN) {

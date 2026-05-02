@@ -15,6 +15,7 @@ import org.swlab.etcetera.Convinience.SkillCooldownNotice;
 import org.swlab.etcetera.Convinience.TipNotice;
 import org.swlab.etcetera.Database.DatabaseRegister;
 import org.swlab.etcetera.Listener.*;
+import org.swlab.etcetera.Placeholder.ChannelPlaceholder;
 import org.swlab.etcetera.Placeholder.CooldownPlaceholder;
 import org.swlab.etcetera.Placeholder.LevelPlaceholder;
 import org.swlab.etcetera.Repositories.MimicRepository;
@@ -45,6 +46,7 @@ public final class EtCetera extends JavaPlugin {
     public void onEnable() {
         instance = this;
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            new ChannelPlaceholder(this).register();
             new CooldownPlaceholder(this).register();
             new LevelPlaceholder(this).register();
         }
@@ -198,6 +200,7 @@ public final class EtCetera extends JavaPlugin {
         getCommand("아포칼립스").setExecutor(new ApocalypseCommand());
         getCommand("쓰레기통").setExecutor(new TrashcanCommand());
         getCommand("일괄분해").setExecutor(new DecompositeCommand());
+        getCommand("일괄판매").setExecutor(new SellAllRewardCommand());
         getCommand("UI").setExecutor(new UICommand());
         getCommand("길드레이드").setExecutor(new GuildRaidCommand());
         getCommand("공헌의탑").setExecutor(new ContributeTowerCommand());
