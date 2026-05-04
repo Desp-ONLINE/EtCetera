@@ -55,10 +55,8 @@ public class BasicWeaponCommand implements CommandExecutor {
         switch (strings[0]) {
             case "2":
                 if (checkisFinished(player, 90000 + jobList.get(playerClass.getName()), mmoCoreAPI.getPlayerData(player).getLevel(), 20)) {
-                    if (!playerClass.getName().equals("퀘이사")) {
-                        ItemStack jobItem = MMOItems.plugin.getItem("JOB_EQUIPMENT", "긍지_" + playerClass.getName() + "2");
-                        player.getInventory().addItem(jobItem);
-                    }
+                    ItemStack jobItem = MMOItems.plugin.getItem("JOB_EQUIPMENT", "긍지_" + playerClass.getName() + "2");
+                    player.getInventory().addItem(jobItem);
                     ItemStack basicWeapon = MMOItems.plugin.getItem("SWORD", "직업무기_2" + playerClass.getName() + "0");
                     player.getInventory().addItem(basicWeapon);
                     player.sendMessage("");
@@ -70,10 +68,8 @@ public class BasicWeaponCommand implements CommandExecutor {
                 break;
             case "3":
                 if (checkisFinished(player, 90010 + jobList.get(playerClass.getName()), mmoCoreAPI.getPlayerData(player).getLevel(), 45)) {
-                    if (!playerClass.getName().equals("퀘이사")) {
-                        ItemStack jobItem = MMOItems.plugin.getItem("JOB_EQUIPMENT", "긍지_" + playerClass.getName() + "3");
-                        player.getInventory().addItem(jobItem);
-                    }
+                    ItemStack jobItem = MMOItems.plugin.getItem("JOB_EQUIPMENT", "긍지_" + playerClass.getName() + "3");
+                    player.getInventory().addItem(jobItem);
                     ItemStack basicWeapon = MMOItems.plugin.getItem("SWORD", "직업무기_3" + playerClass.getName() + "0");
                     player.getInventory().addItem(basicWeapon);
                     player.sendMessage("");
@@ -85,10 +81,8 @@ public class BasicWeaponCommand implements CommandExecutor {
                 break;
             case "4":
                 if (checkisFinished(player, 90020 + jobList.get(playerClass.getName()), mmoCoreAPI.getPlayerData(player).getLevel(), 70)) {
-                    if (!playerClass.getName().equals("퀘이사")) {
-                        ItemStack jobItem = MMOItems.plugin.getItem("JOB_EQUIPMENT", "긍지_" + playerClass.getName() + "4");
-                        player.getInventory().addItem(jobItem);
-                    }
+                    ItemStack jobItem = MMOItems.plugin.getItem("JOB_EQUIPMENT", "긍지_" + playerClass.getName() + "4");
+                    player.getInventory().addItem(jobItem);
                     ItemStack basicWeapon = MMOItems.plugin.getItem("SWORD", "직업무기_4" + playerClass.getName() + "0");
                     player.getInventory().addItem(basicWeapon);
                     player.sendMessage("");
@@ -100,10 +94,8 @@ public class BasicWeaponCommand implements CommandExecutor {
                 break;
             case "각성":
                 if (checkisFinished(player, 90030 + awakenedJobList.get(playerClass.getName()), mmoCoreAPI.getPlayerData(player).getLevel(), 100)) {
-                    if (!playerClass.getName().equals("퀘이사")) {
-                        ItemStack jobItem = MMOItems.plugin.getItem("JOB_EQUIPMENT", "긍지_" + playerClass.getName() + "5");
-                        player.getInventory().addItem(jobItem);
-                    }
+                    ItemStack jobItem = MMOItems.plugin.getItem("JOB_EQUIPMENT", "긍지_" + playerClass.getName() + "5");
+                    player.getInventory().addItem(jobItem);
                     ItemStack basicWeapon = MMOItems.plugin.getItem("SWORD", "직업무기_5" + playerClass.getName() + "0");
                     player.getInventory().addItem(basicWeapon);
                     player.sendMessage("§e 기본템 지급이 완료되었습니다. +0 강화 등급으로는 언제든 복구가 가능하나, 강화 이후에는 해당 강화 등급으로 복구가 불가하니 주의해주세요.");
@@ -113,10 +105,8 @@ public class BasicWeaponCommand implements CommandExecutor {
                 }
                 break;
             case "1":
-                if (!playerClass.getName().equals("퀘이사")) {
-                    ItemStack jobItem = MMOItems.plugin.getItem("JOB_EQUIPMENT", "긍지_" + playerClass.getName() + "1");
-                    player.getInventory().addItem(jobItem);
-                }
+                ItemStack jobItem = MMOItems.plugin.getItem("JOB_EQUIPMENT", "긍지_" + playerClass.getName() + "1");
+                player.getInventory().addItem(jobItem);
                 ItemStack basicWeapon = MMOItems.plugin.getItem("SWORD", "직업무기_1" + playerClass.getName() + "0");
                 player.getInventory().addItem(basicWeapon);
                 player.sendMessage("§e 기본템 지급이 완료되었습니다. +0 강화 등급으로는 언제든 복구가 가능하나, 강화 이후에는 해당 강화 등급으로 복구가 불가하니 주의해주세요.");
