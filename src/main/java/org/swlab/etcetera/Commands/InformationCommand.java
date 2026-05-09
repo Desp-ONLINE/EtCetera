@@ -109,6 +109,7 @@ public class InformationCommand implements CommandExecutor {
             if(getStatSource(entry.getKey()).equals("스텟")){
                 continue;
             }
+
             resultMessage += "§7§o" + getStatSource(entry.getKey()) + ": §f§o" + (String.format("%.1f", entry.getValue()));
             if (!statName.equals("MAX_HEALTH") && !statName.equals("MAX_MANA")) {
                 resultMessage += "%  |  ";

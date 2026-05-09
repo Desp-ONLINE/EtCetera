@@ -61,6 +61,7 @@ public class RestoreCommand implements CommandExecutor {
         jobList.put("루인드", 6);
         jobList.put("판", 7);
         jobList.put("페이탈", 8);
+        jobList.put("퀘이사", 9);
         if (strings.length == 0) {
             player.sendMessage("");
             player.sendMessage(ColorManager.format("#25A79D /복구 [전직] [차수(2/3/4/각성)] §f- 해당 전직의 서를 복구받습니다. §7§o(ex: /복구 전직 2 - 2차 전직의 서를 복구 받습니다.)"));

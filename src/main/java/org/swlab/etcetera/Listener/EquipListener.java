@@ -1,5 +1,6 @@
 package org.swlab.etcetera.Listener;
 
+import io.lumine.mythic.lib.api.player.MMOPlayerData;
 import net.Indyuce.inventory.MMOInventory;
 import net.Indyuce.inventory.api.MMOInventoryAPI;
 import net.Indyuce.inventory.api.event.ItemEquipEvent;
@@ -51,6 +52,7 @@ public class EquipListener implements Listener {
             return;
 
         }
+
 
 
         if (e.getSlot().getType().equals(SlotType.BOOTS) || e.getSlot().getType().equals(SlotType.LEGGINGS)) {
