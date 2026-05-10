@@ -4,6 +4,7 @@ import com.binggre.mmomail.MMOMail;
 import com.binggre.mmomail.api.MailAPI;
 import com.binggre.mmomail.objects.Mail;
 import com.mongodb.client.MongoCollection;
+import fr.nocsy.mcpets.api.MCPetsAPI;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bson.Document;
 import org.bukkit.entity.Player;
@@ -33,6 +34,7 @@ public class MimicRepository {
         if (instance == null) {
             instance = new MimicRepository();
         }
+
         return instance;
     }
 

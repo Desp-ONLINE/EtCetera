@@ -75,7 +75,6 @@ public final class EtCetera extends JavaPlugin {
         loadAllDatas();
         RaidCoinRepository.getInstance().loadCoinData();
         MimicRepository.getInstance().loadData();
-        DogamRegisterRepository.getInstance().seedExampleData();
         DogamRegisterRepository.getInstance().loadData();
         SkillCooldownNotice.scheduleStart();
 

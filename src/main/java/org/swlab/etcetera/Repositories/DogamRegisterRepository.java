@@ -10,7 +10,6 @@ import org.swlab.etcetera.Dto.DogamRegisterDTO.MMOItemRef;
 import org.swlab.etcetera.Dto.DogamRegisterDTO.RequirementGroup;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -99,35 +98,6 @@ public class DogamRegisterRepository {
 
     public List<String> getAllNames() {
         return new ArrayList<>(nameToDogam.keySet());
-    }
-
-    public void seedExampleData() {
-        String exampleName = "히마바트";
-        if (definitionCollection.find(new Document("name", exampleName)).first() != null) {
-            return;
-        }
-        Document hima = new Document()
-                .append("name", exampleName)
-                .append("requirements", Arrays.asList(
-                        new Document()
-                                .append("alternatives", Arrays.asList(
-                                        new Document().append("type", "SWORD").append("id", "히마바트"),
-                                        new Document().append("type", "SWORD").append("id", "오큘러스")
-                                ))
-                                .append("amount", 1)
-                                .append("consume", false),
-                        new Document()
-                                .append("alternatives", Arrays.asList(
-                                        new Document().append("type", "MATERIAL").append("id", "마법석")
-                                ))
-                                .append("amount", 5)
-                                .append("consume", true)
-                ))
-                .append("certificate", new Document()
-                        .append("type", "MISCELLANEOUS")
-                        .append("id", "도감등록증_히마바트")
-                        .append("amount", 1));
-        definitionCollection.insertOne(hima);
     }
 
     public void recordIssue(Player player, String dogamName) {
