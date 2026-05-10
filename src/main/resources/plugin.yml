@@ -105,6 +105,10 @@ commands:
     aliases: [ "fpdlem", "raid", "ㄹㅇㄷ" ]
   채집:
     aliases: [ "cowlq" ]
+  1:
+    aliases: ["fhql1", "로비1"]
+  2:
+    aliases: ["fhql2", "로비2"]
   복구:
     aliases: [ "qhrrn" ]
   양조:
