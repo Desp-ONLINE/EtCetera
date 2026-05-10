@@ -18,6 +18,7 @@ import org.swlab.etcetera.Listener.*;
 import org.swlab.etcetera.Placeholder.ChannelPlaceholder;
 import org.swlab.etcetera.Placeholder.CooldownPlaceholder;
 import org.swlab.etcetera.Placeholder.LevelPlaceholder;
+import org.swlab.etcetera.Repositories.DogamRegisterRepository;
 import org.swlab.etcetera.Repositories.MimicRepository;
 import org.swlab.etcetera.Repositories.RaidCoinRepository;
 import org.swlab.etcetera.Repositories.TutorialRepository;
@@ -74,6 +75,8 @@ public final class EtCetera extends JavaPlugin {
         loadAllDatas();
         RaidCoinRepository.getInstance().loadCoinData();
         MimicRepository.getInstance().loadData();
+        DogamRegisterRepository.getInstance().seedExampleData();
+        DogamRegisterRepository.getInstance().loadData();
         SkillCooldownNotice.scheduleStart();
 
 
@@ -84,6 +87,7 @@ public final class EtCetera extends JavaPlugin {
         new UserSettingRepository();
         new TutorialRepository();
         new MimicRepository();
+        new DogamRegisterRepository();
     }
 
     public static String getChannelType() {
@@ -265,5 +269,8 @@ public final class EtCetera extends JavaPlugin {
         getCommand("인페리움").setExecutor(new InferiumCommand());
         getCommand("아르크티카").setExecutor(new ArcticaCommand());
         getCommand("엡실론").setExecutor(new EpsilonCommand());
+        DogamRegisterCommand dogamRegisterCommand = new DogamRegisterCommand();
+        getCommand("도감등록증").setExecutor(dogamRegisterCommand);
+        getCommand("도감등록증").setTabCompleter(dogamRegisterCommand);
     }
 }
