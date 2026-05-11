@@ -152,6 +152,8 @@ public class BasicListener implements Listener {
 
 
         e.setJoinMessage("");
+        player.setHealthScale(20);
+        player.setHealthScaled(true);
 
         TutorialRepository.getInstance().loadTutorialData(player);
 
