@@ -44,6 +44,9 @@ public class TeleportCommand implements CommandExecutor {
         hashMap.put(16, "망자의기로_입구");
         hashMap.put(17, "망각의영역_입구");
         hashMap.put(18, "소멸된회랑_입구");
+        hashMap.put(19, "균형의길_입구");
+        hashMap.put(20, "이율의협곡_입구");
+        hashMap.put(21, "설화의화맥_입구");
         playerTeleport = DatabaseRegister.getInstance().getMongoDatabase().getCollection("PlayerTeleport");
 
     }
