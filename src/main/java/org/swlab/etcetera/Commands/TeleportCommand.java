@@ -124,6 +124,15 @@ public class TeleportCommand implements CommandExecutor {
                 updateTeleportTime(player);
 
                 return true;
+            }else if (dungeonNumber <=21){
+                if(level < 160){
+                    player.sendMessage("§c 130레벨 이상인 경우에만 입장하실 수 있습니다.");
+                    return false;
+                }
+                CommandUtil.runCommandAsOP(player, "채널 워프 dungeon"+channelNumber+" 워프 이동 "+hashMap.get(dungeonNumber));
+                updateTeleportTime(player);
+
+                return true;
             }
         }
         System.out.println("asdg");
