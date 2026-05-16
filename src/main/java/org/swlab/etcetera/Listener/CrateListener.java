@@ -223,6 +223,21 @@ public class CrateListener implements Listener {
                     canOpen.remove(player);
                 }
             }, openDelay);
+        }else if(e.getCrate().getId().equals("vespera")){
+            if(!(MMOItems.getID(player.getInventory().getItemInMainHand()).equals("기타_베스페라열쇠"))){
+                e.setCancelled(true);
+                player.sendMessage("§c  스타라이트 키를 손에 들고 시도하세요.");
+                return;
+            }
+            int amount = player.getInventory().getItemInMainHand().getAmount();
+            player.getInventory().getItemInMainHand().setAmount(amount-1);
+            canOpen.add(player);
+            Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    canOpen.remove(player);
+                }
+            }, openDelay);
         }
         else{
             e.setCancelled(true);
