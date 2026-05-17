@@ -50,7 +50,7 @@ public class MimicListener implements Listener {
 
         // 엘리트의 체력/데미지 기록 (사망 전 값)
         LivingEntity eliteEntity = (LivingEntity) e.getEntity();
-        var eliteHealthAttr = eliteEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        var eliteHealthAttr = eliteEntity.getAttribute(Attribute.MAX_HEALTH);
         final double eliteMaxHealth = eliteHealthAttr != null ? eliteHealthAttr.getValue() : 100.0;
         final double eliteDamage = MythicBukkit.inst().getMobManager()
                 .getActiveMob(e.getEntity().getUniqueId())
@@ -67,7 +67,7 @@ public class MimicListener implements Listener {
             // 체력: 엘리트의 20배
             LivingEntity mimicEntity = (LivingEntity) spawnedMimic.getEntity().getBukkitEntity();
             double mimicMaxHealth = eliteMaxHealth * HEALTH_MULTIPLIER;
-            var mimicHealthAttr = mimicEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+            var mimicHealthAttr = mimicEntity.getAttribute(Attribute.MAX_HEALTH);
             if (mimicHealthAttr != null) {
                 mimicHealthAttr.setBaseValue(mimicMaxHealth);
             }

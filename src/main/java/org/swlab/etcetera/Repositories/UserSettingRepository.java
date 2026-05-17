@@ -44,8 +44,12 @@ public class UserSettingRepository {
         if(showDamageChat == null){
             showDamageChat = false;
         }
+        Boolean showSkillCooldownNotice = document.getBoolean("showSkillCooldownNotice");
+        if(showSkillCooldownNotice == null){
+            showSkillCooldownNotice = true;
+        }
 
-        UserSettingDTO userSettingDTO = UserSettingDTO.builder().uuid(uuid).isVisibleInformation(isVisibleInformation).showDamageChat(showDamageChat).build();
+        UserSettingDTO userSettingDTO = UserSettingDTO.builder().uuid(uuid).isVisibleInformation(isVisibleInformation).showDamageChat(showDamageChat).showSkillCooldownNotice(showSkillCooldownNotice).build();
 
         userSettingCache.put(uuid, userSettingDTO);
 
@@ -74,6 +78,18 @@ public class UserSettingRepository {
         userSettingCache.put(player.getUniqueId().toString(), userSettingDTO);
     }
 
+    public void toggleShowSkillCooldownNotice(Player player) {
+        boolean current = isShowSkillCooldownNotice(player);
+        UserSettingDTO userSettingDTO = userSettingCache.get(player.getUniqueId().toString());
+        userSettingDTO.setShowSkillCooldownNotice(!current);
+        if (current) {
+            player.sendMessage("§e 이제 스킬 쿨타임 종료 알림이 출력되지 않습니다.");
+        } else {
+            player.sendMessage("§e 이제 스킬 쿨타임 종료 알림이 출력됩니다.");
+        }
+        userSettingCache.put(player.getUniqueId().toString(), userSettingDTO);
+    }
+
     public boolean isVisibleInformation(Player player) {
         if (userSettingCache.get(player.getUniqueId().toString()) == null) {
             return false;
@@ -88,10 +104,18 @@ public class UserSettingRepository {
         return userSettingCache.get(player.getUniqueId().toString()).isShowDamageChat();
     }
 
+    public boolean isShowSkillCooldownNotice(Player player) {
+        if (userSettingCache.get(player.getUniqueId().toString()) == null) {
+            return false;
+        }
+        return userSettingCache.get(player.getUniqueId().toString()).isShowSkillCooldownNotice();
+    }
+
     public void saveUserSetting(Player player) {
         Document document = userSettingCollection.find(new Document("uuid", player.getUniqueId().toString())).first();
         document.append("isVisibleInformation", isVisibleInformation(player));
         document.append("showDamageChat", isShowDamageChat(player));
+        document.append("showSkillCooldownNotice", isShowSkillCooldownNotice(player));
 
         userSettingCollection.replaceOne(new Document("uuid", player.getUniqueId().toString()), document, new ReplaceOptions().upsert(true));
     }
@@ -100,7 +124,8 @@ public class UserSettingRepository {
         Document document = new Document()
                 .append("uuid", player.getUniqueId().toString())
                 .append("isVisibleInformation", true)
-                .append("showDamageChat", true);
+                .append("showDamageChat", true)
+                .append("showSkillCooldownNotice", true);
         userSettingCollection.insertOne(document);
 
         return document;

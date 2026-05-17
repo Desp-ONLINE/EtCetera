@@ -375,7 +375,7 @@ public class BasicListener implements Listener {
         if (!e.getPlayer().hasPermission("*")) {
             Entity entity = e.getRightClicked();
             EntityType type = entity.getType();
-            if (type == EntityType.MINECART_CHEST || type == EntityType.MINECART_HOPPER) {
+            if (type == EntityType.CHEST_MINECART || type == EntityType.HOPPER_MINECART) {
                 if (!e.getPlayer().getWorld().getName().equals("adventures")) {
                     e.setCancelled(true);
                 }

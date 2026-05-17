@@ -28,6 +28,9 @@ public class UserSettingCommand implements CommandExecutor {
             case "데미지":
                 userSettingRepository.toggleShowDamageChat(player);
                 return true;
+            case "쿨타임":
+                userSettingRepository.toggleShowSkillCooldownNotice(player);
+                return true;
             default:
                 showPlayerCommandUsage(player);
         }
@@ -40,6 +43,7 @@ public class UserSettingCommand implements CommandExecutor {
         player.sendMessage("");
         player.sendMessage("§7  /설정 정보 §f- 전체 채팅에서 플레이어 닉네임에 마우스 커서를 올리면 공개되는 정보 여부를 공개/비공개 합니다.");
         player.sendMessage("§7  /설정 데미지 §f- 채팅에 데미지를 넣을 때 마다 출력합니다.");
+        player.sendMessage("§7  /설정 쿨타임 §f- 특수무기/합성무기 스킬의 쿨타임 종료 알림을 켜고/끕니다.");
         player.sendMessage("");
 
     }

@@ -13,5 +13,6 @@ public class UserSettingDTO {
     private String uuid;
     private boolean isVisibleInformation;
     private boolean showDamageChat;
+    private boolean showSkillCooldownNotice;
 
 }

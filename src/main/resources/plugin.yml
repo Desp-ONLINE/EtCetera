@@ -1,7 +1,7 @@
 name: EtCetera
 version: '${version}'
 main: org.swlab.etcetera.EtCetera
-api-version: '1.20'
+api-version: '1.21'
 commands:
   nbt검사:
   spawn:

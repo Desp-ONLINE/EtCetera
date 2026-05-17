@@ -145,8 +145,8 @@ public class DamageListener implements Listener {
                 damage += damage * 5 / 100;
             }
         }
-        if (attacker.hasPotionEffect(PotionEffectType.INCREASE_DAMAGE)) {
-            damage += damage * ((attacker.getPotionEffect(PotionEffectType.INCREASE_DAMAGE).getAmplifier() + 1) * 10) / 100;
+        if (attacker.hasPotionEffect(PotionEffectType.STRENGTH)) {
+            damage += damage * ((attacker.getPotionEffect(PotionEffectType.STRENGTH).getAmplifier() + 1) * 10) / 100;
         }
         ActiveMob mythicMobInstance = MythicBukkit.inst().getMobManager().getMythicMobInstance(e.getEntity());
         if (mythicMobInstance != null) {

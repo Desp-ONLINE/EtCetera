@@ -40,7 +40,9 @@ public class RaidCoinRepository {
 
     public void resetDatas() {
         raidCoinDataCache.clear();
+        loadCoinData();
         raidCoinPlayerCollection.deleteMany(new Document());
+        raidCoinPlayerCache.clear();
         for (Player player : Bukkit.getOnlinePlayers()) {
             loadUserData(player);
         }
