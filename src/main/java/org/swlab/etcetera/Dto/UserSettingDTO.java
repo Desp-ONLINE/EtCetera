@@ -14,5 +14,6 @@ public class UserSettingDTO {
     private boolean isVisibleInformation;
     private boolean showDamageChat;
     private boolean showSkillCooldownNotice;
+    private int playerTime;
 
 }

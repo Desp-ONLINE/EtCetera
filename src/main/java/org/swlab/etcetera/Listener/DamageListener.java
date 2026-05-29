@@ -170,7 +170,9 @@ public class DamageListener implements Listener {
         // 최종데미지 증가
 
 
-        boolean skillCriticalStrike = e.getAttack().getDamage().isSkillCriticalStrike();
+        DamageMetadata dmgMeta = e.getAttack().getDamage();
+        boolean skillCriticalStrike = dmgMeta.isSkillCriticalStrike()
+                || dmgMeta.isWeaponCriticalStrike();
 
 
         double originalDamage = e.getDamage().getDamage();

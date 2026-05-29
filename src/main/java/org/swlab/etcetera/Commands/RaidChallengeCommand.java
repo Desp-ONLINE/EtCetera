@@ -40,7 +40,7 @@ public class RaidChallengeCommand implements CommandExecutor {
         for (int i = 2; i < strings.length; ++i) {
             raidNameBuilder.append(" ").append(strings[i]);
         }
-        String raidName = raidNameBuilder.toString();
+        String raidName = raidNameBuilder.toString().replace("_", " ");
         MongoCollection<Document> raidPlayerDocument = FirstClearListener.raidPlayerDocument;
         MongoCollection<Document> raidFirstClearReward = FirstClearListener.raidFirstClearReward;
         Document raidDocument = raidFirstClearReward.find(new Document("id", raidName)).first();

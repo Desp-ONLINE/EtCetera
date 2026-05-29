@@ -187,6 +187,7 @@ public final class EtCetera extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new JumpMapListener(), this);
         Bukkit.getPluginManager().registerEvents(new UpgradeListener(), this);
         Bukkit.getPluginManager().registerEvents(new GoldItemListener(), this);
+        Bukkit.getPluginManager().registerEvents(new TrashcanListener(), this);
         if (Bukkit.getPluginManager().isPluginEnabled("MMOGuild")) {
             Bukkit.getPluginManager().registerEvents(new FirstClearListener(), this);
 

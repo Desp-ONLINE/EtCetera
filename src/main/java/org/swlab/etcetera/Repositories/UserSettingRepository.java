@@ -48,10 +48,16 @@ public class UserSettingRepository {
         if(showSkillCooldownNotice == null){
             showSkillCooldownNotice = true;
         }
+        Integer playerTime = document.getInteger("playerTime");
+        if(playerTime == null){
+            playerTime = -1;
+        }
 
-        UserSettingDTO userSettingDTO = UserSettingDTO.builder().uuid(uuid).isVisibleInformation(isVisibleInformation).showDamageChat(showDamageChat).showSkillCooldownNotice(showSkillCooldownNotice).build();
+        UserSettingDTO userSettingDTO = UserSettingDTO.builder().uuid(uuid).isVisibleInformation(isVisibleInformation).showDamageChat(showDamageChat).showSkillCooldownNotice(showSkillCooldownNotice).playerTime(playerTime).build();
 
         userSettingCache.put(uuid, userSettingDTO);
+
+        applyPlayerTime(player);
 
     }
 
@@ -90,6 +96,41 @@ public class UserSettingRepository {
         userSettingCache.put(player.getUniqueId().toString(), userSettingDTO);
     }
 
+    public void setPlayerTime(Player player, int time, String displayName) {
+        UserSettingDTO userSettingDTO = userSettingCache.get(player.getUniqueId().toString());
+        if (userSettingDTO == null) {
+            return;
+        }
+        userSettingDTO.setPlayerTime(time);
+        userSettingCache.put(player.getUniqueId().toString(), userSettingDTO);
+        applyPlayerTime(player);
+        if (time < 0) {
+            player.sendMessage("§e 이제 시간이 서버 시간을 따라갑니다.");
+        } else {
+            player.sendMessage("§e 이제 시간이 §f" + displayName + "§e(으)로 고정됩니다.");
+        }
+    }
+
+    public void applyPlayerTime(Player player) {
+        UserSettingDTO userSettingDTO = userSettingCache.get(player.getUniqueId().toString());
+        if (userSettingDTO == null) {
+            return;
+        }
+        int time = userSettingDTO.getPlayerTime();
+        if (time < 0) {
+            player.resetPlayerTime();
+        } else {
+            player.setPlayerTime(time, false);
+        }
+    }
+
+    public int getPlayerTime(Player player) {
+        if (userSettingCache.get(player.getUniqueId().toString()) == null) {
+            return -1;
+        }
+        return userSettingCache.get(player.getUniqueId().toString()).getPlayerTime();
+    }
+
     public boolean isVisibleInformation(Player player) {
         if (userSettingCache.get(player.getUniqueId().toString()) == null) {
             return false;
@@ -116,6 +157,7 @@ public class UserSettingRepository {
         document.append("isVisibleInformation", isVisibleInformation(player));
         document.append("showDamageChat", isShowDamageChat(player));
         document.append("showSkillCooldownNotice", isShowSkillCooldownNotice(player));
+        document.append("playerTime", getPlayerTime(player));
 
         userSettingCollection.replaceOne(new Document("uuid", player.getUniqueId().toString()), document, new ReplaceOptions().upsert(true));
     }
@@ -125,7 +167,8 @@ public class UserSettingRepository {
                 .append("uuid", player.getUniqueId().toString())
                 .append("isVisibleInformation", true)
                 .append("showDamageChat", true)
-                .append("showSkillCooldownNotice", true);
+                .append("showSkillCooldownNotice", true)
+                .append("playerTime", -1);
         userSettingCollection.insertOne(document);
 
         return document;
