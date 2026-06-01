@@ -46,6 +46,9 @@ public class BasicListener implements Listener {
 
     private final Set<UUID> blindnessStacking = new HashSet<>();
 
+    // 실명 누적 지속시간 상한 (200tick = 10초). 주기적 재적용에 의한 무한 누적 방지.
+    private static final int BLINDNESS_MAX_DURATION = 200;
+
 
 
     @EventHandler
@@ -269,7 +272,9 @@ public class BasicListener implements Listener {
             }
             PotionEffect current = cow.getPotionEffect(PotionEffectType.BLINDNESS);
             if (current != null) {
-                int totalDuration = current.getDuration() + newEffect.getDuration();
+                int totalDuration = Math.min(
+                        current.getDuration() + newEffect.getDuration(),
+                        BLINDNESS_MAX_DURATION);
                 int amp = Math.max(current.getAmplifier(), newEffect.getAmplifier());
                 e.setCancelled(true);
                 Bukkit.getConsoleSender().sendMessage("§7[Debug] 소 실명 누적: "

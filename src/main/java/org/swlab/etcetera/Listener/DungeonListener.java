@@ -42,38 +42,38 @@ public class DungeonListener implements Listener {
 
     private List<Integer> jinRegionCommandersDungeonID = new ArrayList<Integer>(Arrays.asList(13, 14, 15));
 
-//    private HashMap<Player, LocalDateTime> firstClearCooldown = new HashMap<>();
+    private HashMap<Player, LocalDateTime> firstClearCooldown = new HashMap<>();
 
 
 
-//    @EventHandler
-//    public void onDungeonCooldown(DungeonJoinEvent e) {
-//
-//        if (e.getDungeon().getId() == 113) {
-//            LocalDateTime localDateTime = LocalDateTime.now();
-//
-//            for (PlayerDungeon playerDungeon : e.getPlayerDungeons()) {
-//                Player player = playerDungeon.toPlayer();
-//
-//                if (firstClearCooldown.get(player) == null) {
-//                    firstClearCooldown.put(player, localDateTime);
-//                } else {
-//                    LocalDateTime joinedTime = firstClearCooldown.get(player);
-//
-//                    long minutes = Duration.between(joinedTime, localDateTime).toMinutes();
-//
-//                    if (minutes < 22) {
-//                        player.sendMessage("§c 퍼스트 클리어 이벤트에 의한 쿨타임(22분) 이 존재합니다. 남은 시간: 약 §f"+(22-minutes)+"§c분");
-//                        e.setCancelled(true);
-//                    }
-//                }
-//            }
-//
-//
-//        }
-//
-//
-//    }
+    @EventHandler
+    public void onDungeonCooldown(DungeonJoinEvent e) {
+
+        if (e.getDungeon().getId() == 115) {
+            LocalDateTime localDateTime = LocalDateTime.now();
+
+            for (PlayerDungeon playerDungeon : e.getPlayerDungeons()) {
+                Player player = playerDungeon.toPlayer();
+
+                if (firstClearCooldown.get(player) == null) {
+                    firstClearCooldown.put(player, localDateTime);
+                } else {
+                    LocalDateTime joinedTime = firstClearCooldown.get(player);
+
+                    long minutes = Duration.between(joinedTime, localDateTime).toMinutes();
+
+                    if (minutes < 15) {
+                        player.sendMessage("§c 퍼스트 클리어 이벤트에 의한 쿨타임(15분) 이 존재합니다. 남은 시간: 약 §f"+(15-minutes)+"§c분");
+                        e.setCancelled(true);
+                    }
+                }
+            }
+
+
+        }
+
+
+    }
 
     @EventHandler
     public void onDungeonClear(DungeonClearEvent e) {
