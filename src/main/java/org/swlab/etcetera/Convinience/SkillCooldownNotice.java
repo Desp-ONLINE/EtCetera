@@ -69,7 +69,8 @@ public class SkillCooldownNotice {
                     }
 
                     if (ts.previousCooldown <= 0.01 && current > 0.01
-                            && heldAbilities.contains(replacedName)) {
+                            && heldAbilities.contains(replacedName)
+                            && UserSettingRepository.getInstance().isShowSkillCooldownItem(player)) {
                         int ticks = (int) Math.round(current * 20);
                         if (ticks > 0) {
                             player.setCooldown(held, ticks);

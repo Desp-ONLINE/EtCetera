@@ -46,34 +46,34 @@ public class DungeonListener implements Listener {
 
 
 
-    @EventHandler
-    public void onDungeonCooldown(DungeonJoinEvent e) {
-
-        if (e.getDungeon().getId() == 115) {
-            LocalDateTime localDateTime = LocalDateTime.now();
-
-            for (PlayerDungeon playerDungeon : e.getPlayerDungeons()) {
-                Player player = playerDungeon.toPlayer();
-
-                if (firstClearCooldown.get(player) == null) {
-                    firstClearCooldown.put(player, localDateTime);
-                } else {
-                    LocalDateTime joinedTime = firstClearCooldown.get(player);
-
-                    long minutes = Duration.between(joinedTime, localDateTime).toMinutes();
-
-                    if (minutes < 15) {
-                        player.sendMessage("§c 퍼스트 클리어 이벤트에 의한 쿨타임(15분) 이 존재합니다. 남은 시간: 약 §f"+(15-minutes)+"§c분");
-                        e.setCancelled(true);
-                    }
-                }
-            }
-
-
-        }
-
-
-    }
+//    @EventHandler
+//    public void onDungeonCooldown(DungeonJoinEvent e) {
+//
+//        if (e.getDungeon().getId() == 115) {
+//            LocalDateTime localDateTime = LocalDateTime.now();
+//
+//            for (PlayerDungeon playerDungeon : e.getPlayerDungeons()) {
+//                Player player = playerDungeon.toPlayer();
+//
+//                if (firstClearCooldown.get(player) == null) {
+//                    firstClearCooldown.put(player, localDateTime);
+//                } else {
+//                    LocalDateTime joinedTime = firstClearCooldown.get(player);
+//
+//                    long minutes = Duration.between(joinedTime, localDateTime).toMinutes();
+//
+//                    if (minutes < 15) {
+//                        player.sendMessage("§c 퍼스트 클리어 이벤트에 의한 쿨타임(15분) 이 존재합니다. 남은 시간: 약 §f"+(15-minutes)+"§c분");
+//                        e.setCancelled(true);
+//                    }
+//                }
+//            }
+//
+//
+//        }
+//
+//
+//    }
 
     @EventHandler
     public void onDungeonClear(DungeonClearEvent e) {
@@ -315,43 +315,43 @@ public class DungeonListener implements Listener {
 
     }
 
-    @EventHandler
-    public void onRaidFirstClear(DungeonClearEvent e) {
-        if (e.getDungeonRoom().getParent().getId() == 115 && e.isClearCondition()) {
-            String emptyMessage = "§3§n                                                                                 §r";
-
-            String message = ColorManager.format("        #3EA7BC멈#4AABB8추#56AFB5었#62B3B1던 #7ABBAA시#86BFA6간#92C3A2이 #ABCB9B다#B7CF97시#C3D393금 #DBDB8C흐#E7DF88릅#F3E385니#FFE781다#F8E789. #EBE799크#E4E8A1로#DDE8A8나#D7E8B0크#D0E8B8가 #C2E8C8처#BCE8D0치#B5E8D8되#AEE9E0었#A7E9E7습#A1E9EF니#9AE9F7다#93E9FF.");
-            List<PlayerData> members = e.getParty().getMembers();
-            int size = members.size();
-            int i = 0;
-
-            String parties = "§7 처치 파티: ";
-            for (PlayerData member : members) {
-                i++;
-                if (i != size) {
-                    parties += member.getPlayer().getName() + ", ";
-                } else {
-                    parties += member.getPlayer().getName();
-                }
-
-            }
-
-            Bukkit.broadcastMessage(emptyMessage);
-            Bukkit.broadcastMessage("");
-            Bukkit.broadcastMessage(message);
-            Bukkit.broadcastMessage(parties);
-            Bukkit.broadcastMessage(emptyMessage);
-
-
-            VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, emptyMessage);
-            VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, "");
-            VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, message);
-            VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, parties);
-            VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, emptyMessage);
-
-
-        }
-    }
+//    @EventHandler
+//    public void onRaidFirstClear(DungeonClearEvent e) {
+//        if (e.getDungeonRoom().getParent().getId() == 115 && e.isClearCondition()) {
+//            String emptyMessage = "§3§n                                                                                 §r";
+//
+//            String message = ColorManager.format("        #3EA7BC멈#4AABB8추#56AFB5었#62B3B1던 #7ABBAA시#86BFA6간#92C3A2이 #ABCB9B다#B7CF97시#C3D393금 #DBDB8C흐#E7DF88릅#F3E385니#FFE781다#F8E789. #EBE799크#E4E8A1로#DDE8A8나#D7E8B0크#D0E8B8가 #C2E8C8처#BCE8D0치#B5E8D8되#AEE9E0었#A7E9E7습#A1E9EF니#9AE9F7다#93E9FF.");
+//            List<PlayerData> members = e.getParty().getMembers();
+//            int size = members.size();
+//            int i = 0;
+//
+//            String parties = "§7 처치 파티: ";
+//            for (PlayerData member : members) {
+//                i++;
+//                if (i != size) {
+//                    parties += member.getPlayer().getName() + ", ";
+//                } else {
+//                    parties += member.getPlayer().getName();
+//                }
+//
+//            }
+//
+//            Bukkit.broadcastMessage(emptyMessage);
+//            Bukkit.broadcastMessage("");
+//            Bukkit.broadcastMessage(message);
+//            Bukkit.broadcastMessage(parties);
+//            Bukkit.broadcastMessage(emptyMessage);
+//
+//
+//            VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, emptyMessage);
+//            VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, "");
+//            VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, message);
+//            VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, parties);
+//            VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, emptyMessage);
+//
+//
+//        }
+//    }
 
 }
 

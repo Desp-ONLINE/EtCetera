@@ -158,6 +158,11 @@ public class BasicListener implements Listener {
         player.setHealthScale(20);
         player.setHealthScaled(true);
 
+        CommandUtil.runCommandAsOP(player, "ml tempstat remove "+player.getName()+" SKILL_CRITICAL_STRIKE_CHANCE Valkyrie");
+        CommandUtil.runCommandAsOP(player, "ml tempstat remove "+player.getName()+" SKILL_CRITICAL_STRIKE_POWER Valkyrie");
+        CommandUtil.runCommandAsOP(player, "ml tempstat remove "+player.getName()+" SKILL_DAMAGE Valkyrie");
+        CommandUtil.runCommandAsOP(player, "ml tempstat remove "+player.getName()+" CUSTOM_BOSSDAMAGE Valkyrie");
+
         TutorialRepository.getInstance().loadTutorialData(player);
 
         Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), () -> {
