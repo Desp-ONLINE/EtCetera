@@ -131,15 +131,16 @@ public class DamageListener implements Listener {
             }
         }
         if (e.getEntity() instanceof Cow) {
-            if (profess.equals("인페르노")) {
-                if (e.getEntity().getFireTicks() > 0) {
+            if (e.getEntity().getFireTicks() > 0) {
+                if (profess.equals("인페르노")) {
                     if (PlaceholderAPI.setPlaceholders(attacker, "%MASTERY_INFERNO_MYTHIC_1%").equals("true")) {
                         damage += damage * 20 / 100;
                     } else {
                         damage += damage * 15 / 100;
                     }
                 } else {
-                    damage += damage * 5 / 100;
+                    damage += damage * 3 / 100;
+
                 }
             } else if (profess.equals("판")) {
                 damage += damage * 5 / 100;
