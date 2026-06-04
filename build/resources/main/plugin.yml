@@ -1,0 +1,145 @@
+name: EtCetera
+version: '1.0-SNAPSHOT'
+main: org.swlab.etcetera.EtCetera
+api-version: '1.21'
+commands:
+  nbt검사:
+  spawn:
+    aliases: [ "로비", "넴주", "스폰", "lobby", "tmvhs", "ㅅㅍ", "tv" ]
+  광산:
+    aliases: [ "채광", "채광장", "rhkdtks", "corhkdwkd", "ㄳ", "ㄱㅅ" ,"rt" ]
+  던전:
+    aliases: [ "사냥", "사냥터", "ejswjs", "tksid", "tksidxj", "ㄷㅈ", "ew" ]
+  쓰레기통:
+    aliases: [ "쓰" ,"Tmfprlxhd","Tm" ]
+  장비2:
+  강화:
+    aliases: [ "rkdghk", "ㄱㅎ", "rg" ]
+  합성:
+    aliases: [ "gkqtjd", "ㅎㅅ","gt" ]
+  전리품:
+    aliases: [ "wjsflvna", "전리품판매", "wjsflvnavksao", "상점", "상점가", "tkdwja", "tkdwjark", "후원상점", "캐시상점", "루비상점","fnqltkdwja", "zotltkdwja", "gndnjstkdwja" ]
+  판도라:
+    aliases: [ "vksehfk", "특수무기", "xmrtnanrl" ]
+  스텟:
+    aliases: [ "스탯", "tmxot", "tmxpt", "stat", "ㅅㅌ", "tx" ]
+  직업:
+    aliases: [ "직업변경", "클래스", "wlrdjq","zmffotm","wlrdjqqusrud" ]
+  낚시:
+    aliases: [ "skRtl", "skrtl", "낙시" ]
+  기본템:
+    aliases: [ "rlqhsxpa" ]
+  퀘스트:
+    aliases: [ "q", "ㅂ", "znptmxm" ]
+  마을:
+    aliases: [ "village", "akdmf", "빌리지", "ㅁㅇ", "ad" ]
+  메뉴:
+    aliases: [ "menu", "apsb" ]
+  후원:
+    aliases: [ "gndnjs" ]
+  메일함:
+    aliases: [ "apdlfgka", "ㅁ" ]
+  시장:
+    aliases: [ "tlwkd","rudaowkd","경매장", "ㅅㅈ", "tw" ]
+  디스코드:
+    aliases: [ "eltmzhem", "elzh", "디코" ]
+  엔더상자:
+    aliases: [ "dpsejtkdwk" ]
+  창고:
+    aliases: [ "ckdrh", "ㅊㄱ", "cr" ]
+  파티:
+    aliases: [ "vkxl" ]
+  루비:
+    aliases: [ "zotl", "fnql" ]
+  잠수:
+    aliases: [ "wkatn" ]
+  잠수포인트:
+    aliases: [ "wkatnvhdlsxm" ]
+  PVP:
+    aliases: [ "피비피", "pk" ]
+  음악:
+    aliases: [ "dmadkr","qoruddmadkr","배경음악","노래","shfo" ]
+  정보:
+    aliases: [ "wjdqh" ]
+  필드보스:
+    aliases: [ "vlfemqhtm", "필보","qhtm","vlfqh","보스" ,"qt", "ㅄ", "ㅂㅅ" ]
+  친구:
+    aliases: [ "clsrn" ]
+  쿠폰:
+    aliases: [ "znvhs" ]
+  펫:
+    aliases: [ "vpt" ]
+  길드레이드:
+      aliases: [ "rlfemfpdlem", "길레", "rlffp" ]
+  엘븐하임:
+    aliases: [ "dpfqmsgkdla", "엘븐", "dpfqms" ]
+  칼리마:
+    aliases: [ "zkfflak" ]
+  인페리움:
+    aliases: [ "dlsvpfldna", "인페", "dlsvp" ]
+  아르크티카:
+    aliases: [ "dkfmzmxlzk", "아르크","dkfmzm" ]
+  도움말:
+    aliases: [ "ehdnaakf", "help", "헬프", "위키", "사이트", "dnlzl","tkdlxm","wiki","site","ghavpdlwl","홈페이지" ]
+  아포칼립스:
+    aliases: [ "dkvhzkfflqtm", "아포","dkvh" ]
+  장사글:
+    aliases: [ "wkdtkrmf", "확성기", "ghkrtjdrl" ]
+  채:
+    aliases: [ "cosjf","co" ]
+  UI:
+    aliases: [ "ui", "일일퀘스트알림", "일퀘알림", "dlfdlfznptmxmdkffla", "dlfznpdkffla" ]
+  길챗:
+    aliases: [ "rlfcot", "g", "ㅎ" ]
+  대결:
+    aliases: [ "eoruf", "영혼의대결", "dudghsdmleoruf", "대전", "eowjs" ]
+  튜토리얼:
+    aliases: [ "xbxhfldjf", "tutorial","tuto" ]
+  튜토완료:
+    aliases: [ "xbxhdhksfy" ]
+  텔레포트:
+    aliases: [ "xpffpvhxm" ]
+  타임던전:
+    aliases: [ "xkdlaejswjs", "ㅌㅇㄷㅈ" ]
+  레이드:
+    aliases: [ "fpdlem", "raid", "ㄹㅇㄷ" ]
+  채집:
+    aliases: [ "cowlq" ]
+  1:
+    aliases: ["fhql1", "로비1"]
+  2:
+    aliases: ["fhql2", "로비2"]
+  복구:
+    aliases: [ "qhrrn" ]
+  양조:
+    aliases: [ "didwh" ]
+  엡실론:
+    aliases: [ "dpqtlffhs" ]
+  베스페라:
+    aliases: [ "qptmvpfk", "ㅄㅍㄹ", "ㅂㅅㅍㄹ", "qtvf" ]
+  전체지급:
+  초월완료:
+  퀘스킵:
+  마나회복:
+  쿨초기화:
+  일괄판매:
+    aliases: ["ㅇㄱㅍㅁ", "drva", "dlfrhkfvksao"]
+  일괄분해:
+    aliases: ["dlfrhkfqnsgo"]
+  환던티켓지급:
+  일일퀘스트:
+    aliases: [ "dlfdlfznptmxm", "일퀘", "dlfznp", "ㅇㅇㅋㅅㅌ", "ㅇㅋ", "dz", "ddztx" ]
+  도플명령어:
+  타임던전첫클리어보상:
+  설정:
+    aliases: [ "tjfwjd", "사용자설정", "tkdydwktjfwjd" ]
+  환던:
+    aliases: [ "ghksejs", "ㅎㄷ", "ge", "ghksdudejswjs" ]
+  사다리타기:
+    aliases: [ "tkekflxkrl", "보상뽑기", "qhtkdQhqrl" ]
+  보스코인:
+  레이드챌린지:
+  공헌의탑:
+    aliases: ["rhdgjsdmlxkq", "공탑", "rhdxkq"]
+  도감등록증:
+    aliases: ["ehrkadmdfhrwmd", "도감", "ehrka"]
