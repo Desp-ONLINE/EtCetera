@@ -59,7 +59,7 @@ public class LevelPlaceholder extends PlaceholderExpansion {
             } else if (level < 200){
                 format = ColorManager.format("§f" + " #C84B55§n[Lv." + level + "]§r ");
             } else {
-                format = ColorManager.format("§f" + " #319BC4[#5DB8DBLv." + level + "#319BC4]§r ");
+                format = ColorManager.format("§f" + " #319BC4[#5DB8DBLv.MAX(" + level + ")#319BC4]§r ");
 
             }
             return format;
