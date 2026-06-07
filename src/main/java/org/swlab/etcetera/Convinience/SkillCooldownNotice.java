@@ -1,8 +1,6 @@
 package org.swlab.etcetera.Convinience;
 
 import com.binggre.binggreapi.utils.ColorManager;
-import io.papermc.paper.datacomponent.DataComponentTypes;
-import io.papermc.paper.datacomponent.item.UseCooldown;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
@@ -17,6 +15,10 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.components.UseCooldownComponent;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Repositories.UserSettingRepository;
 
@@ -28,6 +30,10 @@ import java.util.Set;
 import java.util.UUID;
 
 public class SkillCooldownNotice {
+
+    private static final String GROUP_NAMESPACE = "etcetera";
+    // 아이템 인스턴스마다 박는 고유 UID -> 쿨타임 그룹이 무기마다 무조건 달라져 안 섞임
+    private static final NamespacedKey UID_KEY = new NamespacedKey(GROUP_NAMESPACE, "cooldown_uid");
 
     private static final Map<UUID, Map<String, TrackedSkill>> trackedPerPlayer = new HashMap<>();
 
@@ -47,49 +53,45 @@ public class SkillCooldownNotice {
                     continue;
                 }
 
-                try {
-                    Map<String, TrackedSkill> tracked = trackedPerPlayer
-                            .computeIfAbsent(player.getUniqueId(), k -> new HashMap<>());
+                Map<String, TrackedSkill> tracked = trackedPerPlayer
+                        .computeIfAbsent(player.getUniqueId(), k -> new HashMap<>());
 
-                    Set<String> heldAbilities = refreshHeldWeaponAbilities(player, tracked);
-                    ItemStack held = player.getInventory().getItemInMainHand();
+                Set<String> heldAbilities = refreshHeldWeaponAbilities(player, tracked);
+                ItemStack held = player.getInventory().getItemInMainHand();
 
-                    Iterator<Map.Entry<String, TrackedSkill>> it = tracked.entrySet().iterator();
-                    while (it.hasNext()) {
-                        Map.Entry<String, TrackedSkill> entry = it.next();
-                        String replacedName = entry.getKey();
-                        TrackedSkill ts = entry.getValue();
+                Iterator<Map.Entry<String, TrackedSkill>> it = tracked.entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry<String, TrackedSkill> entry = it.next();
+                    String replacedName = entry.getKey();
+                    TrackedSkill ts = entry.getValue();
 
-                        String raw = PlaceholderAPI.setPlaceholders(
-                                player, "%mythiclib_cooldown_skill_" + replacedName + "%");
-                        double current;
-                        try {
-                            current = Double.parseDouble(raw);
-                        } catch (NumberFormatException e) {
-                            continue;
-                        }
-
-                        if (ts.previousCooldown <= 0.01 && current > 0.01
-                                && heldAbilities.contains(replacedName)
-                                && UserSettingRepository.getInstance().isShowSkillCooldownItem(player)) {
-                            int ticks = (int) Math.round(current * 20);
-                            if (ticks > 0) {
-                                player.setCooldown(held, ticks);
-                            }
-                        }
-
-                        if (ts.previousCooldown > 0.01 && current <= 0.01
-                                && ts.weaponDisplayName != null
-                                && matchesWeaponFilter(ts.weaponDisplayName)
-                                && UserSettingRepository.getInstance().isShowSkillCooldownNotice(player)) {
-                            player.sendMessage(ColorManager.format(
-                                    "#FFC233[알림] &f" + ts.weaponDisplayName + " #10FF5D스킬이 준비되었습니다!"));
-                        }
-
-                        ts.previousCooldown = current;
+                    String raw = PlaceholderAPI.setPlaceholders(
+                            player, "%mythiclib_cooldown_skill_" + replacedName + "%");
+                    double current;
+                    try {
+                        current = Double.parseDouble(raw);
+                    } catch (NumberFormatException e) {
+                        continue;
                     }
-                } catch (Throwable t) {
-                    // 한 플레이어의 비정상 아이템(합성무기 등)이 스케줄러 전체를 죽이지 않도록 보호
+
+                    if (ts.previousCooldown <= 0.01 && current > 0.01
+                            && heldAbilities.contains(replacedName)
+                            && UserSettingRepository.getInstance().isShowSkillCooldownItem(player)) {
+                        int ticks = (int) Math.round(current * 20);
+                        if (ticks > 0) {
+                            player.setCooldown(held, ticks);
+                        }
+                    }
+
+                    if (ts.previousCooldown > 0.01 && current <= 0.01
+                            && ts.weaponDisplayName != null
+                            && matchesWeaponFilter(ts.weaponDisplayName)
+                            && UserSettingRepository.getInstance().isShowSkillCooldownNotice(player)) {
+                        player.sendMessage(ColorManager.format(
+                                "#FFC233[알림] &f" + ts.weaponDisplayName + " #10FF5D스킬이 준비되었습니다!"));
+                    }
+
+                    ts.previousCooldown = current;
                 }
             }
         }, 20L, 5L);
@@ -109,15 +111,18 @@ public class SkillCooldownNotice {
         String displayName = itemInMainHand.getItemMeta().getDisplayName();
         if (!matchesWeaponFilter(displayName)) return heldAbilities;
 
-        // 합성무기는 등록된 템플릿(getMMOItem)이 없어 NPE 가 났음.
-        // 실제 손에 든 아이템(NBT)에서 능력치를 읽도록 LiveMMOItem 사용.
+        // 합성무기는 템플릿(getMMOItem)이 없어 requireNonNull 에서 NPE -> 실제 아이템(NBT)에서 읽는다.
         LiveMMOItem liveMMOItem = new LiveMMOItem(itemInMainHand);
         if (!liveMMOItem.hasData(ItemStats.ABILITIES)) return heldAbilities;
         StatData data = liveMMOItem.getData(ItemStats.ABILITIES);
         AbilityListData abilityList = (AbilityListData) data;
         if (abilityList == null) return heldAbilities;
 
-        injectCooldownGroup(itemInMainHand);
+        // 비정상 아이템에서 예외가 나도 추적은 계속되도록 감싼다.
+        try {
+            injectCooldownGroup(player, itemInMainHand);
+        } catch (Throwable ignored) {
+        }
 
         for (AbilityData ability : abilityList.getAbilities()) {
             String name = ability.getAbility().getName();
@@ -130,32 +135,38 @@ public class SkillCooldownNotice {
         return heldAbilities;
     }
 
-    private static void injectCooldownGroup(ItemStack item) {
-        // 쿨타임 그룹 주입은 베스트-에포트.
-        // 실패해도(합성무기 등 비정상 데이터 컴포넌트) 능력치 추적과 기본 쿨타임 표시는 계속돼야 하므로 전부 감싼다.
-        try {
-            // 1.21.4 신규 custom_model_data 포맷에서 레거시 getCustomModelData() 가
-            // NoSuchElementException 을 던질 수 있으므로 별도로 방어.
-            int cmd = 0;
-            try {
-                if (item.hasItemMeta() && item.getItemMeta().hasCustomModelData()) {
-                    cmd = item.getItemMeta().getCustomModelData();
-                }
-            } catch (Throwable ignored) {
-                cmd = 0;
-            }
+    // 손에 든 무기에 '인스턴스 고유 UID 기반 쿨타임 그룹'을 박고 실제 인벤토리에 반영(write-back).
+    // PDC(UID)와 쿨타임 그룹을 모두 ItemMeta API 로만 설정한다(setData 와 섞으면 한쪽이 날아감).
+    private static void injectCooldownGroup(Player player, ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return;
 
-            String groupName = "w_" + item.getType().name().toLowerCase() + "_" + cmd;
-            NamespacedKey groupKey = new NamespacedKey("etcetera", groupName);
-
-            UseCooldown existing = item.getData(DataComponentTypes.USE_COOLDOWN);
-            if (existing != null && groupKey.equals(existing.cooldownGroup())) return;
-
-            UseCooldown uc = UseCooldown.useCooldown(0.01f).cooldownGroup(groupKey).build();
-            item.setData(DataComponentTypes.USE_COOLDOWN, uc);
-        } catch (Throwable t) {
-            // 그룹 주입 실패 시 무시 (setCooldown 은 재질 기반으로라도 동작)
+        PersistentDataContainer pdc = meta.getPersistentDataContainer();
+        String uid = pdc.get(UID_KEY, PersistentDataType.STRING);
+        boolean metaChanged = false;
+        if (uid == null || uid.isEmpty()) {
+            uid = UUID.randomUUID().toString();
+            pdc.set(UID_KEY, PersistentDataType.STRING, uid);
+            metaChanged = true;
         }
+
+        // UUID 문자열(소문자 16진수+하이픈)은 NamespacedKey 에 그대로 써도 유효.
+        NamespacedKey groupKey = new NamespacedKey(GROUP_NAMESPACE, "w_" + uid);
+
+        boolean groupOk = meta.hasUseCooldown()
+                && groupKey.equals(meta.getUseCooldown().getCooldownGroup());
+
+        // UID 도 그룹도 이미 박혀 있으면 매 틱 다시 쓰지 않는다(플리커 방지).
+        if (!metaChanged && groupOk) return;
+
+        UseCooldownComponent cd = meta.getUseCooldown();
+        cd.setCooldownSeconds(1.0f);
+        cd.setCooldownGroup(groupKey);
+        meta.setUseCooldown(cd);
+        item.setItemMeta(meta);
+
+        // getItemInMainHand() 가 복사본을 줄 수 있으므로 실제 인벤토리에 다시 써넣어야 영구 반영됨.
+        player.getInventory().setItemInMainHand(item);
     }
 
     private static boolean matchesWeaponFilter(String displayName) {

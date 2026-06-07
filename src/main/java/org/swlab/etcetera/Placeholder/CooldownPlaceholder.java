@@ -4,7 +4,6 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import net.Indyuce.mmoitems.ItemStats;
 import net.Indyuce.mmoitems.MMOItems;
-import net.Indyuce.mmoitems.api.item.mmoitem.LiveMMOItem;
 import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.Indyuce.mmoitems.stat.data.AbilityListData;
 import net.Indyuce.mmoitems.stat.data.type.StatData;
@@ -72,13 +71,7 @@ public class CooldownPlaceholder extends PlaceholderExpansion {
         if(!type.getId().equals("SWORD")){
             return "";
         }
-        // 합성무기는 등록 템플릿이 없어 getMMOItem 이 null -> NPE.
-        // 실제 아이템(NBT)에서 능력치를 읽도록 LiveMMOItem 사용.
-        LiveMMOItem liveMMOItem = new LiveMMOItem(itemInMainHand);
-        if(!liveMMOItem.hasData(ItemStats.ABILITIES)){
-            return "";
-        }
-        StatData data = liveMMOItem.getData(ItemStats.ABILITIES);
+        StatData data = Objects.requireNonNull(MMOItems.plugin.getMMOItem(type, id)).getData(ItemStats.ABILITIES);
         AbilityListData data2 = (AbilityListData) data;
 
 
