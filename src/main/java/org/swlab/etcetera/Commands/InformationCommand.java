@@ -11,6 +11,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.swlab.etcetera.Util.CombatPowerUtil;
 
 import java.text.NumberFormat;
 import java.util.Collection;
@@ -39,6 +40,7 @@ public class InformationCommand implements CommandExecutor {
         long maxHealth = Math.round(health);
         NumberFormat numberFormat = NumberFormat.getInstance();
         player.sendMessage("§f > " + player.getName() + " 님의 §a스텟 §f정보입니다.");
+        player.sendMessage("§f  ");
         player.sendMessage("§f  ");
         player.sendMessage("§f  ᎈ §7공격력: §f+" + numberFormat.format(skillDamage) + "%");
 //        for (String key : statMap.getInstance("SKILL_DAMAGE").getKeys()) {
@@ -76,6 +78,10 @@ public class InformationCommand implements CommandExecutor {
         sendDetailedInfo(player, statMap, "CUSTOM_BOSSDAMAGE");
 
         player.sendMessage("§7§o    ※ /스텟 을 통한 스텟은 따로 표시되지 않습니다.");
+        player.sendMessage("");
+        player.sendMessage("");
+        player.sendMessage(ColorManager.format("§f          ϗ #FFD700전투력: §f" + CombatPowerUtil.toKoreanUnit(CombatPowerUtil.calculate(player))));
+
 
         player.sendMessage("");
         return true;

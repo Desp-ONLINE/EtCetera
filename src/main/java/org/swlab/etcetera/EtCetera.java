@@ -16,6 +16,7 @@ import org.swlab.etcetera.Convinience.TipNotice;
 import org.swlab.etcetera.Database.DatabaseRegister;
 import org.swlab.etcetera.Listener.*;
 import org.swlab.etcetera.Placeholder.ChannelPlaceholder;
+import org.swlab.etcetera.Placeholder.CombatPowerPlaceholder;
 import org.swlab.etcetera.Placeholder.CooldownPlaceholder;
 import org.swlab.etcetera.Placeholder.LevelPlaceholder;
 import org.swlab.etcetera.Repositories.DogamRegisterRepository;
@@ -50,6 +51,7 @@ public final class EtCetera extends JavaPlugin {
             new ChannelPlaceholder(this).register();
             new CooldownPlaceholder(this).register();
             new LevelPlaceholder(this).register();
+            new CombatPowerPlaceholder(this).register();
         }
         FileConfiguration config = getConfig();
         config.addDefault("channelType", "lobby");
