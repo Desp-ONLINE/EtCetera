@@ -23,6 +23,7 @@ public class BasicWeaponCommand implements CommandExecutor {
         Player player = (Player) sender;
         HashMap<String, Integer> jobList = new HashMap<>();
         jobList.put("크루세이더", 1);
+        jobList.put("드레드노트", 0);
         jobList.put("파우스트", 2);
         jobList.put("오베론", 3);
         jobList.put("인페르노", 4);
@@ -33,6 +34,7 @@ public class BasicWeaponCommand implements CommandExecutor {
         jobList.put("퀘이사", 9);
         HashMap<String, Integer> awakenedJobList = new HashMap<>();
         awakenedJobList.put("크루세이더", 1);
+        awakenedJobList.put("드레드노트", 0);
         awakenedJobList.put("파우스트", 2);
         awakenedJobList.put("오베론", 5);
         awakenedJobList.put("인페르노", 6);
