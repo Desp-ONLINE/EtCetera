@@ -14,6 +14,7 @@ public class ApocalypseCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         Player player = (Player) commandSender;
         String joinMessage = ColorManager.format("#D293FF /아포칼립스 입장 §f- 아포칼립스 던전에 입장할 수 있는 UI를 오픈합니다. ");
+        String sweepMessage = ColorManager.format("#D293FF /아포칼립스 소탕 §f- 이번 주 제일 최근에 플레이 한 이력으로 소탕합니다. [ 패스 필요 / 랭킹 누적 주 최대 4회 ] ");
         String giveUpMessage = ColorManager.format("#D293FF /아포칼립스 포기 §f- 플레이 중인 아포칼립스 던전을 포기합니다. ");
         String checkMessage = ColorManager.format("#D293FF /아포칼립스 확인 §f- 오늘 나의 아포칼립스 던전 입장권 획득 여부를 확인합니다. ");
         String receiveMessage = ColorManager.format("#D293FF /아포칼립스 보상받기 §f- 현재 보상을 수령합니다. 수령 시 입장권이 소모됩니다.");
@@ -21,6 +22,7 @@ public class ApocalypseCommand implements CommandExecutor {
         if (strings.length == 0) {
             player.sendMessage(joinMessage);
             player.sendMessage(giveUpMessage);
+            player.sendMessage(sweepMessage);
             player.sendMessage(checkMessage);
             player.sendMessage(receiveMessage);
             player.sendMessage(rewardInfoMessage);
@@ -37,6 +39,9 @@ public class ApocalypseCommand implements CommandExecutor {
             case "확인":
                 CommandUtil.runCommandAsOP(player, "웨이브던전 확인");
                 return true;
+                case "소탕":
+                CommandUtil.runCommandAsOP(player, "웨이브던전 소탕");
+                return true;
             case "보상받기":
                 CommandUtil.runCommandAsOP(player, "웨이브던전 보상받기");
                 return true;
@@ -50,6 +55,7 @@ public class ApocalypseCommand implements CommandExecutor {
 
                 player.sendMessage(joinMessage);
                 player.sendMessage(giveUpMessage);
+                player.sendMessage(sweepMessage);
                 player.sendMessage(checkMessage);
                 player.sendMessage(receiveMessage);
                 player.sendMessage(rewardInfoMessage);
