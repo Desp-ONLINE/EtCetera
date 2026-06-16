@@ -1,5 +1,8 @@
 package org.swlab.etcetera.Listener;
 
+import io.lumine.mythic.lib.api.player.MMOPlayerData;
+import net.Indyuce.mmocore.api.MMOCoreAPI;
+import net.Indyuce.mmocore.api.player.PlayerData;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -22,6 +25,8 @@ public class LeapListener implements Listener {
 
     private static LeapListener instance;
 
+    private MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
+
     public static LeapListener getInstance() {
         if (instance == null) {
             instance = new LeapListener();
@@ -43,6 +48,8 @@ public class LeapListener implements Listener {
         ArrayList<String> sword = new ArrayList(Arrays.asList(Material.DIAMOND_SWORD, Material.GOLDEN_SWORD, Material.IRON_SWORD, Material.WOODEN_SWORD, Material.STONE_SWORD));
 
         if (sword.contains(p.getInventory().getItemInMainHand().getType()) && !p.isSneaking()) {
+
+            String job = PlayerData.get(p.getUniqueId()).getProfess().getName();
             UUID uuid = p.getUniqueId();
             if (!isCooldown(uuid)) {
                 e.setCancelled(true);
@@ -56,10 +63,20 @@ public class LeapListener implements Listener {
                 if (p.getWorld().getName().equals("adventures")) {
                     return;
                 } else {
-                    vector = p.getLocation().getDirection().normalize().multiply(2.2).setY(0.5);
+                    // 로비 도약 거리
+                    if(job.equals("루인드") || job.equals("드레드노트")) {
+                        vector = p.getLocation().getDirection().normalize().multiply(1.9).setY(0.35);
+                    } else {
+                        vector = p.getLocation().getDirection().normalize().multiply(2.2).setY(0.5);
+                    }
                 }
             } else {
-                vector = p.getLocation().getDirection().normalize().multiply(3.2).setY(0.5);
+                // 던전 채널 도약 거리
+                if(job.equals("루인드") || job.equals("드레드노트")) {
+                    vector = p.getLocation().getDirection().normalize().multiply(2.7).setY(0.35);
+                } else {
+                    vector = p.getLocation().getDirection().normalize().multiply(3.2).setY(0.5);
+                }
             }
             p.setVelocity(vector);
             addCooldown(uuid);
@@ -81,7 +98,11 @@ public class LeapListener implements Listener {
     }
 
     public boolean isCooldown(UUID uuid) {
+        String job = PlayerData.get(uuid).getProfess().getName();
         long now = System.currentTimeMillis();
+        if(job.equals("루인드") || job.equals("드레드노트")){
+            return !cooldowns.containsKey(uuid) || now - cooldowns.get(uuid) >= 2000;
+        }
         return !cooldowns.containsKey(uuid) || now - cooldowns.get(uuid) >= 3000;
     }
 
