@@ -16,33 +16,37 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.swlab.etcetera.EtCetera;
+import org.swlab.etcetera.Util.CommandUtil;
 import org.swlab.etcetera.Util.NameTagUtil;
 
 
-public class ClassChangeListener implements Listener{
+public class ClassChangeListener implements Listener {
     @EventHandler
-    public void onLevelUp(PlayerChangeClassEvent e){
+    public void onLevelUp(PlayerChangeClassEvent e) {
         Player player = e.getPlayer();
         PlayerClass newClass = e.getNewClass();
 
 
-        Bukkit.getScheduler().runTaskLaterAsynchronously(EtCetera.getInstance(), () -> {
-            MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
-            if(mmoCoreAPI.getPlayerData(player).getLevel() != 1){
-                return;
-            }
-            ItemStack basicWeapon = MMOItems.plugin.getItem("SWORD", "직업무기_1" + newClass.getName() + "0");
-            ItemStack basicArmor = MMOItems.plugin.getItem("ARMOR", "방어구_모험가0");
-            player.getInventory().addItem(basicArmor);
-            player.getInventory().addItem(basicWeapon);
-            mmoCoreAPI.getPlayerData(player).setClassPoints(999);
-//            NameTagUtil.setPlayerNameTag(player);
-        }, 20L);
+        MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
+        if (mmoCoreAPI.getPlayerData(player).getClassInfo(newClass).getLevel() == 1) {
+            Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    CommandUtil.runCommandAsOP(player, "기본템 1");
+                    mmoCoreAPI.getPlayerData(player).setClassPoints(999);
+                }
+            }, 20L);
+            return;
+        }
+        System.out.println("mmoCoreAPI.getPlayerData(player).getClassInfo(newClass).getLevel() = " + mmoCoreAPI.getPlayerData(player).getClassInfo(newClass).getLevel());
+
+
     }
+
     @EventHandler
-    public void onProfileCreate(QuestFinishEvent e){
+    public void onProfileCreate(QuestFinishEvent e) {
         int id = e.getQuest().getId();
-        if(id == 1){
+        if (id == 1) {
             Player player = e.getPlayer();
             MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
             PlayerClass profess = mmoCoreAPI.getPlayerData(player).getProfess();
@@ -53,19 +57,19 @@ public class ClassChangeListener implements Listener{
             player.getInventory().addItem(basicWeapon);
             mmoCoreAPI.getPlayerData(player).setClassPoints(999);
         }
-        if(id >= 30000 && id < 40000){
+        if (id >= 30000 && id < 40000) {
             Player player = e.getPlayer();
             Quest quest = QuestsAPI.getAPI().getQuestsManager().getQuest(id);
             PlayerAccountImplementation account = BeautyQuests.getInstance().getPlayersManager().getAccount(player);
 //            if(!account.hasQuestDatas(quest)){
-                player.sendMessage(ColorManager.format("§6 [편의성] #93FFA3 5초 뒤, 자동으로 서브퀘스트 §f"+quest.getName()+"#93FFA3 를 수령합니다. 수령 전 채널을 옮기거나 하는 경우 직접 수령이 필요합니다."));
-                Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
-                    @Override
-                    public void run() {
-                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "bq start "+ player.getName()+" "+id);
+            player.sendMessage(ColorManager.format("§6 [편의성] #93FFA3 5초 뒤, 자동으로 서브퀘스트 §f" + quest.getName() + "#93FFA3 를 수령합니다. 수령 전 채널을 옮기거나 하는 경우 직접 수령이 필요합니다."));
+            Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "bq start " + player.getName() + " " + id);
 
-                    }
-                }, 100L);
+                }
+            }, 100L);
 //                CommandUtil.runCommandAsOP(player, );
 //            }
 //            System.out.println("true = " + true);

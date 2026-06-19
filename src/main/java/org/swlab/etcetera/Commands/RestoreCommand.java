@@ -53,6 +53,7 @@ public class RestoreCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         Player player = (Player) commandSender;
         HashMap<String, Integer> jobList = new HashMap<>();
+        jobList.put("드레드노트", 0);
         jobList.put("크루세이더", 1);
         jobList.put("파우스트", 2);
         jobList.put("오베론", 3);
