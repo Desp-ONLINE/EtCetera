@@ -26,6 +26,7 @@ import org.dople.guidance.dto.PlayerDto;
 import org.jetbrains.annotations.NotNull;
 import org.swlab.etcetera.Database.DatabaseRegister;
 import org.swlab.etcetera.EtCetera;
+import org.swlab.etcetera.Listener.FirstClearListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,6 +70,7 @@ public class RestoreCommand implements CommandExecutor {
 //            player.sendMessage(ColorManager.format("#25A79D /복구 버닝 §f- 버닝 완료 아이템을 복구 받습니다. 메인 퀘스트 41을 클리어 하고, 레벨이 45 이상이어야 합니다."));
             player.sendMessage(ColorManager.format("#25A79D /복구 바벨탑 §f- 내가 클리어 한 모든 바벨탑의 공략증을 획득합니다."));
             player.sendMessage(ColorManager.format("#25A79D /복구 길라잡이 §f- 일부 받지 못한 길라잡이 보상을 수령합니다."));
+            player.sendMessage(ColorManager.format("#25A79D /복구 공략증 §f- 익스트림 황금의 미궁(Lv.10) 클리어 유저가 공략증을 복구받습니다."));
             player.sendMessage("");
             return true;
         }
@@ -188,6 +190,35 @@ public class RestoreCommand implements CommandExecutor {
 //                MMOMail.getInstance().getMailAPI().sendMail(player.getName(), mail);
 //                player.sendMessage("§a 복구가 완료되었습니다! §7§o(/메일함)");
 //                return true;
+            case "공략증":
+                // 황금의 미궁 익스트림(난이도 10, cleared 키 "1-10") 클리어 기록이 있는 유저에게
+                // 익스트림 황금의 미궁 LV1 공략증을 복구 지급한다. (골드 보상 없음, 아이템만 지급)
+                // 횟수 제한 없이 언제든 다시 받을 수 있다.
+                MongoCollection<Document> timeRaidPlayerDocument = FirstClearListener.timeRaidPlayerDocument;
+                String uuid = player.getUniqueId().toString();
+
+                // 타임 던전 클리어 기록 조회
+                Document timeRaidPlayer = timeRaidPlayerDocument.find(new Document("uuid", uuid)).first();
+                List<String> clearedList = timeRaidPlayer == null
+                        ? new ArrayList<>()
+                        : timeRaidPlayer.getList("cleared", String.class);
+                if (clearedList == null) {
+                    clearedList = new ArrayList<>();
+                }
+
+                // "1-10" 클리어 여부 확인
+                if (!clearedList.contains("1-10")) {
+                    player.sendMessage("§c 복구 조건에 맞지 않습니다. (익스트림 황금의 미궁(Lv.10)을 클리어한 기록이 없습니다.)");
+                    return true;
+                }
+
+                // 공략증 지급 (아이템만)
+                ItemStack labyrinthItem = MMOItems.plugin.getItem("MISCELLANEOUS", "퀘스트_익스트림황금의미궁LV1");
+                labyrinthItem.setAmount(1);
+                player.getInventory().addItem(labyrinthItem);
+
+                player.sendMessage("§a 아이템 복구가 완료되었습니다. (익스트림 황금의 미궁 LV1 공략증)");
+                return true;
             case "길라잡이":
                 PlayerDto playerData = PlayerRepository.getInstance().getPlayerData(player);
                 int id = playerData.getId();
@@ -247,6 +278,7 @@ public class RestoreCommand implements CommandExecutor {
                 player.sendMessage("");
                 player.sendMessage(ColorManager.format("#25A79D /복구 [전직] [차수] §f- 해당 전직의 서를 복구받습니다. §7§o(ex: /복구 전직 2 - 2차 전직의 서를 복구 받습니다.)"));
                 player.sendMessage(ColorManager.format("#25A79D /복구 길라잡이 §f- 일부 받지 못한 길라잡이 보상을 수령합니다."));
+                player.sendMessage(ColorManager.format("#25A79D /복구 공략증 §f- 익스트림 황금의 미궁(Lv.10) 클리어 유저가 공략증을 복구받습니다."));
 //                player.sendMessage(ColorManager.format("#25A79D /복구 버닝 §f- 버닝 완료 아이템을 복구 받습니다. 메인 퀘스트 41을 클리어 하고, 레벨이 45 이상이어야 합니다. "));
                 player.sendMessage("");
                 return true;
