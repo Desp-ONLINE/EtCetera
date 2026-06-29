@@ -121,6 +121,24 @@ public class DungeonListener implements Listener {
                 return;
             }
         }
+        if(dungeonID == 800 || dungeonID == 801){
+            for (PlayerDungeon playerDungeon : e.getPlayerDungeons()) {
+                PlayerClearLog exKanaloaClearLog = playerDungeon.getClearLog(800);
+                PlayerClearLog kanaloaClearLog = playerDungeon.getClearLog(801);
+
+                if(!exKanaloaClearLog.isJoinableDate()){
+                    joinable = false;
+                }
+                if(!kanaloaClearLog.isJoinableDate()){
+                    joinable = false;
+                }
+            }
+            if (!joinable) {
+                e.setCancelMessage("§c 이미 금주에 그랜드 워든 레이드를 완료하셨습니다.");
+                e.setCancelled(true);
+                return;
+            }
+        }
 
         if (jinRegionCommandersDungeonID.contains(dungeonID)) {
             for (PlayerDungeon playerDungeon : e.getPlayerDungeons()) {
