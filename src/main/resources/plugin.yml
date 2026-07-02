@@ -111,6 +111,10 @@ commands:
     aliases: ["fhql2", "로비2"]
   복구:
     aliases: [ "qhrrn" ]
+  히든교환:
+    aliases: [ "glemsrhks", "히든", "glems" ]
+  히든재료교환:
+    aliases: [ "glemswofyrhks" ]
   양조:
     aliases: [ "didwh" ]
   엡실론:

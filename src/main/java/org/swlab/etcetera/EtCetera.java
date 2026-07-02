@@ -22,6 +22,7 @@ import org.swlab.etcetera.Placeholder.LevelPlaceholder;
 import org.swlab.etcetera.Repositories.DogamRegisterRepository;
 import org.swlab.etcetera.Repositories.MimicRepository;
 import org.swlab.etcetera.Repositories.RaidCoinRepository;
+import org.swlab.etcetera.Repositories.HiddenExchangeRepository;
 import org.swlab.etcetera.Repositories.TutorialRepository;
 import org.swlab.etcetera.Repositories.UserSettingRepository;
 import org.swlab.etcetera.Util.PetUtil;
@@ -107,6 +108,7 @@ public final class EtCetera extends JavaPlugin {
             TutorialRepository.getInstance().loadTutorialData(player);
             DataLoadListener.getInstance().putPlayerData(player);
             RaidCoinRepository.getInstance().loadUserData(player);
+            HiddenExchangeRepository.getInstance().loadUserData(player);
         }
 
     }
@@ -121,6 +123,7 @@ public final class EtCetera extends JavaPlugin {
             }
             UserSettingRepository.getInstance().saveUserSetting(player);
             RaidCoinRepository.getInstance().saveUserData(player);
+            HiddenExchangeRepository.getInstance().saveUserData(player);
         }
     }
 
@@ -190,6 +193,7 @@ public final class EtCetera extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new UpgradeListener(), this);
         Bukkit.getPluginManager().registerEvents(new GoldItemListener(), this);
         Bukkit.getPluginManager().registerEvents(new TrashcanListener(), this);
+        Bukkit.getPluginManager().registerEvents(new HiddenExchangeListener(), this);
         if (Bukkit.getPluginManager().isPluginEnabled("MMOGuild")) {
             Bukkit.getPluginManager().registerEvents(new FirstClearListener(), this);
 
@@ -205,6 +209,8 @@ public final class EtCetera extends JavaPlugin {
         getCommand("설정").setExecutor(new UserSettingCommand());
         getCommand("아포칼립스").setExecutor(new ApocalypseCommand());
         getCommand("쓰레기통").setExecutor(new TrashcanCommand());
+        getCommand("히든교환").setExecutor(new HiddenExchangeCommand());
+        getCommand("히든재료교환").setExecutor(new HiddenExchangeCommand());
         getCommand("일괄분해").setExecutor(new DecompositeCommand());
         getCommand("일괄판매").setExecutor(new SellAllRewardCommand());
         getCommand("UI").setExecutor(new UICommand());

@@ -30,6 +30,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.dople.dataSync.event.DataLoadEvent;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Repositories.RaidCoinRepository;
+import org.swlab.etcetera.Repositories.HiddenExchangeRepository;
 import org.swlab.etcetera.Repositories.TutorialRepository;
 import org.swlab.etcetera.Repositories.UserSettingRepository;
 import org.swlab.etcetera.Util.CommandUtil;
@@ -199,6 +200,7 @@ public class BasicListener implements Listener {
 
         UserSettingRepository.getInstance().loadUserSetting(player);
         RaidCoinRepository.getInstance().loadUserData(player);
+        HiddenExchangeRepository.getInstance().loadUserData(player);
 
     }
 
@@ -238,6 +240,7 @@ public class BasicListener implements Listener {
         }
         UserSettingRepository.getInstance().saveUserSetting(player);
         RaidCoinRepository.getInstance().saveUserData(player);
+        HiddenExchangeRepository.getInstance().saveUserData(player);
 
 
     }
