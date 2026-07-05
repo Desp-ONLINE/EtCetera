@@ -57,6 +57,9 @@ public final class EtCetera extends JavaPlugin {
         FileConfiguration config = getConfig();
         config.addDefault("channelType", "lobby");
         config.addDefault("channelNumber", 0);
+        config.addDefault("tradeHighlightColor.buy", "#51A037");
+        config.addDefault("tradeHighlightColor.sell", "#D9C338");
+        config.addDefault("tradeHighlightColor.recruit", "#556E6D");
         config.options().copyDefaults(true);
         saveConfig();
         channelType = config.getString("channelType");

@@ -12,5 +12,6 @@ public class RaidCoinDataDTO {
     private String raidName;
     private Integer normalAmount;
     private Integer specialAmount;
+    private Integer premiumAmount;
 
 }

@@ -41,7 +41,8 @@ public class RaidCoinRepository {
     public void resetDatas() {
         raidCoinDataCache.clear();
         loadCoinData();
-        raidCoinPlayerCollection.deleteMany(new Document());
+        // 문서 삭제 대신 제자리 초기화. 여러 채널 서버가 동시에 실행해도 결과가 같아 경합이 없다.
+        raidCoinPlayerCollection.updateMany(new Document(), new Document("$set", new Document("highestClearedRaid", "")));
         raidCoinPlayerCache.clear();
         for (Player player : Bukkit.getOnlinePlayers()) {
             loadUserData(player);
@@ -53,8 +54,12 @@ public class RaidCoinRepository {
             String raidName = document.getString("raidName");
             Integer normalAmount = document.getInteger("normalAmount");
             Integer specialAmount = document.getInteger("specialAmount");
+            Integer premiumAmount = document.getInteger("premiumAmount");
+            if (premiumAmount == null) {
+                premiumAmount = 0;
+            }
 
-            RaidCoinDataDTO raidCoinDataDTO = RaidCoinDataDTO.builder().raidName(raidName).normalAmount(normalAmount).specialAmount(specialAmount).build();
+            RaidCoinDataDTO raidCoinDataDTO = RaidCoinDataDTO.builder().raidName(raidName).normalAmount(normalAmount).specialAmount(specialAmount).premiumAmount(premiumAmount).build();
 
             raidCoinDataCache.put(raidName, raidCoinDataDTO);
         }
@@ -110,12 +115,31 @@ public class RaidCoinRepository {
         return Math.max(result, 0);
     }
 
+    public Integer getPremiumRewardGapAmount(Player player, String clearedRaidName) {
+        RaidCoinPlayerDTO raidCoinPlayerDTO = raidCoinPlayerCache.get(player.getUniqueId().toString());
+        String highestClearedRaid = raidCoinPlayerDTO.getHighestClearedRaid();
+
+        RaidCoinDataDTO clearedDataDTO = raidCoinDataCache.get(clearedRaidName);
+        RaidCoinDataDTO highestDataDTO = raidCoinDataCache.get(highestClearedRaid);
+
+        if (highestDataDTO == null) {
+            return clearedDataDTO.getPremiumAmount();
+        }
+
+        int result = clearedDataDTO.getPremiumAmount() - highestDataDTO.getPremiumAmount();
+
+        return Math.max(result, 0);
+    }
+
     public void updateUserRaidData(Player player, String clearedRaidName) {
 
         RaidCoinPlayerDTO raidCoinPlayerDTO = raidCoinPlayerCache.get(player.getUniqueId().toString());
         raidCoinPlayerDTO.setHighestClearedRaid(clearedRaidName);
 
         raidCoinPlayerCache.put(player.getUniqueId().toString(), raidCoinPlayerDTO);
+
+        // 보상 지급 직후 즉시 저장. 퇴장 전에 서버가 죽거나 채널 이동 경합이 나도 기록이 유실되지 않도록.
+        saveUserData(player);
 
     }
 
@@ -126,7 +150,7 @@ public class RaidCoinRepository {
         }
         List<ItemStack> items = new ArrayList<>();
 
-        ItemStack item = MMOItems.plugin.getItem("MISCELLANEOUS", "기타_보스코인2");
+        ItemStack item = MMOItems.plugin.getItem("MISCELLANEOUS", "기타_보스코인3");
         item.setAmount(normalRewardGapAmount);
         items.add(item);
 
@@ -149,7 +173,7 @@ public class RaidCoinRepository {
         }
         List<ItemStack> items = new ArrayList<>();
 
-        ItemStack item = MMOItems.plugin.getItem("MISCELLANEOUS", "기타_상급보스코인2");
+        ItemStack item = MMOItems.plugin.getItem("MISCELLANEOUS", "기타_상급보스코인3");
         item.setAmount(specialRewardGapAmount);
         items.add(item);
 
@@ -166,13 +190,41 @@ public class RaidCoinRepository {
 
     }
 
+    public boolean givePremiumReward(Player player, String clearedRaidName) {
+        Integer premiumRewardGapAmount = getPremiumRewardGapAmount(player, clearedRaidName);
+        if (premiumRewardGapAmount == 0) {
+            return false;
+        }
+        List<ItemStack> items = new ArrayList<>();
+
+        ItemStack item = MMOItems.plugin.getItem("MISCELLANEOUS", "기타_특급보스코인3");
+        item.setAmount(premiumRewardGapAmount);
+        items.add(item);
+
+        MailAPI mailAPI = MMOMail.getInstance().getMailAPI();
+
+        Mail mail = mailAPI.createMail("시스템", "§f특급 보스 코인 이벤트 보상입니다.", 0, items);
+        mailAPI.sendMail(player.getName(), mail);
+
+        player.sendMessage("§e    [ EVENT ]§d 특급 보스 코인 §6" + premiumRewardGapAmount + "§e개를 획득했습니다.");
+
+
+        return true;
+
+
+    }
+
 
     public void saveUserData(Player player) {
 
         RaidCoinPlayerDTO raidCoinPlayerDTO = raidCoinPlayerCache.get(player.getUniqueId().toString());
-        Document document = raidCoinPlayerCollection.find(new Document("uuid", player.getUniqueId().toString())).first();
-        document.append("nickname", player.getName());
-        document.append("highestClearedRaid", raidCoinPlayerDTO.getHighestClearedRaid());
+        if (raidCoinPlayerDTO == null) {
+            return;
+        }
+        Document document = new Document()
+                .append("uuid", player.getUniqueId().toString())
+                .append("nickname", player.getName())
+                .append("highestClearedRaid", raidCoinPlayerDTO.getHighestClearedRaid());
 
         raidCoinPlayerCollection.replaceOne(new Document("uuid", player.getUniqueId().toString()), document, new ReplaceOptions().upsert(true));
     }

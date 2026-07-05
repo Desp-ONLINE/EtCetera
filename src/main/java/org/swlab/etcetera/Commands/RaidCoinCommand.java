@@ -36,10 +36,12 @@ public class RaidCoinCommand implements CommandExecutor {
                 if (strings.length == 3) {
                     RaidCoinRepository.getInstance().giveNormalReward(player, strings[1] + " " + strings[2]);
                     RaidCoinRepository.getInstance().giveSpecialReward(player, strings[1] + " " + strings[2]);
+                    RaidCoinRepository.getInstance().givePremiumReward(player, strings[1] + " " + strings[2]);
                     RaidCoinRepository.getInstance().updateUserRaidData(player, strings[1] + " " + strings[2]);
                 } else {
                     RaidCoinRepository.getInstance().giveNormalReward(player, strings[1]);
                     RaidCoinRepository.getInstance().giveSpecialReward(player, strings[1]);
+                    RaidCoinRepository.getInstance().givePremiumReward(player, strings[1]);
                     RaidCoinRepository.getInstance().updateUserRaidData(player, strings[1]);
                 }
 
@@ -56,7 +58,7 @@ public class RaidCoinCommand implements CommandExecutor {
         for (String string : raidCoinDataCache.keySet()) {
             RaidCoinDataDTO raidCoinDataDTO = raidCoinDataCache.get(string);
             String raidName = raidCoinDataDTO.getRaidName();
-            sender.sendMessage(ColorManager.format("    §6" + raidName + "§f: #B6FFC1보스 코인 §6" + raidCoinDataDTO.getNormalAmount() + "§f개 / §c상급 보스 코인 §6" + raidCoinDataDTO.getSpecialAmount() + "§f개"));
+            sender.sendMessage(ColorManager.format("    §6" + raidName + "§f: #B6FFC1보스 코인 §6" + raidCoinDataDTO.getNormalAmount() + "§f개 / §c상급 보스 코인 §6" + raidCoinDataDTO.getSpecialAmount() + "§f개 / §d특급 보스 코인 §6" + raidCoinDataDTO.getPremiumAmount() + "§f개"));
         }
         sender.sendMessage("");
         sender.sendMessage("§e    이번 주 획득한 최고 보상의 레이드: §f" + RaidCoinRepository.getInstance().raidCoinPlayerCache.get(sender.getUniqueId().toString()).getHighestClearedRaid());

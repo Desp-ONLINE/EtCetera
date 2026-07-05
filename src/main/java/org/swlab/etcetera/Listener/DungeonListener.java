@@ -91,7 +91,8 @@ public class DungeonListener implements Listener {
             }
             boolean a = RaidCoinRepository.getInstance().giveNormalReward(player, e.getDungeonRoom().getParent().getName());
             boolean b = RaidCoinRepository.getInstance().giveSpecialReward(player, e.getDungeonRoom().getParent().getName());
-            if (a || b) {
+            boolean c = RaidCoinRepository.getInstance().givePremiumReward(player, e.getDungeonRoom().getParent().getName());
+            if (a || b || c) {
                 RaidCoinRepository.getInstance().updateUserRaidData(player, e.getDungeonRoom().getParent().getName());
             }
         }

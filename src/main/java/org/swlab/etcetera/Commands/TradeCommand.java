@@ -19,6 +19,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.swlab.etcetera.Database.DatabaseRegister;
+import org.swlab.etcetera.EtCetera;
 
 import java.util.Date;
 
@@ -68,26 +69,31 @@ public class TradeCommand implements CommandExecutor {
         String symbol;
         String color;
         String title;
+        String highlightKey;
         switch (type) {
             case "구매":
                 symbol = "Ϟ";
                 color = "#98FF76";
                 title = "[구매해요!]";
+                highlightKey = "buy";
                 break;
             case "판매":
                 symbol = "ϙ";
                 color = "#FFEC76";
                 title = "[판매해요!]";
+                highlightKey = "sell";
                 break;
             case "구인":
                 symbol = "ϗ";
                 color = "#7D9A99";
                 title = "[사람구해요!]";
+                highlightKey = "recruit";
                 break;
             default:
                 return;
         }
-        String highlighted = highlightContext(stripColorCodes(context), color);
+        String highlightColor = EtCetera.getInstance().getConfig().getString("tradeHighlightColor." + highlightKey, color);
+        String highlighted = highlightContext(stripColorCodes(context), highlightColor);
         String format = ColorManager.format("&f " + symbol + " " + color + " " + title + " " + player.getName() + "§f: " + highlighted);
         String divideLine = ColorManager.format(color + "§m                                                                                        §f");
         broadcastClickableTradeMessage(divideLine, format, player.getName());
