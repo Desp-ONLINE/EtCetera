@@ -8,22 +8,16 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.dople.transactionLog.Database.TransactionLogRepository;
+import org.dople.transactionLog.Service.PriceRangeService;
 import org.jetbrains.annotations.NotNull;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Util.CommandUtil;
 
 import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.List;
+import java.util.Objects;
 
 public class MarketCommand implements CommandExecutor {
-
-    private long BASIC_GAP = 20;
-    // 미거래 일수에 따른 판매 허용 폭(±%) 구간. 두 배열의 같은 인덱스가 (일수, 폭) 쌍이며,
-    // 사이 구간은 선형 보간한다. 0일=±20%, 10일=±30%, 14일=±50%, 17일=±70%, 21일 이상=±100%.
-    private static final int[] GAP_DAYS = {0, 10, 14, 17, 21};
-    private static final long[] GAP_PERCENT = {20, 30, 50, 70, 100};
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
@@ -69,25 +63,15 @@ public class MarketCommand implements CommandExecutor {
                     try {
                         String priceString = strings[1].replace("만", "0000");
                         double price = Double.parseDouble(priceString);
-                        if (!checkPriceInRange(price, player)) {
-                            return false;
-                        }
-                        Bukkit.dispatchCommand(player, "판매2 " + price);
-                    } catch (NumberFormatException | ParseException e) {
+                        sellIfPriceInRange(price, player);
+                    } catch (NumberFormatException e) {
                         player.sendMessage("§c/시장 판매 <금액> : 입력이 잘못되었습니다.");
                     }
                     return false;
                 }
                 String priceString = strings[1].replace("만", "0000");
                 double price = Double.parseDouble(priceString);
-                try {
-                    if (!checkPriceInRange(price, player)) {
-                        return false;
-                    }
-                } catch (ParseException e) {
-                    throw new RuntimeException(e);
-                }
-                Bukkit.dispatchCommand(player, "판매2 " + price);
+                sellIfPriceInRange(price, player);
                 return false;
             case "회수":
                 CommandUtil.runCommandAsOP(player, "ah");
@@ -99,69 +83,39 @@ public class MarketCommand implements CommandExecutor {
         return false;
     }
 
-    public boolean checkPriceInRange(double price, Player player) throws ParseException {
+    // 가격 범위 조회(Mongo)를 비동기로 수행해 메인 스레드 멈춤을 막고,
+    // 검사 통과 시에만 메인 스레드로 복귀해 판매 명령을 실행한다.
+    private void sellIfPriceInRange(double price, Player player) {
         ItemStack itemInMainHand = player.getInventory().getItemInMainHand();
         String id = MMOItems.getID(itemInMainHand);
         String type = MMOItems.getType(itemInMainHand).getId();
-        long averagePrice = TransactionLogRepository.getInstance().getAveragePrice(id, type, 20);
-        if (averagePrice == 0) {
-            return true;
-        }
+        int amount = itemInMainHand.getAmount();
 
-        // 거래가 10일 넘게 끊긴 경우에만 미거래 일수 기반으로 폭을 넓히고(calcGap),
-        // 그 외에는 평소처럼 거래량 기반 폭(getGap)을 사용한다.
-        int untransactedDays = TransactionLogRepository.getInstance().getUntransactedDays(id, type, 1, player);
-        long gap = untransactedDays > 10 ? calcGap(untransactedDays) : getGap(id);
-
-        averagePrice *= itemInMainHand.getAmount();
-        long maximumPrice = averagePrice + averagePrice * gap / 100;
-        long minimumPrice = averagePrice - averagePrice * gap / 100;
-
-        NumberFormat formatter = NumberFormat.getInstance();
-        if ((price > maximumPrice) || (price < minimumPrice)) {
-            player.sendMessage("§6[ 시장 경제 시스템 ] §e" + formatter.format(minimumPrice) + " §c~ §e" + formatter.format(maximumPrice) + " §c사이의 금액으로만 판매 할 수 있습니다. §7§o(평균 거래가의 " + gap + "% 로 판매가 제한되어 있습니다.)");
-            return false;
-        }
-        return true;
-    }
-
-    // 미거래 일수에 따른 판매 허용 폭(±%)을 GAP_DAYS/GAP_PERCENT 구간으로 선형 보간한다.
-    private long calcGap(int untransactedDays) {
-        if (untransactedDays <= GAP_DAYS[0]) {
-            return GAP_PERCENT[0];
-        }
-        for (int i = 1; i < GAP_DAYS.length; i++) {
-            if (untransactedDays < GAP_DAYS[i]) {
-                int d0 = GAP_DAYS[i - 1];
-                long g0 = GAP_PERCENT[i - 1];
-                return g0 + (GAP_PERCENT[i] - g0) * (untransactedDays - d0) / (GAP_DAYS[i] - d0);
+        PriceRangeService priceRangeService = PriceRangeService.getInstance();
+        priceRangeService.getPriceRangeAsync(id, type, amount, player).whenComplete((range, ex) -> {
+            if (ex != null) {
+                EtCetera.getInstance().getLogger().warning("시장 가격 범위 계산 실패 (" + id + "): " + ex.getMessage());
+                return;
             }
-        }
-        return GAP_PERCENT[GAP_PERCENT.length - 1];
-    }
-
-    public long getGap(String mmoitemID) {
-
-        int volume = TransactionLogRepository
-                .getInstance()
-                .getItemLogAmountWeekly(mmoitemID);
-
-        // 최대 거래량 제한 (600 초과 방지)
-        int maxVolume = 600;
-        volume = Math.min(volume, maxVolume);
-
-        double minGap = 10.0;
-        double maxGap = 20.0;
-
-        // 로그 정규화
-        double t = Math.log(1.0 + volume) / Math.log(1.0 + maxVolume);
-
-        // 20 → 10 으로 감소
-        double gap = maxGap - (maxGap - minGap) * t;
-
-        // 안전 클램프
-        gap = Math.max(minGap, Math.min(maxGap, gap));
-
-        return Math.round(gap);
+            if (!priceRangeService.isPriceInRange(price, range)) {
+                NumberFormat formatter = NumberFormat.getInstance();
+                player.sendMessage("§6[ 시장 경제 시스템 ] §e" + formatter.format(range.getMinPrice()) + " §c~ §e" + formatter.format(range.getMaxPrice()) + " §c사이의 금액으로만 판매 할 수 있습니다. §7§o(평균 거래가의 " + range.getGapPercent() + "% 로 판매가 제한되어 있습니다.)");
+                return;
+            }
+            // Bukkit 명령 실행은 메인 스레드에서만 가능하다.
+            Bukkit.getScheduler().runTask(EtCetera.getInstance(), () -> {
+                // 비동기 검사 중 손의 아이템을 바꿔 가격 제한을 우회하지 못하도록,
+                // 검사 시점에 캡처한 id/type/개수와 현재 손의 아이템을 비교한다.
+                ItemStack current = player.getInventory().getItemInMainHand();
+                String currentType = MMOItems.getType(current) == null ? null : MMOItems.getType(current).getId();
+                if (!Objects.equals(id, MMOItems.getID(current))
+                        || !type.equals(currentType)
+                        || current.getAmount() != amount) {
+                    player.sendMessage("§c 판매 검사 중 손에 든 아이템이 바뀌어 판매가 취소되었습니다. 다시 시도해주세요.");
+                    return;
+                }
+                Bukkit.dispatchCommand(player, "판매2 " + price);
+            });
+        });
     }
 }

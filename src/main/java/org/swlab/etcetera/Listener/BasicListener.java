@@ -54,6 +54,9 @@ public class BasicListener implements Listener {
 
     @EventHandler
     public void onDamage(EntityDamageEvent e) {
+        if(e.getEntity() instanceof  Player){
+
+        }
         if (e.getCause().equals(EntityDamageEvent.DamageCause.WITHER)) {
             e.setCancelled(true);
         }

@@ -18,7 +18,7 @@ public class GuildRaidCommand implements CommandExecutor {
             player.sendMessage("§c 로비에서만 이용하실 수 있는 명령어 입니다.");
             return true;
         }
-        CommandUtil.runCommandAsOP(player, "gui open 길드레이드");
+        CommandUtil.runCommandAsOP(player, "길드레이드2 메뉴 길드레이드");
 
         return true;
     }

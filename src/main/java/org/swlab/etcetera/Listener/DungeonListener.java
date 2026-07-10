@@ -317,6 +317,33 @@ public class DungeonListener implements Listener {
                 player.sendMessage("");
                 player.sendTitle(ColorManager.format("#20314F  ~  레기온의 성역  ~"), ColorManager.format("§7§o 탑의 대제, 레기온"));
                 break;
+            case 114:
+                player.sendMessage("");
+                player.sendMessage(ColorManager.format("#7C4557    더 강해진 공허의 대제, 익스트림 카날로아가 등장했습니다. "));
+                player.sendMessage(ColorManager.format(""));
+                player.sendMessage(ColorManager.format("§7§o        [ RAID TIP 1 ] 이전의 카날로아보다 많은 페이즈가 존재합니다."));
+                player.sendMessage(ColorManager.format("§7§o        [ RAID TIP 2 ] 카날로아의 구체가 발사하는 투사체는 매우 강력하니, 조심하세요."));
+                player.sendMessage("");
+                player.sendTitle(ColorManager.format("#7C4557  ~  공허의 더 깊은 곳  ~"), ColorManager.format("§7§o 공허의 대제, 익스트림 카날로아"));
+                break;
+            case 115:
+                player.sendMessage("");
+                player.sendMessage(ColorManager.format("#80A1B1    영겁의 시간 속에 갇힌 마법사, 크로나크가 등장했습니다. "));
+                player.sendMessage(ColorManager.format(""));
+                player.sendMessage(ColorManager.format("§7§o        [ RAID TIP 1 ] 크로나크의 공격에 맞으면 영겁 수치가 오르며, 150에 도달하면 실패처리 됩니다."));
+                player.sendMessage(ColorManager.format("§7§o        [ RAID TIP 2 ] 크로나크는 정오/황혼/자정 3페이즈가 존재하며, 자정에는 강력한 패턴인 큐브가 소환됩니다."));
+                player.sendMessage("");
+                player.sendTitle(ColorManager.format("#80A1B1  ~  무한한 영겁의 시간 속  ~"), ColorManager.format("§7§o 영겁에 봉인된 마법사, 크로나크"));
+                break;
+            case 116:
+                player.sendMessage("");
+                player.sendMessage(ColorManager.format("#D26B39    최종 병기, KRM-EX가 등장합니다. "));
+                player.sendMessage(ColorManager.format(""));
+                player.sendMessage(ColorManager.format("§7§o        [ RAID TIP 1 ] KRM-716을 처치한 후에, KRM-EX를 처치할 수 있습니다."));
+                player.sendMessage(ColorManager.format("§7§o        [ RAID TIP 2 ] KRM-716과 EX 합쳐 총 6개의 페이즈가 존재합니다."));
+                player.sendMessage("");
+                player.sendTitle(ColorManager.format("#D26B39  ~  병기 제작소  ~"), ColorManager.format("§7§o 최종 병기, KRM-EX"));
+                break;
         }
     }
 

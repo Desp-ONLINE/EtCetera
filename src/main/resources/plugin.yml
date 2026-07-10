@@ -2,6 +2,7 @@ name: EtCetera
 version: '${version}'
 main: org.swlab.etcetera.EtCetera
 api-version: '1.21'
+depend: [ TransactionLog ]
 commands:
   nbt검사:
   spawn:
