@@ -197,6 +197,7 @@ public final class EtCetera extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new GoldItemListener(), this);
         Bukkit.getPluginManager().registerEvents(new TrashcanListener(), this);
         Bukkit.getPluginManager().registerEvents(new HiddenExchangeListener(), this);
+        Bukkit.getPluginManager().registerEvents(new CataclysmMirrorListener(), this);
         if (Bukkit.getPluginManager().isPluginEnabled("MMOGuild")) {
             Bukkit.getPluginManager().registerEvents(new FirstClearListener(), this);
 

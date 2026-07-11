@@ -27,6 +27,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Repositories.RaidCoinRepository;
+import org.swlab.etcetera.Repositories.WeeklyRaidLimitRepository;
 import org.swlab.etcetera.Util.CommandUtil;
 
 import java.time.Duration;
@@ -41,6 +42,13 @@ import java.util.List;
 public class DungeonListener implements Listener {
 
     private List<Integer> jinRegionCommandersDungeonID = new ArrayList<Integer>(Arrays.asList(13, 14, 15));
+
+    private static final int WEEKLY_LIMIT_MIN_DUNGEON_ID = 100;
+    private static final int WEEKLY_LIMIT_MAX_DUNGEON_ID = 300;
+
+    private boolean isWeeklyLimitedRaid(int dungeonID) {
+        return dungeonID >= WEEKLY_LIMIT_MIN_DUNGEON_ID && dungeonID <= WEEKLY_LIMIT_MAX_DUNGEON_ID;
+    }
 
     private HashMap<Player, LocalDateTime> firstClearCooldown = new HashMap<>();
 
@@ -99,29 +107,60 @@ public class DungeonListener implements Listener {
 
     }
 
+    @EventHandler
+    public void onWeeklyRaidClear(DungeonClearEvent e) {
+        if (!isWeeklyLimitedRaid(e.getDungeonRoom().getParent().getId())) {
+            return;
+        }
+        if (!e.getDungeonRoom().getController().isClear()) {
+            return;
+        }
+        for (PlayerDungeon playerDungeon : e.getPlayerDungeons()) {
+            Player player = playerDungeon.toPlayer();
+            WeeklyRaidLimitRepository.getInstance().incrementClearCount(player);
+            Integer clearCount = WeeklyRaidLimitRepository.getInstance().getClearCount(player);
+            player.sendMessage("§e    [ 주간 레이드 ]§f 금주 레이드 클리어 횟수: §6" + clearCount + "§f/" + WeeklyRaidLimitRepository.MAX_WEEKLY_CLEAR + " §7(매주 월요일 자정 초기화)");
+        }
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onDungeonEnter(DungeonJoinEvent e) {
         Integer dungeonID = e.getDungeon().getId();
         boolean joinable = true;
 
-        if(dungeonID == 114 || dungeonID == 109){
+        if (isWeeklyLimitedRaid(dungeonID)) {
+            List<String> limitedPlayers = new ArrayList<>();
             for (PlayerDungeon playerDungeon : e.getPlayerDungeons()) {
-                PlayerClearLog exKanaloaClearLog = playerDungeon.getClearLog(114);
-                PlayerClearLog kanaloaClearLog = playerDungeon.getClearLog(109);
-
-                if(!exKanaloaClearLog.isJoinableDate()){
-                    joinable = false;
-                }
-                if(!kanaloaClearLog.isJoinableDate()){
-                    joinable = false;
+                Player player = playerDungeon.toPlayer();
+                if (!WeeklyRaidLimitRepository.getInstance().canEnter(player)) {
+                    limitedPlayers.add(player.getName());
                 }
             }
-            if (!joinable) {
-                e.setCancelMessage("§c 이미 금주에 카날로아 레이드를 완료하셨습니다.");
+            if (!limitedPlayers.isEmpty()) {
+                e.setCancelMessage("§c 금주 레이드 클리어 횟수(주 " + WeeklyRaidLimitRepository.MAX_WEEKLY_CLEAR + "회)를 모두 소진한 인원이 있습니다: §f" + String.join(", ", limitedPlayers) + " §7(매주 월요일 자정 초기화)");
                 e.setCancelled(true);
                 return;
             }
         }
+
+//        if(dungeonID == 114 || dungeonID == 109){
+//            for (PlayerDungeon playerDungeon : e.getPlayerDungeons()) {
+//                PlayerClearLog exKanaloaClearLog = playerDungeon.getClearLog(114);
+//                PlayerClearLog kanaloaClearLog = playerDungeon.getClearLog(109);
+//
+//                if(!exKanaloaClearLog.isJoinableDate()){
+//                    joinable = false;
+//                }
+//                if(!kanaloaClearLog.isJoinableDate()){
+//                    joinable = false;
+//                }
+//            }
+//            if (!joinable) {
+//                e.setCancelMessage("§c 이미 금주에 카날로아 레이드를 완료하셨습니다.");
+//                e.setCancelled(true);
+//                return;
+//            }
+//        }
         if(dungeonID == 800 || dungeonID == 801){
             for (PlayerDungeon playerDungeon : e.getPlayerDungeons()) {
                 PlayerClearLog exKanaloaClearLog = playerDungeon.getClearLog(800);
