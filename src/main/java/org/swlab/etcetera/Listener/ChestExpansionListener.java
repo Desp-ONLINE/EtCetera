@@ -13,6 +13,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.dople.dataSync.inventory.InventorySyncListener;
 import org.swlab.etcetera.EtCetera;
+import org.swlab.etcetera.Repositories.WeeklyRaidLimitRepository;
 import org.swlab.etcetera.Util.CommandUtil;
 
 public class ChestExpansionListener implements Listener {
@@ -88,7 +89,10 @@ public class ChestExpansionListener implements Listener {
                 CommandUtil.runCommandAsOP(player, "인던 입장횟수초기화 " + player.getName() + " 111");
                 CommandUtil.runCommandAsOP(player, "인던 입장횟수초기화 " + player.getName() + " 112");
                 CommandUtil.runCommandAsOP(player, "인던 입장횟수초기화 " + player.getName() + " 113");
+                CommandUtil.runCommandAsOP(player, "인던 입장횟수초기화 " + player.getName() + " 114");
                 CommandUtil.runCommandAsOP(player, "인던 입장횟수초기화 " + player.getName() + " 115");
+                CommandUtil.runCommandAsOP(player, "인던 입장횟수초기화 " + player.getName() + " 116");
+                WeeklyRaidLimitRepository.getInstance().resetClearCount(player);
                 player.playSound(player, "minecraft:entity.player.levelup", 1, 1);
                 if (itemInMainHand.getAmount() > 1) {
                     itemInMainHand.setAmount(itemInMainHand.getAmount() - 1);

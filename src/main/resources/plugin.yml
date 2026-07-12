@@ -104,6 +104,8 @@ commands:
     aliases: [ "xkdlaejswjs", "ㅌㅇㄷㅈ" ]
   레이드:
     aliases: [ "fpdlem", "raid", "ㄹㅇㄷ" ]
+  레이드횟수:
+    aliases: [ "fpdlemghltnn", "주간레이드", "wnrksfpdlem" ]
   채집:
     aliases: [ "cowlq" ]
   1:
