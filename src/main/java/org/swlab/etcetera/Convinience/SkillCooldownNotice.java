@@ -43,6 +43,9 @@ public class SkillCooldownNotice {
     }
 
     public static void scheduleStart() {
+        if(EtCetera.getChannelType().equals("afk")){
+            return;
+        }
         Bukkit.getScheduler().runTaskTimer(EtCetera.getInstance(), () -> {
             trackedPerPlayer.keySet().removeIf(uuid -> Bukkit.getPlayer(uuid) == null);
 

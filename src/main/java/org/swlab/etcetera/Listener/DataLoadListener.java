@@ -31,6 +31,7 @@ import org.dople.dataSync.DataSync;
 import org.dople.dataSync.event.DataLoadEvent;
 import org.dople.dataSync.inventory.InventorySyncListener;
 import org.swlab.etcetera.EtCetera;
+import org.swlab.etcetera.Repositories.WeeklyRaidLimitRepository;
 import su.nightexpress.excellentcrates.api.event.CrateOpenEvent;
 
 import java.util.ArrayList;
@@ -55,6 +56,14 @@ public class DataLoadListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         isDataLoaded.put(player, false);
+
+        // 주간 레이드 횟수는 접속 5초 뒤 비동기로 DB에서 로드한다. 로드 전에는 레이드 입장이 차단된다.
+        Bukkit.getScheduler().runTaskLaterAsynchronously(EtCetera.getInstance(), () -> {
+            if (!player.isOnline()) {
+                return;
+            }
+            WeeklyRaidLimitRepository.getInstance().loadUserData(player);
+        }, 100L);
 
 //        ProfileListImpl playerData = MMOProfiles.plugin.getPlayerData(player.getUniqueId());
 //        if (!playerData.getProfiles().isEmpty()) {
@@ -183,6 +192,7 @@ public class DataLoadListener implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         isDataLoaded.remove(event.getPlayer());
+        WeeklyRaidLimitRepository.getInstance().unloadUserData(event.getPlayer());
     }
 
 

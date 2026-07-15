@@ -2,11 +2,11 @@ name: EtCetera
 version: '${version}'
 main: org.swlab.etcetera.EtCetera
 api-version: '1.21'
-depend: [ TransactionLog ]
+depend: [  ]
 commands:
   nbt검사:
   spawn:
-    aliases: [ "로비", "넴주", "스폰", "lobby", "tmvhs", "ㅅㅍ", "tv" ]
+    aliases: [ "로비", "넴주", "스폰", "lobby", "tmvhs", "ㅅㅍ", "tv","fq","ㄼ","ㄹㅂ" ]
   광산:
     aliases: [ "채광", "채광장", "rhkdtks", "corhkdwkd", "ㄳ", "ㄱㅅ" ,"rt" ]
   던전:
@@ -14,6 +14,8 @@ commands:
   쓰레기통:
     aliases: [ "쓰" ,"Tmfprlxhd","Tm" ]
   장비2:
+  보스장비:
+    aliases: [ "qhtmwkdql", "fpdlemwkdql", "레이드장비"]
   강화:
     aliases: [ "rkdghk", "ㄱㅎ", "rg" ]
   합성:

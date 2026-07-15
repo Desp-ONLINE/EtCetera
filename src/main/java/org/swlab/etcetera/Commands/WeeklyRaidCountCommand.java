@@ -14,7 +14,12 @@ public class WeeklyRaidCountCommand implements CommandExecutor {
             return true;
         }
 
-        int clearCount = WeeklyRaidLimitRepository.getInstance().getClearCount(player);
+        Integer clearCountValue = WeeklyRaidLimitRepository.getInstance().getClearCount(player);
+        if (clearCountValue == null) {
+            player.sendMessage("§c 데이터를 로드중입니다. 잠시 후 다시 시도해주세요.");
+            return true;
+        }
+        int clearCount = clearCountValue;
         int remainCount = Math.max(0, WeeklyRaidLimitRepository.MAX_WEEKLY_CLEAR - clearCount);
 
         player.sendMessage("§6[주간 레이드] §f이번 주 클리어 횟수: §e" + clearCount + "§7/§e" + WeeklyRaidLimitRepository.MAX_WEEKLY_CLEAR);

@@ -10,14 +10,15 @@ import org.swlab.etcetera.Dto.WeeklyRaidClearDTO;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class WeeklyRaidLimitRepository {
 
     public static final int MAX_WEEKLY_CLEAR = 5;
 
     public static WeeklyRaidLimitRepository instance;
-    public HashMap<String, WeeklyRaidClearDTO> weeklyRaidClearCache = new HashMap<>();
+    // 접속 5초 후 비동기 로드되는 조회 전용 스냅샷. 누적/초기화는 캐싱 없이 DB에 즉시 기록한다.
+    public ConcurrentHashMap<String, WeeklyRaidClearDTO> weeklyRaidClearCache = new ConcurrentHashMap<>();
 
     public WeeklyRaidLimitRepository() {
         instance = this;
@@ -38,40 +39,58 @@ public class WeeklyRaidLimitRepository {
         return LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)).toString();
     }
 
+    public boolean isLoaded(Player player) {
+        return weeklyRaidClearCache.containsKey(player.getUniqueId().toString());
+    }
+
+    // 로드 전이면 null 반환. 호출부에서 isLoaded 로 먼저 확인해야 한다.
     public Integer getClearCount(Player player) {
-        WeeklyRaidClearDTO dto = getOrLoad(player);
-        if (!getCurrentWeekStart().equals(dto.getWeekStart())) {
-            dto.setWeekStart(getCurrentWeekStart());
+        WeeklyRaidClearDTO dto = weeklyRaidClearCache.get(player.getUniqueId().toString());
+        if (dto == null) {
+            return null;
+        }
+        String currentWeekStart = getCurrentWeekStart();
+        if (!currentWeekStart.equals(dto.getWeekStart())) {
+            dto.setWeekStart(currentWeekStart);
             dto.setClearCount(0);
-            saveUserData(player);
+            writeToDatabase(player, 0, currentWeekStart);
         }
         return dto.getClearCount();
     }
 
     public boolean canEnter(Player player) {
-        return getClearCount(player) < MAX_WEEKLY_CLEAR;
+        Integer clearCount = getClearCount(player);
+        return clearCount != null && clearCount < MAX_WEEKLY_CLEAR;
     }
 
     public void resetClearCount(Player player) {
-        WeeklyRaidClearDTO dto = getOrLoad(player);
-        dto.setWeekStart(getCurrentWeekStart());
-        dto.setClearCount(0);
-        saveUserData(player);
-    }
-
-    public void incrementClearCount(Player player) {
-        Integer clearCount = getClearCount(player);
+        String currentWeekStart = getCurrentWeekStart();
         WeeklyRaidClearDTO dto = weeklyRaidClearCache.get(player.getUniqueId().toString());
-        dto.setClearCount(clearCount + 1);
-        saveUserData(player);
-    }
-
-    private WeeklyRaidClearDTO getOrLoad(Player player) {
-        WeeklyRaidClearDTO dto = weeklyRaidClearCache.get(player.getUniqueId().toString());
-        if (dto == null) {
-            dto = loadUserData(player);
+        if (dto != null) {
+            dto.setWeekStart(currentWeekStart);
+            dto.setClearCount(0);
         }
-        return dto;
+        writeToDatabase(player, 0, currentWeekStart);
+    }
+
+    // DB 기준으로 누적하여 즉시 기록. 스냅샷은 표시/입장 체크용으로만 갱신한다.
+    public int incrementClearCount(Player player) {
+        String currentWeekStart = getCurrentWeekStart();
+        Document document = weeklyRaidClearCollection.find(new Document("uuid", player.getUniqueId().toString())).first();
+
+        int clearCount = 0;
+        if (document != null && currentWeekStart.equals(document.getString("weekStart"))) {
+            clearCount = document.getInteger("clearCount", 0);
+        }
+        int newClearCount = clearCount + 1;
+        writeToDatabase(player, newClearCount, currentWeekStart);
+
+        WeeklyRaidClearDTO dto = weeklyRaidClearCache.get(player.getUniqueId().toString());
+        if (dto != null) {
+            dto.setWeekStart(currentWeekStart);
+            dto.setClearCount(newClearCount);
+        }
+        return newClearCount;
     }
 
     public WeeklyRaidClearDTO loadUserData(Player player) {
@@ -91,16 +110,16 @@ public class WeeklyRaidLimitRepository {
         return dto;
     }
 
-    public void saveUserData(Player player) {
-        WeeklyRaidClearDTO dto = weeklyRaidClearCache.get(player.getUniqueId().toString());
-        if (dto == null) {
-            return;
-        }
+    public void unloadUserData(Player player) {
+        weeklyRaidClearCache.remove(player.getUniqueId().toString());
+    }
+
+    private void writeToDatabase(Player player, int clearCount, String weekStart) {
         Document document = new Document()
                 .append("uuid", player.getUniqueId().toString())
                 .append("nickname", player.getName())
-                .append("clearCount", dto.getClearCount())
-                .append("weekStart", dto.getWeekStart());
+                .append("clearCount", clearCount)
+                .append("weekStart", weekStart);
 
         weeklyRaidClearCollection.replaceOne(new Document("uuid", player.getUniqueId().toString()), document, new ReplaceOptions().upsert(true));
     }

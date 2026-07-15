@@ -117,8 +117,7 @@ public class DungeonListener implements Listener {
         }
         for (PlayerDungeon playerDungeon : e.getPlayerDungeons()) {
             Player player = playerDungeon.toPlayer();
-            WeeklyRaidLimitRepository.getInstance().incrementClearCount(player);
-            Integer clearCount = WeeklyRaidLimitRepository.getInstance().getClearCount(player);
+            int clearCount = WeeklyRaidLimitRepository.getInstance().incrementClearCount(player);
             player.sendMessage("§e    [ 주간 레이드 ]§f 금주 레이드 클리어 횟수: §6" + clearCount + "§f/" + WeeklyRaidLimitRepository.MAX_WEEKLY_CLEAR + " §7(매주 월요일 자정 초기화)");
         }
     }
@@ -129,12 +128,20 @@ public class DungeonListener implements Listener {
         boolean joinable = true;
 
         if (isWeeklyLimitedRaid(dungeonID)) {
+            List<String> loadingPlayers = new ArrayList<>();
             List<String> limitedPlayers = new ArrayList<>();
             for (PlayerDungeon playerDungeon : e.getPlayerDungeons()) {
                 Player player = playerDungeon.toPlayer();
-                if (!WeeklyRaidLimitRepository.getInstance().canEnter(player)) {
+                if (!WeeklyRaidLimitRepository.getInstance().isLoaded(player)) {
+                    loadingPlayers.add(player.getName());
+                } else if (!WeeklyRaidLimitRepository.getInstance().canEnter(player)) {
                     limitedPlayers.add(player.getName());
                 }
+            }
+            if (!loadingPlayers.isEmpty()) {
+                e.setCancelMessage("§c 주간 레이드 데이터를 로드중입니다. 잠시 후 다시 시도해주세요: §f" + String.join(", ", loadingPlayers));
+                e.setCancelled(true);
+                return;
             }
             if (!limitedPlayers.isEmpty()) {
                 e.setCancelMessage("§c 금주 레이드 클리어 횟수(주 " + WeeklyRaidLimitRepository.MAX_WEEKLY_CLEAR + "회)를 모두 소진한 인원이 있습니다: §f" + String.join(", ", limitedPlayers) + " §7(매주 월요일 자정 초기화)");
