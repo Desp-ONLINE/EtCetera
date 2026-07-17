@@ -1,0 +1,87 @@
+시장 판매 가격 제한 로직이 TransactionLog 플러그인에 API로 내장됐어.
+이제 MarketCommand에 들어있는 중복 로직을 지우고, 그 API를 호출만 하도록 바꿔줘.
+
+## 새 API (libs/TransactionLog-1.0.jar 에 포함, 이미 교체된 상태라고 가정하지 말고
+컴파일 에러가 나면 jar가 구버전인 것이니 알려줘)
+
+- org.dople.transactionLog.Service.PriceRangeService (lazy 싱글톤)
+  - PriceRange getPriceRange(String mmoItemId, String type, int amount, Player player)
+    throws ParseException
+    - amount = 판매하려는 아이템 개수 (내부에서 평균가에 곱해짐)
+    - player = getUntransactedDays 조회용
+    - 거래 이력이 없으면 unrestricted=true 인 PriceRange 반환
+  - boolean isPriceInRange(double price, PriceRange range)
+    - unrestricted면 항상 true. 기존 (price > max || price < min) 판정과 동치.
+  - CompletableFuture<PriceRange> getPriceRangeAsync(String mmoItemId, String type,
+    int amount, Player player)
+    - Mongo 조회를 비동기 스레드에서 수행 (내부 캐시에 있으면 즉시 완료된 future 반환).
+      메인 스레드 멈춤 방지용.
+
+- org.dople.transactionLog.Dto.PriceRange (@Getter)
+  - long getAveragePrice()  // amount가 곱해진 기준가
+  - long getMinPrice()
+  - long getMaxPrice()
+  - long getGapPercent()
+  - boolean isUnrestricted()
+
+## 바꿀 내용 (org.swlab.etcetera.Commands.MarketCommand)
+
+1. checkPriceInRange(double price, Player player)의 몸통을 API 호출로 교체:
+   - id/type은 기존처럼 손에 든 아이템에서 추출
+     (id = MMOItems.getID(item), type = MMOItems.getType(item).getId())
+   - PriceRangeService.getInstance().getPriceRange(id, type, item.getAmount(), player)
+   - isPriceInRange(price, range)가 false면 기존 안내 메시지를 "그대로" 보내고 false 반환.
+     메시지 포맷 유지 (min/max/gap 값은 range의 getter 사용):
+     "§6[ 시장 경제 시스템 ] §e{min} §c~ §e{max} §c사이의 금액으로만 판매 할 수 있습니다.
+      §7§o(평균 거래가의 {gapPercent}% 로 판매가 제한되어 있습니다.)"
+     (min/max는 기존처럼 NumberFormat.getInstance().format() 적용)
+   - ParseException은 기존 시그니처(throws ParseException) 유지. 호출부는 건드리지 말 것.
+
+2. 다음 멤버 삭제 (전부 API로 이동됨):
+   - calcGap(int)
+   - getGap(String)  ← public이라 다른 클래스에서 호출하는 곳이 있는지 먼저 검색하고,
+     있으면 그 호출부도 PriceRangeService.getInstance().getGap(...)으로 교체
+   - GAP_DAYS, GAP_PERCENT, BASIC_GAP 상수
+   - TransactionLogRepository 직접 호출 (getAveragePrice / getUntransactedDays /
+     getItemLogAmountWeekly) 은 이 클래스에서 모두 사라져야 함
+
+3. 동작이 바뀌면 안 됨:
+   - 판매 가능/불가 판정 결과가 기존과 완전히 동일해야 함 (수식은 API 안에 그대로 옮겨져 있음)
+   - onCommand 쪽 흐름(레벨 체크, 판매 불가 아이템 필터, "만" 치환 등)은 건드리지 말 것
+
+## 판매 검사를 비동기로 바꾸기 (필수)
+
+동기 getPriceRange는 캐시 미스 때 메인 스레드에서 Mongo 쿼리를 날려 서버가 멈출 수 있어.
+checkPriceInRange를 없애고 판매 흐름을 비동기로 재구성해줘:
+
+```java
+PriceRangeService service = PriceRangeService.getInstance();
+service.getPriceRangeAsync(id, type, item.getAmount(), player).whenComplete((range, ex) -> {
+    if (ex != null) {
+        // 범위 계산 실패 시 기존 ParseException 흐름처럼 판매를 진행하지 않고 로그만 남김
+        return;
+    }
+    if (!service.isPriceInRange(price, range)) {
+        player.sendMessage(...기존 안내 메시지, range의 getter 사용...);
+        return;
+    }
+    // Bukkit 명령 실행은 메인 스레드에서만 가능하므로 되돌아와야 함
+    Bukkit.getScheduler().runTask(EtCetera.getInstance(), () ->
+            Bukkit.dispatchCommand(player, "판매2 " + price));
+});
+```
+
+- "판매2" 디스패치가 onCommand 안 두 군데에 있으니 둘 다 이 구조로 교체
+- 검사 통과 후 명령 실행까지 한 틱 정도 지연이 생기는 건 허용
+- [중요] 비동기 검사 중 플레이어가 손의 아이템을 바꿀 수 있음. 메인 스레드로 돌아와서
+  "판매2"를 실행하기 "직전에" 손에 든 아이템의 id/type/개수가 검사 시점과 같은지 재확인하고,
+  다르면 판매를 중단할 것. (싼 아이템으로 검사를 통과시킨 뒤 비싼 아이템으로 바꿔치기해서
+  가격 제한을 우회하는 악용 방지. 검사 시점의 id/type/amount를 지역변수로 캡처해두고 비교)
+
+## 확인 사항
+
+- plugin.yml의 depend(또는 softdepend)에 TransactionLog가 있는지 확인하고 없으면 depend에 추가
+- 캐시 관리는 신경 쓸 필요 없음: PriceRangeService가 내부에 5분 TTL 캐시를 갖고 있고,
+  새 거래가 기록되면 TransactionLog 쪽에서 알아서 무효화함. EtCetera에서
+  invalidate()를 호출할 필요 없음
+- 수정 후 컴파일이 되는지 확인해줘

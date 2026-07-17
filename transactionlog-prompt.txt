@@ -1,0 +1,61 @@
+시장 판매 가격 허용 범위(가격 제한) 시스템을 이 플러그인에 API로 내장해줘.
+지금은 EtCetera 플러그인의 MarketCommand에 들어있는 로직인데, 데이터 소스가 전부
+이 플러그인의 TransactionLogRepository라서 여기로 옮기고, EtCetera는 이 API를
+호출만 하도록 바꿀 예정이야.
+
+## 요구사항
+
+1. 새 public 서비스 클래스를 만들어줘 (예: PriceRangeService, 패키지는 이 플러그인
+   구조에 맞게). 외부 플러그인이 가져다 쓸 API라서:
+   - Player에게 메시지를 보내거나 Bukkit 명령을 실행하지 말 것. 순수하게 계산 결과만 반환.
+   - 결과는 DTO로 반환 (예: PriceRange { long averagePrice, long minPrice, long maxPrice,
+     long gapPercent, boolean unrestricted }).
+   - 진입점 예시: PriceRange getPriceRange(String mmoItemId, String type, int amount, Player player)
+     (player는 getUntransactedDays 조회에만 필요. 기존 시그니처가
+     getUntransactedDays(id, type, 1, player)라서 유지)
+
+2. 옮길 로직 (아래 원본 코드 그대로 동작이 보존되어야 함, 특히 long 정수 연산):
+
+   - 평균가: TransactionLogRepository.getInstance().getAveragePrice(id, type, 20)
+     → 0이면 제한 없음(unrestricted=true)으로 반환.
+   - 미거래 일수: getUntransactedDays(id, type, 1, player)
+     → 10일 초과면 미거래 일수 기반 gap(calcGap), 아니면 거래량 기반 gap(getGap) 사용.
+   - averagePrice에 아이템 개수(amount)를 곱한 뒤:
+     max = averagePrice + averagePrice * gap / 100
+     min = averagePrice - averagePrice * gap / 100
+     (long 연산 순서 그대로 유지)
+
+   calcGap — 미거래 일수에 따른 허용 폭(±%)을 구간 선형 보간:
+   GAP_DAYS = {0, 10, 14, 17, 21}, GAP_PERCENT = {20, 30, 50, 70, 100}
+   (0일=±20%, 10일=±30%, 14일=±50%, 17일=±70%, 21일 이상=±100%, 사이 구간은 정수 선형 보간)
+
+   private long calcGap(int untransactedDays) {
+       if (untransactedDays <= GAP_DAYS[0]) return GAP_PERCENT[0];
+       for (int i = 1; i < GAP_DAYS.length; i++) {
+           if (untransactedDays < GAP_DAYS[i]) {
+               int d0 = GAP_DAYS[i - 1];
+               long g0 = GAP_PERCENT[i - 1];
+               return g0 + (GAP_PERCENT[i] - g0) * (untransactedDays - d0) / (GAP_DAYS[i] - d0);
+           }
+       }
+       return GAP_PERCENT[GAP_PERCENT.length - 1];
+   }
+
+   getGap — 주간 거래량 기반 허용 폭 (거래량 많을수록 폭이 좁아짐, 20% → 10%):
+
+   public long getGap(String mmoitemID) {
+       int volume = TransactionLogRepository.getInstance().getItemLogAmountWeekly(mmoitemID);
+       int maxVolume = 600;
+       volume = Math.min(volume, maxVolume);
+       double minGap = 10.0, maxGap = 20.0;
+       double t = Math.log(1.0 + volume) / Math.log(1.0 + maxVolume);
+       double gap = maxGap - (maxGap - minGap) * t;
+       gap = Math.max(minGap, Math.min(maxGap, gap));
+       return Math.round(gap);
+   }
+
+3. 편의 메서드로 boolean isPriceInRange(double price, PriceRange range) 같은 것도 있으면 좋음
+   (unrestricted면 항상 true).
+
+4. 외부(EtCetera)에서 접근할 수 있게 서비스 인스턴스를 얻는 방법을 정리해줘
+   (싱글톤 getInstance() 또는 플러그인 메인 클래스의 getter 등 이 플러그인 관례에 맞게).

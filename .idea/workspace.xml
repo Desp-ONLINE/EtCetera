@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="9de49959-ba55-4fdd-87fd-1e2a3cd47518" name="변경" comment="LATEST" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="EtCetera" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="EtCetera" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="EtCetera" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;khw3268480&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Desp-ONLINE/EtCetera.git&quot;,
+    &quot;accountId&quot;: &quot;92cb3589-9662-4cc2-84fd-201b1eff7f40&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 5
+}</component>
+  <component name="ProjectId" id="3E7GVauBlAAn9VQCxMjw4aML6RM" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Gradle.EtCetera [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.EtCetera [jar].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/khw32/IdeaProjects/EtCetera/libs&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;모듈&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\khw32\IdeaProjects\EtCetera\libs" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="org.swlab.etcetera.Commands" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Gradle.EtCetera [jar]">
+    <configuration name="EtCetera [clean]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="clean" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <ExternalSystemDebugDisabled>false</ExternalSystemDebugDisabled>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <GradleProfilingDisabled>false</GradleProfilingDisabled>
+      <GradleCoverageDisabled>false</GradleCoverageDisabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="EtCetera [jar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="jar" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <ExternalSystemDebugDisabled>false</ExternalSystemDebugDisabled>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <GradleProfilingDisabled>false</GradleProfilingDisabled>
+      <GradleCoverageDisabled>false</GradleCoverageDisabled>
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Gradle.EtCetera [jar]" />
+        <item itemvalue="Gradle.EtCetera [clean]" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-37e91769500f-intellij.indexing.shared.core-IU-261.24374.151" />
+        <option value="bundled-js-predefined-d6986cc7102b-31caf2ab9e3c-JavaScript-IU-261.24374.151" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="디폴트 작업">
+      <changelist id="9de49959-ba55-4fdd-87fd-1e2a3cd47518" name="변경" comment="" />
+      <created>1779522218936</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1779522218936</updated>
+    </task>
+    <task id="LOCAL-00001" summary="LATEST">
+      <option name="closed" value="true" />
+      <created>1780038372796</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1780038372796</updated>
+    </task>
+    <task id="LOCAL-00002" summary="LATEST">
+      <option name="closed" value="true" />
+      <created>1780317439618</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1780317439619</updated>
+    </task>
+    <task id="LOCAL-00003" summary="LATEST">
+      <option name="closed" value="true" />
+      <created>1780378380906</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1780378380906</updated>
+    </task>
+    <task id="LOCAL-00004" summary="화염 시 데미지 다시계산">
+      <option name="closed" value="true" />
+      <created>1780488911197</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1780488911197</updated>
+    </task>
+    <task id="LOCAL-00005" summary="LATEST">
+      <option name="closed" value="true" />
+      <created>1780560517830</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1780560517830</updated>
+    </task>
+    <task id="LOCAL-00006" summary="쿨타임 버그 수정">
+      <option name="closed" value="true" />
+      <created>1780837863480</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1780837863480</updated>
+    </task>
+    <task id="LOCAL-00007" summary="쿨타임 버그 수정">
+      <option name="closed" value="true" />
+      <created>1780842124394</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1780842124394</updated>
+    </task>
+    <task id="LOCAL-00008" summary="쿨타임 버그 수정">
+      <option name="closed" value="true" />
+      <created>1780858367282</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1780858367282</updated>
+    </task>
+    <task id="LOCAL-00009" summary="전투력 추가">
+      <option name="closed" value="true" />
+      <created>1780916272941</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1780916272941</updated>
+    </task>
+    <task id="LOCAL-00010" summary="LATEST">
+      <option name="closed" value="true" />
+      <created>1781349117199</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1781349117199</updated>
+    </task>
+    <task id="LOCAL-00011" summary="LATEST">
+      <option name="closed" value="true" />
+      <created>1781481188995</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1781481188996</updated>
+    </task>
+    <task id="LOCAL-00012" summary="시세 개편">
+      <option name="closed" value="true" />
+      <created>1781537994492</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1781537994492</updated>
+    </task>
+    <task id="LOCAL-00013" summary="도약 거리 및 레벨 플레이스 홀더 추가">
+      <option name="closed" value="true" />
+      <created>1781621122041</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1781621122041</updated>
+    </task>
+    <task id="LOCAL-00014" summary="%cp_level% 추가">
+      <option name="closed" value="true" />
+      <created>1781622660989</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1781622660989</updated>
+    </task>
+    <task id="LOCAL-00015" summary="LATEST">
+      <option name="closed" value="true" />
+      <created>1781861451458</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1781861451458</updated>
+    </task>
+    <task id="LOCAL-00016" summary="LATEST">
+      <option name="closed" value="true" />
+      <created>1782719411710</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1782719411710</updated>
+    </task>
+    <task id="LOCAL-00017" summary="LATEST">
+      <option name="closed" value="true" />
+      <created>1782719502895</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1782719502895</updated>
+    </task>
+    <task id="LOCAL-00018" summary="히든재료 교환 ui 추가">
+      <option name="closed" value="true" />
+      <created>1783017153553</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1783017153553</updated>
+    </task>
+    <task id="LOCAL-00019" summary="히든 재료 UI 추가">
+      <option name="closed" value="true" />
+      <created>1783019786014</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1783019786014</updated>
+    </task>
+    <task id="LOCAL-00020" summary="보스 코인 이벤트 및 오류 개편">
+      <option name="closed" value="true" />
+      <created>1783262107218</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1783262107218</updated>
+    </task>
+    <task id="LOCAL-00021" summary="LATEST + 리스폰 무적 추가">
+      <option name="closed" value="true" />
+      <created>1783674942724</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1783674942724</updated>
+    </task>
+    <task id="LOCAL-00022" summary="LATEST">
+      <option name="closed" value="true" />
+      <created>1783795737974</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1783795737974</updated>
+    </task>
+    <task id="LOCAL-00023" summary="LATEST">
+      <option name="closed" value="true" />
+      <created>1783881447355</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1783881447355</updated>
+    </task>
+    <task id="LOCAL-00024" summary="LATEST">
+      <option name="closed" value="true" />
+      <created>1784138018098</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1784138018098</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="화염 시 데미지 다시계산" />
+    <MESSAGE value="쿨타임 버그 수정" />
+    <MESSAGE value="전투력 추가" />
+    <MESSAGE value="시세 개편" />
+    <MESSAGE value="도약 거리 및 레벨 플레이스 홀더 추가" />
+    <MESSAGE value="%cp_level% 추가" />
+    <MESSAGE value="히든재료 교환 ui 추가" />
+    <MESSAGE value="히든 재료 UI 추가" />
+    <MESSAGE value="보스 코인 이벤트 및 오류 개편" />
+    <MESSAGE value="LATEST + 리스폰 무적 추가" />
+    <MESSAGE value="LATEST" />
+    <option name="LAST_COMMIT_MESSAGE" value="LATEST" />
+  </component>
+</project>
