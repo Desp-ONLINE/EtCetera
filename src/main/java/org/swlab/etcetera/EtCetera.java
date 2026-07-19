@@ -286,6 +286,8 @@ public final class EtCetera extends JavaPlugin {
         getCommand("인페리움").setExecutor(new InferiumCommand());
         getCommand("아르크티카").setExecutor(new ArcticaCommand());
         getCommand("엡실론").setExecutor(new EpsilonCommand());
+        getCommand("점멸").setExecutor(new BlinkCommand());
+        getCommand("질문").setExecutor(new QuestionCommand());
         DogamRegisterCommand dogamRegisterCommand = new DogamRegisterCommand();
         getCommand("도감등록증").setExecutor(dogamRegisterCommand);
         getCommand("도감등록증").setTabCompleter(dogamRegisterCommand);
