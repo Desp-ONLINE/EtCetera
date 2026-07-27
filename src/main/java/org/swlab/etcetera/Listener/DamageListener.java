@@ -98,7 +98,7 @@ public class DamageListener implements Listener {
 
         if (victim.getType().equals(EntityType.COW)) {
             double customBossdamage = mmoPlayerData.getStatMap().getStat("CUSTOM_BOSSDAMAGE");
-            damage += damage * (customBossdamage) / 100;
+            damage += damage * applyBossDamageSoftCap(customBossdamage) / 100;
         }
 
 
@@ -211,6 +211,20 @@ public class DamageListener implements Listener {
         }
         attacker.sendTitle("", damageString(fixedDamage), 5, 10, 5);
 
+    }
+
+    // 보스데미지 소프트캡: 70까지는 100% 적용, 초과분은 80을 상한으로 수렴하는 곡선으로 감쇠
+    private static final double BOSS_DAMAGE_SOFT_CAP = 70.0;
+    private static final double BOSS_DAMAGE_LIMIT = 80.0;
+
+    private double applyBossDamageSoftCap(double stat) {
+        if (stat <= BOSS_DAMAGE_SOFT_CAP) {
+            return stat;
+        }
+        double range = BOSS_DAMAGE_LIMIT - BOSS_DAMAGE_SOFT_CAP;
+        double excess = stat - BOSS_DAMAGE_SOFT_CAP;
+        // 70 지점에서 기울기 1로 매끄럽게 이어지고, 스탯이 높아질수록 80에 점근
+        return BOSS_DAMAGE_SOFT_CAP + range * (1 - Math.exp(-excess / range));
     }
 
     public String criticalDamageString(double fixedDamage) {

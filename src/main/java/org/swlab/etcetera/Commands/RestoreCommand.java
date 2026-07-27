@@ -26,11 +26,12 @@ import org.dople.guidance.dto.PlayerDto;
 import org.jetbrains.annotations.NotNull;
 import org.swlab.etcetera.Database.DatabaseRegister;
 import org.swlab.etcetera.EtCetera;
-import org.swlab.etcetera.Listener.FirstClearListener;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 public class RestoreCommand implements CommandExecutor {
 
@@ -43,12 +44,31 @@ public class RestoreCommand implements CommandExecutor {
                 .getMongoClient()
                 .getDatabase("Upgrade")
                 .getCollection("Weapons");
+        timeRaidPlayerCollection = DatabaseRegister.getInstance()
+                .getMongoDatabase()
+                .getCollection("TimeDungeonPlayer");
+        babel122RestoreCollection = DatabaseRegister.getInstance()
+                .getMongoDatabase()
+                .getCollection("Babel122RestoreLog");
 //        accRestoredCollection = MongoLibraryPlugin.getInst().getMongoClient().getDatabase("EtCetera").getCollection("AccRestored");
     }
 
     MongoCollection<Document> upgradeLogCollection;
     MongoCollection<Document> upgradeCollection;
+    MongoCollection<Document> timeRaidPlayerCollection;
+    MongoCollection<Document> babel122RestoreCollection;
 //    MongoCollection<Document> accRestoredCollection;
+
+    // 2026-07-25 기준 바벨탑 122층 이상 클리어 유저 스냅샷 (BabelTower.PlayerData 에서 추출한 닉네임)
+    private static final Set<String> BABEL_122_ELIGIBLE_NAMES = Set.of(
+            "__Taeju", "kainue", "tibasion", "neoul_2", "pikachu0630", "Hike1",
+            "Penguinvlrt", "_cokaPanda_", "rfsf2", "LOOKISM_GunPark", "ILIXO", "asd46578", "dople_L"
+    );
+
+    // TODO: 지급할 보상 아이템 목록 설정 { MMOItems 타입, 아이템 ID, 수량 }
+    private static final List<String[]> BABEL_122_REWARDS = List.<String[]>of(
+            new String[]{"MISCELLANEOUS", "기타_무색의휘장조각", "30"}
+    );
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
@@ -71,6 +91,7 @@ public class RestoreCommand implements CommandExecutor {
             player.sendMessage(ColorManager.format("#25A79D /복구 바벨탑 §f- 내가 클리어 한 모든 바벨탑의 공략증을 획득합니다."));
             player.sendMessage(ColorManager.format("#25A79D /복구 길라잡이 §f- 일부 받지 못한 길라잡이 보상을 수령합니다."));
             player.sendMessage(ColorManager.format("#25A79D /복구 공략증 §f- 익스트림 황금의 미궁(Lv.10) 클리어 유저가 공략증을 복구받습니다."));
+            player.sendMessage(ColorManager.format("#25A79D /복구 바벨탑122 §f- 7월 25일까지 바벨탑 122층을 클리어한 유저가 보상을 수령합니다. §7§o(1회 한정)"));
             player.sendMessage("");
             return true;
         }
@@ -126,6 +147,41 @@ public class RestoreCommand implements CommandExecutor {
 
                 }
                 return false;
+            case "바벨탑122": {
+
+                String playerUuid = player.getUniqueId().toString();
+
+                // 이미 수령했는지 확인 (1회 제한)
+                if (babel122RestoreCollection.find(new Document("uuid", playerUuid)).first() != null) {
+                    player.sendMessage("§c 이미 바벨탑 122층 보상을 수령하셨습니다.");
+                    return true;
+                }
+
+                // 스냅샷 대상자 확인
+                if (!BABEL_122_ELIGIBLE_NAMES.contains(player.getName())) {
+                    player.sendMessage("§c 보상 대상이 아닙니다. (7월 25일까지 바벨탑 122층을 클리어한 유저만 수령할 수 있습니다.)");
+                    return true;
+                }
+
+                // 수령 내역 저장 (중복 수령 방지를 위해 지급 전에 기록)
+                Document receiveLog = new Document("uuid", playerUuid)
+                        .append("name", player.getName())
+                        .append("receivedAt", new Date());
+                babel122RestoreCollection.insertOne(receiveLog);
+
+                List<ItemStack> rewardItems = new ArrayList<>();
+                for (String[] reward : BABEL_122_REWARDS) {
+                    ItemStack rewardItem = MMOItems.plugin.getItem(reward[0], reward[1]);
+                    rewardItem.setAmount(Integer.parseInt(reward[2]));
+                    rewardItems.add(rewardItem);
+                }
+                Mail rewardMail = MMOMail.getInstance().getMailAPI()
+                        .createMail("관리자", "바벨탑 122층 클리어 보상입니다.", 0, rewardItems);
+                MMOMail.getInstance().getMailAPI().sendMail(player.getName(), rewardMail);
+
+                player.sendMessage("§a 바벨탑 122층 클리어 보상이 지급되었습니다! §7§o(/메일함)");
+                return true;
+            }
             case "전직":
                 if (strings[1].equals("2")) {
                     MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
@@ -194,11 +250,10 @@ public class RestoreCommand implements CommandExecutor {
                 // 황금의 미궁 익스트림(난이도 10, cleared 키 "1-10") 클리어 기록이 있는 유저에게
                 // 익스트림 황금의 미궁 LV1 공략증을 복구 지급한다. (골드 보상 없음, 아이템만 지급)
                 // 횟수 제한 없이 언제든 다시 받을 수 있다.
-                MongoCollection<Document> timeRaidPlayerDocument = FirstClearListener.timeRaidPlayerDocument;
                 String uuid = player.getUniqueId().toString();
 
                 // 타임 던전 클리어 기록 조회
-                Document timeRaidPlayer = timeRaidPlayerDocument.find(new Document("uuid", uuid)).first();
+                Document timeRaidPlayer = timeRaidPlayerCollection.find(new Document("uuid", uuid)).first();
                 List<String> clearedList = timeRaidPlayer == null
                         ? new ArrayList<>()
                         : timeRaidPlayer.getList("cleared", String.class);
@@ -279,6 +334,7 @@ public class RestoreCommand implements CommandExecutor {
                 player.sendMessage(ColorManager.format("#25A79D /복구 [전직] [차수] §f- 해당 전직의 서를 복구받습니다. §7§o(ex: /복구 전직 2 - 2차 전직의 서를 복구 받습니다.)"));
                 player.sendMessage(ColorManager.format("#25A79D /복구 길라잡이 §f- 일부 받지 못한 길라잡이 보상을 수령합니다."));
                 player.sendMessage(ColorManager.format("#25A79D /복구 공략증 §f- 익스트림 황금의 미궁(Lv.10) 클리어 유저가 공략증을 복구받습니다."));
+                player.sendMessage(ColorManager.format("#25A79D /복구 바벨탑122 §f- 7월 25일까지 바벨탑 122층을 클리어한 유저가 보상을 수령합니다. §7§o(1회 한정)"));
 //                player.sendMessage(ColorManager.format("#25A79D /복구 버닝 §f- 버닝 완료 아이템을 복구 받습니다. 메인 퀘스트 41을 클리어 하고, 레벨이 45 이상이어야 합니다. "));
                 player.sendMessage("");
                 return true;

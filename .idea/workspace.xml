@@ -6,8 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="9de49959-ba55-4fdd-87fd-1e2a3cd47518" name="변경" comment="LATEST">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/EtCetera.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/EtCetera.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Commands/InformationCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Commands/InformationCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Commands/RestoreCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Commands/RestoreCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Listener/DamageListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Listener/DamageListener.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -366,7 +367,15 @@
       <option name="project" value="LOCAL" />
       <updated>1784138018098</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="LATEST">
+      <option name="closed" value="true" />
+      <created>1784460456431</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1784460456431</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

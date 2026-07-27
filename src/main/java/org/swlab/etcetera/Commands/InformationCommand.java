@@ -74,7 +74,7 @@ public class InformationCommand implements CommandExecutor {
         sendDetailedInfo(player, statMap, "MAX_MANA");
 
         player.sendMessage(" ");
-        player.sendMessage(ColorManager.format("§f  ｦ #8C5FBA보스 대상 공격력: §f+") + numberFormat.format(customBossdamage) + "%");
+        player.sendMessage(ColorManager.format("§f  ｦ #8C5FBA보스 대상 공격력: §f+") + numberFormat.format(customBossdamage) + "% §7§o(보스 대상 공격력은 70%부터 실 적용 효율이 감소합니다. ( 100% 기준 실 효과 80% )" );
         sendDetailedInfo(player, statMap, "CUSTOM_BOSSDAMAGE");
 
         player.sendMessage("§7§o    ※ /스텟 을 통한 스텟은 따로 표시되지 않습니다.");
