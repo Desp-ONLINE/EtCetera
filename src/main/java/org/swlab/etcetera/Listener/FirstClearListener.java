@@ -153,6 +153,11 @@ public class FirstClearListener implements Listener {
     @EventHandler
     public void onTimeRaidClear(TimeRaidClearEvent e) {
 
+        System.out.println("[FirstClear] TimeRaidClearEvent 수신: players=" + e.getPlayers().size()
+                + ", difficulty=" + e.getDifficulty()
+                + ", raidId=" + e.getTimeRaid().getId()
+                + ", key=" + e.getTimeRaid().getId() + "-" + e.getDifficulty());
+
         if (e.getDifficulty() <= 6) {
             expLogic(e, 1);
         } else if (e.getDifficulty() <= 9) {
@@ -163,57 +168,82 @@ public class FirstClearListener implements Listener {
             expLogic(e, 3);
         }
 
-        if (e.getPlayers().size() == 1 && e.getDifficulty() > 9) {
+        if (e.getPlayers().size() != 1) {
+            System.out.println("[FirstClear] 스킵: 솔로가 아님 (players=" + e.getPlayers().size() + ")");
+            return;
+        }
+        if (e.getDifficulty() <= 9) {
+            System.out.println("[FirstClear] 스킵: 난이도 9 이하 (difficulty=" + e.getDifficulty() + ")");
+            return;
+        }
 
-            for (Player player : e.getPlayers()) {
-                Document first = timeRaidPlayerDocument.find(new Document("uuid", player.getUniqueId().toString())).first();
-                if (first == null) {
-                    first = getDefaultPlayerDocument(player);
-                    timeRaidPlayerDocument.insertOne(first);
-                }
-
-
-                // 황금의 미궁 10레벨 짜리면 1-10
-                String clearedDungeonKey = e.getTimeRaid().getId() + "-" + e.getDifficulty();
-
-                List<String> list = first.getList("cleared", String.class);
-                if (list.contains(clearedDungeonKey)) {
-                    return;
-                } else {
-                    Document rewardDocument = timeRaidFirstClearReward.find(new Document("id", clearedDungeonKey)).first();
-                    Integer gold = rewardDocument.getInteger("gold");
-                    Integer exp = rewardDocument.getInteger("exp");
-                    ArrayList<ItemStack> itemList = new ArrayList<>();
-                    if (e.getDifficulty() == 10) {
-                        player.getInventory().addItem(MMOItems.plugin.getItem("MISCELLANEOUS", "퀘스트_익스트림황금의미궁LV1"));
-                    }
-                    for (String reward : rewardDocument.getList("rewards", String.class)) {
-                        System.out.println(reward);
-                        String[] split = reward.split(":");
-
-                        String type = split[0];
-                        String mmoitemID = split[1];
-                        String amount = split[2];
-
-                        ItemStack item = MMOItems.plugin.getItem(type, mmoitemID);
-                        item.setAmount(Integer.parseInt(amount));
-
-                        itemList.add(item);
-                    }
-
-                    MailAPI mailAPI = MMOMail.getInstance().getMailAPI();
-                    Mail mail = mailAPI.createMail("시스템", "타임 던전 첫 클리어 보상입니다. (" + e.getTimeRaid().getName() + ", Lv." + e.getDifficulty(), gold, itemList);
-                    mailAPI.sendMail(player.getName(), mail);
-
-                    player.sendMessage(ColorManager.format("#41B07A  타임 던전: §f" + e.getTimeRaid().getName() + " §7§o(Lv." + e.getDifficulty() + ") #41B07A첫 클리어 보상이 메일로 지급되었습니다! §7§o(/메일함 또는 /ㅁ)"));
-
-                    System.out.println("player = " + player.getName() + " 타임 던전 첫 클리어 보상 지급 완료: " + clearedDungeonKey);
-
-                    updateTimeRaidPlayerDocument(player, first, clearedDungeonKey);
-                }
-
+        for (Player player : e.getPlayers()) {
+            Document first = timeRaidPlayerDocument.find(new Document("uuid", player.getUniqueId().toString())).first();
+            if (first == null) {
+                first = getDefaultPlayerDocument(player);
+                timeRaidPlayerDocument.insertOne(first);
             }
 
+
+            // 황금의 미궁 10레벨 짜리면 1-10
+            String clearedDungeonKey = e.getTimeRaid().getId() + "-" + e.getDifficulty();
+
+            List<String> list = first.getList("cleared", String.class);
+            if (list == null) {
+                list = new ArrayList<>();
+                first.append("cleared", list);
+            }
+            if (list.contains(clearedDungeonKey)) {
+                System.out.println("[FirstClear] 스킵: 이미 클리어 기록 있음 (" + player.getName() + ", " + clearedDungeonKey + ")");
+                continue;
+            }
+
+            // 공략증은 보상 문서(TimeDungeonReward)와 무관하게 먼저 지급한다.
+            if (e.getDifficulty() == 10) {
+                ItemStack certificate = MMOItems.plugin.getItem("MISCELLANEOUS", "퀘스트_익스트림황금의미궁LV1");
+                if (certificate == null) {
+                    System.out.println("[FirstClear] 오류: MMOItems에 MISCELLANEOUS.퀘스트_익스트림황금의미궁LV1 아이템이 없음");
+                } else {
+                    player.getInventory().addItem(certificate);
+                    System.out.println("[FirstClear] 공략증 지급 완료: " + player.getName());
+                }
+            }
+
+            Document rewardDocument = timeRaidFirstClearReward.find(new Document("id", clearedDungeonKey)).first();
+            if (rewardDocument == null) {
+                System.out.println("[FirstClear] 오류: TimeDungeonReward 컬렉션에 id=" + clearedDungeonKey + " 문서가 없음. 골드/아이템 보상 미지급.");
+            } else {
+                Integer gold = rewardDocument.getInteger("gold");
+                Integer exp = rewardDocument.getInteger("exp");
+                ArrayList<ItemStack> itemList = new ArrayList<>();
+                for (String reward : rewardDocument.getList("rewards", String.class)) {
+                    System.out.println(reward);
+                    String[] split = reward.split(":");
+
+                    String type = split[0];
+                    String mmoitemID = split[1];
+                    String amount = split[2];
+
+                    ItemStack item = MMOItems.plugin.getItem(type, mmoitemID);
+                    if (item == null) {
+                        System.out.println("[FirstClear] 오류: MMOItems에 " + type + "." + mmoitemID + " 아이템이 없음. 해당 보상 건너뜀.");
+                        continue;
+                    }
+                    item.setAmount(Integer.parseInt(amount));
+
+                    itemList.add(item);
+                }
+
+                MailAPI mailAPI = MMOMail.getInstance().getMailAPI();
+                Mail mail = mailAPI.createMail("시스템", "타임 던전 첫 클리어 보상입니다. (" + e.getTimeRaid().getName() + ", Lv." + e.getDifficulty(), gold, itemList);
+                mailAPI.sendMail(player.getName(), mail);
+
+                player.sendMessage(ColorManager.format("#41B07A  타임 던전: §f" + e.getTimeRaid().getName() + " §7§o(Lv." + e.getDifficulty() + ") #41B07A첫 클리어 보상이 메일로 지급되었습니다! §7§o(/메일함 또는 /ㅁ)"));
+
+                System.out.println("player = " + player.getName() + " 타임 던전 첫 클리어 보상 지급 완료: " + clearedDungeonKey);
+            }
+
+            updateTimeRaidPlayerDocument(player, first, clearedDungeonKey);
         }
 
     }
