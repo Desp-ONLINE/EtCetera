@@ -3,6 +3,11 @@ version: '${version}'
 main: org.swlab.etcetera.EtCetera
 api-version: '1.21'
 depend: [  ]
+softdepend:
+  - MythicMobs
+  - MythicLib
+  - MMOCore
+  - PlaceholderAPI
 commands:
   nbt검사:
   spawn:
@@ -156,3 +161,7 @@ commands:
     aliases: ["blink", "wjaauf"]
   질문:
     aliases: ["wlfans", "ㅈㅁ", "wa"]
+  훈련:
+    aliases: [ "훈련장", "gnsfuswkd", "gnsfus", "epalwlxptmxm", "데미지테스트" ]
+  훈련관리:
+    permission: training.admin

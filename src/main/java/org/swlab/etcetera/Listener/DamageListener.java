@@ -28,6 +28,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Repositories.UserSettingRepository;
+import org.swlab.etcetera.Training.listeners.CombatListener;
+import org.swlab.etcetera.Training.objects.TrainingController;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -134,7 +136,7 @@ public class DamageListener implements Listener {
             if (e.getEntity().getFireTicks() > 0) {
                 if (profess.equals("인페르노")) {
                     if (PlaceholderAPI.setPlaceholders(attacker, "%MASTERY_INFERNO_MYTHIC_1%").equals("true")) {
-                        damage += damage * 20 / 100;
+                        damage += damage * 21 / 100;
                     } else {
                         damage += damage * 15 / 100;
                     }
@@ -180,6 +182,16 @@ public class DamageListener implements Listener {
         DamageMetadata damageMetadata = e.getDamage().add(damage - originalDamage);
         double fixedDamage = Math.round(damageMetadata.getDamage());
 
+        // 훈련장 누적 데미지는 표기값과 동일한 이 최종 데미지를 그대로 사용한다
+        TrainingController trainingController = TrainingController.get(attacker);
+        if (trainingController != null) {
+            trainingController.addDamage(fixedDamage, CombatListener.sourceOf(eAttacker, damageMetadata));
+        }
+
+        // 데미지 5 이하는 표기하지 않음
+        if (fixedDamage <= 5) {
+            return;
+        }
 
         if (skillCriticalStrike) {
 
@@ -236,7 +248,7 @@ public class DamageListener implements Listener {
     }
 
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void cancelInstantAttack(EntityDamageByEntityEvent e) {
         if (e.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK && e.getDamager() instanceof Player) { // 기본공격 캔슬
             e.setCancelled(true);

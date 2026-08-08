@@ -25,6 +25,7 @@ import org.swlab.etcetera.Repositories.RaidCoinRepository;
 import org.swlab.etcetera.Repositories.HiddenExchangeRepository;
 import org.swlab.etcetera.Repositories.TutorialRepository;
 import org.swlab.etcetera.Repositories.UserSettingRepository;
+import org.swlab.etcetera.Training.TrainingManager;
 import org.swlab.etcetera.Util.PetUtil;
 
 import java.text.SimpleDateFormat;
@@ -68,6 +69,7 @@ public final class EtCetera extends JavaPlugin {
         registerEvents();
         registerCommands();
         registerRepositories();
+        TrainingManager.enable(this);
         startDayChangeCheckScheduler();
 
         Set<OfflinePlayer> operators = Bukkit.getOperators();
@@ -133,6 +135,7 @@ public final class EtCetera extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        TrainingManager.disable();
         saveAllDatas();
     }
 
