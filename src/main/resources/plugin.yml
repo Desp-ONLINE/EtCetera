@@ -8,6 +8,13 @@ softdepend:
   - MythicLib
   - MMOCore
   - PlaceholderAPI
+  - MMOItems
+  - MMOGuild
+  - MMOMail
+  - MMODungeon
+  - MMOTimeRaid
+  - BinggreAPI
+  - VelocitySocketClient
 commands:
   nbt검사:
   spawn:
@@ -39,6 +46,7 @@ commands:
     aliases: [ "rlqhsxpa" ]
   퀘스트:
     aliases: [ "q", "ㅂ", "znptmxm" ]
+  퀘스트알림:
   마을:
     aliases: [ "village", "akdmf", "빌리지", "ㅁㅇ", "ad" ]
   메뉴:
@@ -165,3 +173,5 @@ commands:
     aliases: [ "훈련장", "gnsfuswkd", "gnsfus", "epalwlxptmxm", "데미지테스트" ]
   훈련관리:
     permission: training.admin
+  메인퀘스트:
+    aliases: [ "apdlsznptmxm", "메퀘", "apznp", "메인퀘", "apdlsznp" ]

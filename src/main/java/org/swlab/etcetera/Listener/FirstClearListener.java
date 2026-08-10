@@ -17,6 +17,7 @@ import com.binggre.mmotimeraid.api.TimeRaidClearEvent;
 import com.binggre.velocitysocketclient.VelocityClient;
 import com.binggre.velocitysocketclient.listener.BroadcastStringVelocityListener;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.result.UpdateResult;
 import io.lumine.mythic.bukkit.events.MythicMobDeathEvent;
 import lombok.Getter;
 import net.Indyuce.mmoitems.MMOItems;
@@ -67,7 +68,13 @@ public class FirstClearListener implements Listener {
         list.add(clearedDungeonKey);
         document.append("cleared", list);
 
-        timeRaidPlayerDocument.replaceOne(new Document("uuid", player.getUniqueId().toString()), document);
+        UpdateResult result = timeRaidPlayerDocument.replaceOne(new Document("uuid", player.getUniqueId().toString()), document);
+        System.out.println("[FirstClear] DB 저장(TimeDungeonPlayer): " + player.getName() + ", key=" + clearedDungeonKey
+                + ", matched=" + result.getMatchedCount() + ", modified=" + result.getModifiedCount()
+                + ", cleared=" + list);
+        if (result.getMatchedCount() == 0) {
+            System.out.println("[FirstClear] 경고: TimeDungeonPlayer 문서를 찾지 못해 저장되지 않음 (uuid=" + player.getUniqueId() + ")");
+        }
     }
 
     public void updateRaidPlayerDocument(Player player, Document document, String clearedDungeonKey) {
@@ -75,29 +82,57 @@ public class FirstClearListener implements Listener {
         list.add(clearedDungeonKey);
         document.append("cleared", list);
 
-        raidPlayerDocument.replaceOne(new Document("uuid", player.getUniqueId().toString()), document);
+        UpdateResult result = raidPlayerDocument.replaceOne(new Document("uuid", player.getUniqueId().toString()), document);
+        System.out.println("[RaidChallenge] DB 저장(RaidPlayer): " + player.getName() + ", raid=" + clearedDungeonKey
+                + ", matched=" + result.getMatchedCount() + ", modified=" + result.getModifiedCount()
+                + ", cleared=" + list);
+        if (result.getMatchedCount() == 0) {
+            System.out.println("[RaidChallenge] 경고: RaidPlayer 문서를 찾지 못해 저장되지 않음 (uuid=" + player.getUniqueId() + ")");
+        }
     }
 
     @EventHandler
     public void onRaidClear(DungeonClearEvent e) {
 
+        Dungeon parent = e.getDungeonRoom().getParent();
         List<PlayerDungeon> playerDungeons = e.getPlayerDungeons();
+
+        System.out.println("[RaidChallenge] DungeonClearEvent 수신: raid=" + parent.getName()
+                + ", players=" + playerDungeons.size()
+                + ", clear=" + e.getDungeonRoom().getController().isClear()
+                + ", life=" + e.getDungeonRoom().getController().getLife() + "/" + parent.getLife()
+                + ", replayDay=" + parent.getReplayDay());
+
         for (PlayerDungeon playerDungeon : playerDungeons) {
+            try {
             Player player = playerDungeon.toPlayer();
+            if (player == null) {
+                System.out.println("[RaidChallenge] 스킵: 플레이어 객체 없음 (오프라인 추정, nickname=" + playerDungeon.getNickname()
+                        + ", uuid=" + playerDungeon.getId() + ")");
+                continue;
+            }
             boolean clear = e.getDungeonRoom().getController().isClear();
             if (!clear) {
+                System.out.println("[RaidChallenge] 스킵: 클리어 상태 아님 (raid=" + parent.getName() + ")");
                 return;
             }
-            if (playerDungeons.size() > 1 || e.getDungeonRoom().getParent().getReplayDay() == 1) {
+            if (playerDungeons.size() > 1 || parent.getReplayDay() == 1) {
+                System.out.println("[RaidChallenge] 스킵: 솔로가 아니거나 replayDay=1 (players=" + playerDungeons.size()
+                        + ", replayDay=" + parent.getReplayDay() + ")");
                 return;
             }
             int life = e.getDungeonRoom().getController().getLife();
-            if (life != e.getDungeonRoom().getParent().getLife()) {
+            if (life != parent.getLife()) {
+                System.out.println("[RaidChallenge] 스킵: 목숨 소모함 (life=" + life + ", max=" + parent.getLife() + ")");
                 return;
             }
-            String raidName = e.getDungeonRoom().getParent().getName();
+            String raidName = parent.getName();
 
             Document raidDocument = raidFirstClearReward.find(new Document("id", raidName)).first();
+            if (raidDocument == null) {
+                System.out.println("[RaidChallenge] 오류: RaidReward 컬렉션에 id=" + raidName + " 문서가 없음. 챌린지 처리 중단.");
+                return;
+            }
             List<String> list = raidDocument.getList("rewards", String.class);
 
             String broadcastMessage = "§c  [ RAID CHALLENGE ] §f" + player.getName() + " 님께서 §6" + raidName + " §f레이드 챌린지에 성공하셨습니다!";
@@ -106,10 +141,14 @@ public class FirstClearListener implements Listener {
             if (playerDocument == null) {
                 playerDocument = getDefaultPlayerDocument(player);
                 raidPlayerDocument.insertOne(playerDocument);
+                System.out.println("[RaidChallenge] RaidPlayer 문서 신규 생성: " + player.getName());
             }
             if (playerDocument.getList("cleared", String.class).contains(raidName)) {
+                System.out.println("[RaidChallenge] 스킵: 이미 챌린지 클리어 기록 있음 (" + player.getName() + ", " + raidName + ")");
                 return;
             }
+
+            System.out.println("[RaidChallenge] 챌린지 성공 처리 시작: " + player.getName() + ", raid=" + raidName);
 
             ArrayList<ItemStack> rewardItems = new ArrayList<>();
             for (String s : list) {
@@ -119,6 +158,10 @@ public class FirstClearListener implements Listener {
                 Integer amount = Integer.parseInt(split[2]);
 
                 ItemStack item = MMOItems.plugin.getItem(type, mmoitemID);
+                if (item == null) {
+                    System.out.println("[RaidChallenge] 오류: MMOItems에 " + type + "." + mmoitemID + " 아이템이 없음. 해당 보상 건너뜀.");
+                    continue;
+                }
                 item.setAmount(amount);
 
                 rewardItems.add(item);
@@ -126,6 +169,8 @@ public class FirstClearListener implements Listener {
 
             Mail mail = MMOMail.getInstance().getMailAPI().createMail("관리자", "레이드 챌린지 성공 보상입니다.", 0, rewardItems);
             MMOMail.getInstance().getMailAPI().sendMail(player.getName(), mail);
+            System.out.println("[RaidChallenge] 보상 메일 발송: " + player.getName() + ", raid=" + raidName
+                    + ", items=" + rewardItems.size() + "/" + list.size());
 
             Bukkit.broadcastMessage("");
             Bukkit.broadcastMessage(broadcastMessage);
@@ -135,6 +180,11 @@ public class FirstClearListener implements Listener {
             VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, "");
 
             updateRaidPlayerDocument(player, playerDocument, raidName);
+            } catch (Exception ex) {
+                System.out.println("[RaidChallenge] 오류: 챌린지 처리 중 예외 발생 (" + playerDungeon.getNickname()
+                        + ", raid=" + parent.getName() + ")");
+                ex.printStackTrace();
+            }
         }
 
 
@@ -178,10 +228,12 @@ public class FirstClearListener implements Listener {
         }
 
         for (Player player : e.getPlayers()) {
+            try {
             Document first = timeRaidPlayerDocument.find(new Document("uuid", player.getUniqueId().toString())).first();
             if (first == null) {
                 first = getDefaultPlayerDocument(player);
                 timeRaidPlayerDocument.insertOne(first);
+                System.out.println("[FirstClear] TimeDungeonPlayer 문서 신규 생성: " + player.getName());
             }
 
 
@@ -197,6 +249,9 @@ public class FirstClearListener implements Listener {
                 System.out.println("[FirstClear] 스킵: 이미 클리어 기록 있음 (" + player.getName() + ", " + clearedDungeonKey + ")");
                 continue;
             }
+
+            System.out.println("[FirstClear] 첫 클리어 처리 시작: " + player.getName() + ", key=" + clearedDungeonKey
+                    + ", 기존 cleared=" + list);
 
             // 공략증은 보상 문서(TimeDungeonReward)와 무관하게 먼저 지급한다.
             if (e.getDifficulty() == 10) {
@@ -240,10 +295,16 @@ public class FirstClearListener implements Listener {
 
                 player.sendMessage(ColorManager.format("#41B07A  타임 던전: §f" + e.getTimeRaid().getName() + " §7§o(Lv." + e.getDifficulty() + ") #41B07A첫 클리어 보상이 메일로 지급되었습니다! §7§o(/메일함 또는 /ㅁ)"));
 
-                System.out.println("player = " + player.getName() + " 타임 던전 첫 클리어 보상 지급 완료: " + clearedDungeonKey);
+                System.out.println("[FirstClear] 보상 메일 발송 완료: " + player.getName() + ", key=" + clearedDungeonKey
+                        + ", gold=" + gold + ", items=" + itemList.size());
             }
 
             updateTimeRaidPlayerDocument(player, first, clearedDungeonKey);
+            } catch (Exception ex) {
+                System.out.println("[FirstClear] 오류: 첫 클리어 처리 중 예외 발생 (" + player.getName()
+                        + ", key=" + e.getTimeRaid().getId() + "-" + e.getDifficulty() + ")");
+                ex.printStackTrace();
+            }
         }
 
     }

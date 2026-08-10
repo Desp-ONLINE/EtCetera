@@ -9,6 +9,7 @@ import fr.skytasul.quests.players.PlayerAccountImplementation;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
 import net.Indyuce.mmocore.api.event.PlayerChangeClassEvent;
 import net.Indyuce.mmocore.api.player.profess.PlayerClass;
+import net.Indyuce.mmocore.api.player.profess.SavedClassInformation;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -28,7 +29,10 @@ public class ClassChangeListener implements Listener {
 
 
         MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
-        if (mmoCoreAPI.getPlayerData(player).getClassInfo(newClass).getLevel() == 1) {
+        // 이벤트는 직업 변경 적용 전에 발생하며, 처음 플레이하는 직업은 저장된 정보가 없어 null 반환
+        SavedClassInformation classInfo = mmoCoreAPI.getPlayerData(player).getClassInfo(newClass);
+        int level = classInfo == null ? 1 : classInfo.getLevel();
+        if (level == 1) {
             Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
                 @Override
                 public void run() {
@@ -36,9 +40,7 @@ public class ClassChangeListener implements Listener {
                     mmoCoreAPI.getPlayerData(player).setClassPoints(999);
                 }
             }, 20L);
-            return;
         }
-        System.out.println("mmoCoreAPI.getPlayerData(player).getClassInfo(newClass).getLevel() = " + mmoCoreAPI.getPlayerData(player).getClassInfo(newClass).getLevel());
 
 
     }
@@ -56,6 +58,23 @@ public class ClassChangeListener implements Listener {
             player.getInventory().addItem(basicArmor);
             player.getInventory().addItem(basicWeapon);
             mmoCoreAPI.getPlayerData(player).setClassPoints(999);
+        }
+        // 전직 퀘스트 클리어 시 해당 차수 기본템 자동 지급 (90000~: 2차, 90010~: 3차, 90020~: 4차, 90030~: 각성)
+        if (id >= 90000 && id < 90040) {
+            Player player = e.getPlayer();
+            String tier = switch ((id - 90000) / 10) {
+                case 0 -> "2";
+                case 1 -> "3";
+                case 2 -> "4";
+                default -> "각성";
+            };
+            player.sendMessage(ColorManager.format("§6 [전직] #93FFA3 전직을 축하합니다! 잠시 후 기본템이 자동 지급됩니다. 분실 시 §f/기본템 " + tier + "#93FFA3 명령어로 언제든지 다시 받을 수 있습니다."));
+            Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
+                @Override
+                public void run() {
+                    CommandUtil.runCommandAsOP(player, "기본템 " + tier);
+                }
+            }, 20L);
         }
         if (id >= 30000 && id < 40000) {
             Player player = e.getPlayer();

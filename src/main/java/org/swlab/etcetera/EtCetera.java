@@ -11,6 +11,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.swlab.etcetera.Commands.*;
+import org.swlab.etcetera.Convinience.QuestBossBar;
 import org.swlab.etcetera.Convinience.SkillCooldownNotice;
 import org.swlab.etcetera.Convinience.TipNotice;
 import org.swlab.etcetera.Database.DatabaseRegister;
@@ -24,6 +25,7 @@ import org.swlab.etcetera.Repositories.MimicRepository;
 import org.swlab.etcetera.Repositories.RaidCoinRepository;
 import org.swlab.etcetera.Repositories.HiddenExchangeRepository;
 import org.swlab.etcetera.Repositories.TutorialRepository;
+import org.swlab.etcetera.Repositories.QuestAlertSettingRepository;
 import org.swlab.etcetera.Repositories.UserSettingRepository;
 import org.swlab.etcetera.Training.TrainingManager;
 import org.swlab.etcetera.Util.PetUtil;
@@ -85,6 +87,9 @@ public final class EtCetera extends JavaPlugin {
         MimicRepository.getInstance().loadData();
         DogamRegisterRepository.getInstance().loadData();
         SkillCooldownNotice.scheduleStart();
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            QuestBossBar.getInstance().show(player);
+        }
 
 
         VelocityClient.getInstance().getConnectClient().registerListener(FirstJoinVelocityListener.class);
@@ -95,6 +100,7 @@ public final class EtCetera extends JavaPlugin {
         new TutorialRepository();
         new MimicRepository();
         new DogamRegisterRepository();
+        new QuestAlertSettingRepository();
     }
 
     public static String getChannelType() {
@@ -136,6 +142,7 @@ public final class EtCetera extends JavaPlugin {
     public void onDisable() {
         // Plugin shutdown logic
         TrainingManager.disable();
+        QuestBossBar.getInstance().removeAll();
         saveAllDatas();
     }
 
@@ -201,11 +208,9 @@ public final class EtCetera extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new TrashcanListener(), this);
         Bukkit.getPluginManager().registerEvents(new HiddenExchangeListener(), this);
         Bukkit.getPluginManager().registerEvents(new CataclysmMirrorListener(), this);
-        if (Bukkit.getPluginManager().isPluginEnabled("MMOGuild")) {
-            Bukkit.getPluginManager().registerEvents(new FirstClearListener(), this);
-
-        }
+        Bukkit.getPluginManager().registerEvents(new FirstClearListener(), this);
         Bukkit.getPluginManager().registerEvents(new AFKListener(), this);
+        Bukkit.getPluginManager().registerEvents(new QuestAnnounceListener(), this);
     }
 
     public void registerCommands() {
@@ -232,6 +237,7 @@ public final class EtCetera extends JavaPlugin {
         getCommand("도플명령어").setExecutor(new AdminCommand());
         getCommand("대결").setExecutor(new VersusCommand());
         getCommand("퀘스킵").setExecutor(new QuestSkipCommand());
+        getCommand("메인퀘스트").setExecutor(new MainQuestCommand());
         getCommand("초월완료").setExecutor(new AscendCommand());
         getCommand("채").setExecutor(new ChannelCommand());
         getCommand("쿨초기화").setExecutor(new CoolResetCommand());
@@ -261,6 +267,7 @@ public final class EtCetera extends JavaPlugin {
         getCommand("낚시").setExecutor(new FishingCommand());
         getCommand("기본템").setExecutor(new BasicWeaponCommand());
         getCommand("퀘스트").setExecutor(new QuestCommand());
+        getCommand("퀘스트알림").setExecutor(new QuestAlertCommand());
         getCommand("g").setExecutor(new GuildChatCommand());
         getCommand("마을").setExecutor(new VillageCommand());
         getCommand("마을").setTabCompleter(new VillageCommand());

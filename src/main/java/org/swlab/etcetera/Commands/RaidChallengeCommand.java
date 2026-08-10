@@ -5,6 +5,7 @@ import com.binggre.mmomail.objects.Mail;
 import com.binggre.velocitysocketclient.VelocityClient;
 import com.binggre.velocitysocketclient.listener.BroadcastStringVelocityListener;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.result.UpdateResult;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bson.Document;
 import org.bukkit.Bukkit;
@@ -80,7 +81,10 @@ public class RaidChallengeCommand implements CommandExecutor {
         List clearedList = playerDocument.getList("cleared", String.class);
         clearedList.add(raidName);
         playerDocument.append("cleared", clearedList);
-        raidPlayerDocument.replaceOne(new Document("uuid", player.getUniqueId().toString()), playerDocument);
+        UpdateResult result = raidPlayerDocument.replaceOne(new Document("uuid", player.getUniqueId().toString()), playerDocument);
+        System.out.println("[RaidChallenge] 수동 지급(" + commandSender.getName() + "): " + player.getName() + ", raid=" + raidName
+                + ", matched=" + result.getMatchedCount() + ", modified=" + result.getModifiedCount()
+                + ", cleared=" + clearedList);
         commandSender.sendMessage("§a " + player.getName() + " 님의 " + raidName + " 레이드 챌린지 클리어 처리 완료!");
         return true;
     }
