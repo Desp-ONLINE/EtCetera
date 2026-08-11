@@ -17,6 +17,7 @@ import org.swlab.etcetera.Convinience.TipNotice;
 import org.swlab.etcetera.Database.DatabaseRegister;
 import org.swlab.etcetera.Listener.*;
 import org.swlab.etcetera.Placeholder.ChannelPlaceholder;
+import org.swlab.etcetera.Placeholder.EntityPotionHudPlaceholder;
 import org.swlab.etcetera.Placeholder.CombatPowerPlaceholder;
 import org.swlab.etcetera.Placeholder.CooldownPlaceholder;
 import org.swlab.etcetera.Placeholder.LevelPlaceholder;
@@ -56,6 +57,12 @@ public final class EtCetera extends JavaPlugin {
             new CooldownPlaceholder(this).register();
             new LevelPlaceholder(this).register();
             new CombatPowerPlaceholder(this).register();
+        }
+        if (Bukkit.getPluginManager().isPluginEnabled("BetterHud")) {
+            new EntityPotionHudPlaceholder().register();
+            getLogger().info("BetterHud 엔티티 포션 플레이스홀더 등록 완료 (entity_potion_duration / entity_potion_amplifier)");
+        } else {
+            getLogger().warning("BetterHud가 없거나 아직 활성화되지 않아 엔티티 포션 플레이스홀더를 등록하지 못했습니다.");
         }
         FileConfiguration config = getConfig();
         config.addDefault("channelType", "lobby");

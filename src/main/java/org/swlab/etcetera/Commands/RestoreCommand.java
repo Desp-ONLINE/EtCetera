@@ -65,6 +65,9 @@ public class RestoreCommand implements CommandExecutor {
             "Penguinvlrt", "_cokaPanda_", "rfsf2", "LOOKISM_GunPark", "ILIXO", "asd46578", "dople_L"
     );
 
+    // /복구 바벨탑 으로 지급하는 공략증 층 목록 (MMOItems ID: 퀘스트_바벨탑증표_<층>)
+    private static final int[] BABEL_RESTORE_FLOORS = {30, 60, 70, 75, 80, 85, 90, 95, 100, 105, 110};
+
     // TODO: 지급할 보상 아이템 목록 설정 { MMOItems 타입, 아이템 ID, 수량 }
     private static final List<String[]> BABEL_122_REWARDS = List.<String[]>of(
             new String[]{"MISCELLANEOUS", "기타_무색의휘장조각", "30"}
@@ -107,44 +110,12 @@ public class RestoreCommand implements CommandExecutor {
                 if (clearFloor < 30) {
                     player.sendMessage("§c 받을 수 있는 복구가 없습니다. 현재 내 바벨탑 공략 성공 층: §f" + clearFloor);
                 }
-                if (clearFloor >= 30) {
-                    ItemStack item = MMOItems.plugin.getItem("MISCELLANEOUS", "퀘스트_바벨탑증표_30");
-                    player.getInventory().addItem(item);
-                    player.sendMessage("§a 아이템 복구가 완료되었습니다. (바벨탑 30층 공략증)");
-
-                }
-                if (clearFloor >= 60) {
-                    ItemStack item2 = MMOItems.plugin.getItem("MISCELLANEOUS", "퀘스트_바벨탑증표_60");
-                    player.sendMessage("§a 아이템 복구가 완료되었습니다. (바벨탑 60층 공략증)");
-                    player.getInventory().addItem(item2);
-                }
-                if (clearFloor >= 70) {
-                    ItemStack item3 = MMOItems.plugin.getItem("MISCELLANEOUS", "퀘스트_바벨탑증표_70");
-                    player.sendMessage("§a 아이템 복구가 완료되었습니다. (바벨탑 70층 공략증)");
-                    player.getInventory().addItem(item3);
-
-                }
-                if (clearFloor >= 80) {
-                    ItemStack item3 = MMOItems.plugin.getItem("MISCELLANEOUS", "퀘스트_바벨탑증표_80");
-                    player.sendMessage("§a 아이템 복구가 완료되었습니다. (바벨탑 80층 공략증)");
-                    player.getInventory().addItem(item3);
-
-                }
-                if (clearFloor >= 90) {
-                    ItemStack item3 = MMOItems.plugin.getItem("MISCELLANEOUS", "퀘스트_바벨탑증표_90");
-                    player.sendMessage("§a 아이템 복구가 완료되었습니다. (바벨탑 90층 공략증)");
-                    player.getInventory().addItem(item3);
-
-                }if (clearFloor >= 95) {
-                    ItemStack item3 = MMOItems.plugin.getItem("MISCELLANEOUS", "퀘스트_바벨탑증표_95");
-                    player.sendMessage("§a 아이템 복구가 완료되었습니다. (바벨탑 95층 공략증)");
-                    player.getInventory().addItem(item3);
-
-                }if (clearFloor >= 100) {
-                    ItemStack item3 = MMOItems.plugin.getItem("MISCELLANEOUS", "퀘스트_바벨탑증표_100");
-                    player.sendMessage("§a 아이템 복구가 완료되었습니다. (바벨탑 100층 공략증)");
-                    player.getInventory().addItem(item3);
-
+                for (int floor : BABEL_RESTORE_FLOORS) {
+                    if (clearFloor >= floor) {
+                        ItemStack item = MMOItems.plugin.getItem("MISCELLANEOUS", "퀘스트_바벨탑증표_" + floor);
+                        player.getInventory().addItem(item);
+                        player.sendMessage("§a 아이템 복구가 완료되었습니다. (바벨탑 " + floor + "층 공략증)");
+                    }
                 }
                 return false;
             case "바벨탑122": {
