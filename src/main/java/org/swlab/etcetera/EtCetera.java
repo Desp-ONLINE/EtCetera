@@ -218,6 +218,10 @@ public final class EtCetera extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new FirstClearListener(), this);
         Bukkit.getPluginManager().registerEvents(new AFKListener(), this);
         Bukkit.getPluginManager().registerEvents(new QuestAnnounceListener(), this);
+        Bukkit.getPluginManager().registerEvents(new ItemFrameProtectListener(), this);
+        if (Bukkit.getPluginManager().getPlugin("ItemsAdder") != null) {
+            Bukkit.getPluginManager().registerEvents(new FurnitureProtectListener(), this);
+        }
     }
 
     public void registerCommands() {

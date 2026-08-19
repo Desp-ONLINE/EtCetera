@@ -45,19 +45,22 @@ public class DungeonListener implements Listener {
 
     private static final int WEEKLY_LIMIT_MIN_DUNGEON_ID = 100;
     private static final int WEEKLY_LIMIT_MAX_DUNGEON_ID = 300;
+    private static final List<Integer> WEEKLY_LIMIT_EXCLUDED_DUNGEON_IDS = Arrays.asList(117);
 
     private boolean isWeeklyLimitedRaid(int dungeonID) {
+        if (WEEKLY_LIMIT_EXCLUDED_DUNGEON_IDS.contains(dungeonID)) {
+            return false;
+        }
         return dungeonID >= WEEKLY_LIMIT_MIN_DUNGEON_ID && dungeonID <= WEEKLY_LIMIT_MAX_DUNGEON_ID;
     }
 
     private HashMap<Player, LocalDateTime> firstClearCooldown = new HashMap<>();
 
 
-
 //    @EventHandler
 //    public void onDungeonCooldown(DungeonJoinEvent e) {
 //
-//        if (e.getDungeon().getId() == 115) {
+//        if (e.getDungeon().getId() == 117) {
 //            LocalDateTime localDateTime = LocalDateTime.now();
 //
 //            for (PlayerDungeon playerDungeon : e.getPlayerDungeons()) {
@@ -70,8 +73,8 @@ public class DungeonListener implements Listener {
 //
 //                    long minutes = Duration.between(joinedTime, localDateTime).toMinutes();
 //
-//                    if (minutes < 15) {
-//                        player.sendMessage("§c 퍼스트 클리어 이벤트에 의한 쿨타임(15분) 이 존재합니다. 남은 시간: 약 §f"+(15-minutes)+"§c분");
+//                    if (minutes < 5) {
+//                        player.sendMessage("§c 퍼스트 클리어 이벤트에 의한 쿨타임(5분) 이 존재합니다. 남은 시간: 약 §f" + (5 - minutes) + "§c분");
 //                        e.setCancelled(true);
 //                    }
 //                }
@@ -168,15 +171,15 @@ public class DungeonListener implements Listener {
 //                return;
 //            }
 //        }
-        if(dungeonID == 800 || dungeonID == 801){
+        if (dungeonID == 800 || dungeonID == 801) {
             for (PlayerDungeon playerDungeon : e.getPlayerDungeons()) {
                 PlayerClearLog exKanaloaClearLog = playerDungeon.getClearLog(800);
                 PlayerClearLog kanaloaClearLog = playerDungeon.getClearLog(801);
 
-                if(!exKanaloaClearLog.isJoinableDate()){
+                if (!exKanaloaClearLog.isJoinableDate()) {
                     joinable = false;
                 }
-                if(!kanaloaClearLog.isJoinableDate()){
+                if (!kanaloaClearLog.isJoinableDate()) {
                     joinable = false;
                 }
             }
@@ -390,6 +393,15 @@ public class DungeonListener implements Listener {
                 player.sendMessage("");
                 player.sendTitle(ColorManager.format("#D26B39  ~  병기 제작소  ~"), ColorManager.format("§7§o 최종 병기, KRM-EX"));
                 break;
+            case 117:
+                player.sendMessage("");
+                player.sendMessage(ColorManager.format("#FFF678    빛의 선봉장이자 기사단장, 아르카디엘이 등장합니다. "));
+                player.sendMessage(ColorManager.format(""));
+                player.sendMessage(ColorManager.format("§7§o        [ RAID TIP 1 ] 아르카디엘은 체력 분기조차 없는 단일 페이즈이며, 20%의 데미지 감소 효과를 지니고 있습니다."));
+                player.sendMessage(ColorManager.format("§7§o        [ RAID TIP 2 ] 아르카디엘의 석상의 메시지에 맞춰, 박자에 맞게 파훼해보세요."));
+                player.sendMessage("");
+                player.sendTitle(ColorManager.format("#FFF678  ~  빛의 휴역  ~"), ColorManager.format("§7§o 빛의 기사단장, 아르카디엘"));
+                break;
         }
     }
 
@@ -407,43 +419,49 @@ public class DungeonListener implements Listener {
 
     }
 
-//    @EventHandler
-//    public void onRaidFirstClear(DungeonClearEvent e) {
-//        if (e.getDungeonRoom().getParent().getId() == 115 && e.isClearCondition()) {
-//            String emptyMessage = "§3§n                                                                                 §r";
-//
-//            String message = ColorManager.format("        #3EA7BC멈#4AABB8추#56AFB5었#62B3B1던 #7ABBAA시#86BFA6간#92C3A2이 #ABCB9B다#B7CF97시#C3D393금 #DBDB8C흐#E7DF88릅#F3E385니#FFE781다#F8E789. #EBE799크#E4E8A1로#DDE8A8나#D7E8B0크#D0E8B8가 #C2E8C8처#BCE8D0치#B5E8D8되#AEE9E0었#A7E9E7습#A1E9EF니#9AE9F7다#93E9FF.");
-//            List<PlayerData> members = e.getParty().getMembers();
-//            int size = members.size();
-//            int i = 0;
-//
-//            String parties = "§7 처치 파티: ";
-//            for (PlayerData member : members) {
-//                i++;
-//                if (i != size) {
-//                    parties += member.getPlayer().getName() + ", ";
-//                } else {
-//                    parties += member.getPlayer().getName();
-//                }
-//
-//            }
-//
-//            Bukkit.broadcastMessage(emptyMessage);
-//            Bukkit.broadcastMessage("");
-//            Bukkit.broadcastMessage(message);
-//            Bukkit.broadcastMessage(parties);
-//            Bukkit.broadcastMessage(emptyMessage);
-//
-//
-//            VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, emptyMessage);
-//            VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, "");
-//            VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, message);
-//            VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, parties);
-//            VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, emptyMessage);
-//
-//
-//        }
-//    }
+    @EventHandler
+    public void onRaidFirstClear(DungeonClearEvent e) {
+        if (e.getDungeonRoom().getParent().getId() == 117 && e.isClearCondition()) {
+            String emptyMessage = "§3§n                                                                                 §r";
+
+            String message = ColorManager.format("        &#FFFFFF빛&#FFFEF0의 &#FFFCD2기&#FFFBC3사&#FFFAB4단&#FFF9A5장&#FFF896, &#FFF678아&#FFE678르&#FFD778카&#FFC778디&#FFB778엘&#FFA778의 &#FF8878심&#FF7878사&#FF8787를 &#FFA5A5통&#FFB4B4과&#FFC3C3했&#FFD2D2습&#FFE1E1니&#FFF0F0다&#FFFFFF.");
+            String parties = "§7 처치 파티: ";
+            if(e.getParty() == null){
+
+            } else {
+                List<PlayerData> members = e.getParty().getMembers();
+                int size = members.size();
+                int i = 0;
+
+                for (PlayerData member : members) {
+                    i++;
+                    if (i != size) {
+                        parties += member.getPlayer().getName() + ", ";
+                    } else {
+                        parties += member.getPlayer().getName();
+                    }
+
+                }
+
+
+            }
+            Bukkit.broadcastMessage(emptyMessage);
+            Bukkit.broadcastMessage("");
+            Bukkit.broadcastMessage(message);
+            Bukkit.broadcastMessage(parties);
+            Bukkit.broadcastMessage(emptyMessage);
+
+
+            VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, emptyMessage);
+            VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, "");
+            VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, message);
+            VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, parties);
+            VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, emptyMessage);
+
+
+
+        }
+    }
 
 }
 

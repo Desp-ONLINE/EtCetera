@@ -61,6 +61,7 @@ public class QuestBossBar {
     public void remove(Player player) {
         BossBar bossBar = bossBars.remove(player.getUniqueId());
         if (bossBar != null) {
+
             bossBar.removeAll();
         }
     }

@@ -4,6 +4,7 @@ main: org.swlab.etcetera.EtCetera
 api-version: '1.21'
 depend: [  ]
 softdepend:
+  - ItemsAdder
   - BetterHud
   - MythicMobs
   - MythicLib

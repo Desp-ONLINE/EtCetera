@@ -113,6 +113,11 @@ public class RestoreCommand implements CommandExecutor {
                 for (int floor : BABEL_RESTORE_FLOORS) {
                     if (clearFloor >= floor) {
                         ItemStack item = MMOItems.plugin.getItem("MISCELLANEOUS", "퀘스트_바벨탑증표_" + floor);
+                        if (item == null) {
+                            player.sendMessage("§c " + floor + "층 공략증 아이템을 찾을 수 없어 지급하지 못했습니다. 관리자에게 문의해주세요.");
+                            EtCetera.getInstance().getLogger().warning("MMOItems 아이템 없음: MISCELLANEOUS.퀘스트_바벨탑증표_" + floor);
+                            continue;
+                        }
                         player.getInventory().addItem(item);
                         player.sendMessage("§a 아이템 복구가 완료되었습니다. (바벨탑 " + floor + "층 공략증)");
                     }
