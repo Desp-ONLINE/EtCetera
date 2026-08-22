@@ -13,12 +13,20 @@ import org.swlab.etcetera.Training.commands.AdminCommand;
 import org.swlab.etcetera.Training.commands.UserCommand;
 import org.swlab.etcetera.Training.listeners.CombatListener;
 import org.swlab.etcetera.Training.listeners.PlayerListener;
+import org.swlab.etcetera.Training.listeners.TrainingInfoListener;
 import org.swlab.etcetera.Training.objects.TrainingRoom;
+import org.swlab.etcetera.Training.objects.TrainingSnapshot;
 import org.swlab.etcetera.Training.placeholder.TrainingPlaceholder;
 import org.swlab.etcetera.Training.ranking.DamageRankingManager;
 import org.swlab.etcetera.Training.repository.TrainingRoomRepository;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Getter
 public final class TrainingManager {
@@ -28,6 +36,20 @@ public final class TrainingManager {
 
     private TrainingRoomRepository roomRepository;
     private DamageRankingManager rankingManager;
+
+    /** 플레이어별 최근 훈련 기록 (관리자용 정보 GUI). 삽입 순서 = 오래된 순 */
+    private final Map<UUID, TrainingSnapshot> snapshots = new LinkedHashMap<>();
+
+    public void addSnapshot(TrainingSnapshot snapshot) {
+        snapshots.remove(snapshot.getUuid());
+        snapshots.put(snapshot.getUuid(), snapshot);
+    }
+
+    public List<TrainingSnapshot> getSnapshotsNewestFirst() {
+        List<TrainingSnapshot> list = new ArrayList<>(snapshots.values());
+        Collections.reverse(list);
+        return list;
+    }
 
     private TrainingManager() {
     }
@@ -68,6 +90,7 @@ public final class TrainingManager {
 
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), plugin);
         Bukkit.getPluginManager().registerEvents(new CombatListener(), plugin);
+        Bukkit.getPluginManager().registerEvents(new TrainingInfoListener(), plugin);
     }
 
     private void shutdown() {

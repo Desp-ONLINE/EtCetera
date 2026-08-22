@@ -70,6 +70,8 @@ public final class EtCetera extends JavaPlugin {
         config.addDefault("tradeHighlightColor.buy", "#51A037");
         config.addDefault("tradeHighlightColor.sell", "#D9C338");
         config.addDefault("tradeHighlightColor.recruit", "#556E6D");
+        // 훈련 세션 로그에 기록되는 밸런스 패치 버전. 밸런스 패치 시마다 올려서 전후 비교에 쓴다
+        config.addDefault("training.balanceVersion", "v1");
         config.options().copyDefaults(true);
         saveConfig();
         channelType = config.getString("channelType");
@@ -269,7 +271,9 @@ public final class EtCetera extends JavaPlugin {
         getCommand("판도라").setExecutor(new PandoraCommand());
         getCommand("1").setExecutor(new Lobby1Command());
         getCommand("2").setExecutor(new Lobby2Command());
-        getCommand("스텟").setExecutor(new StatCommand());
+        StatCommand statCommand = new StatCommand();
+        getCommand("스텟").setExecutor(statCommand);
+        getCommand("스텟").setTabCompleter(statCommand);
         getCommand("직업").setExecutor(new ClassSelectCommand());
         getCommand("환던티켓지급").setExecutor(new AdventureCommand());
         getCommand("베스페라").setExecutor(new VesperaCommand());

@@ -162,7 +162,14 @@ public class DamageListener implements Listener {
                 for (String auraKeys : auraRegistry.getAuras().keySet()) {
                     if (auraKeys.startsWith(auraKey)) {
                         String replace = auraKeys.replace(auraKey + "_", "");
-                        double i = Double.parseDouble(replace);
+                        // 접두사만 같고 수치가 아닌 오라(ex. adamas_genesis)가 있으면
+                        // 파싱 예외로 데미지 처리 전체가 죽으므로 건너뛴다
+                        double i;
+                        try {
+                            i = Double.parseDouble(replace);
+                        } catch (NumberFormatException ignored) {
+                            continue;
+                        }
                         multiply += (i / 100);
                     }
                 }
@@ -185,7 +192,8 @@ public class DamageListener implements Listener {
         // 훈련장 누적 데미지는 표기값과 동일한 이 최종 데미지를 그대로 사용한다
         TrainingController trainingController = TrainingController.get(attacker);
         if (trainingController != null) {
-            trainingController.addDamage(fixedDamage, CombatListener.sourceOf(eAttacker, damageMetadata));
+            CombatListener.SourceItem source = CombatListener.sourceOf(eAttacker, damageMetadata);
+            trainingController.addDamage(fixedDamage, source.name(), source.itemId());
         }
 
         // 데미지 5 이하는 표기하지 않음

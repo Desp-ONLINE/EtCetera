@@ -6,6 +6,8 @@ import com.binggre.mmomail.MMOMail;
 import com.binggre.mmomail.objects.Mail;
 import com.mongodb.client.MongoCollection;
 import fr.skytasul.quests.BeautyQuests;
+import fr.skytasul.quests.api.quests.Quest;
+import fr.skytasul.quests.players.PlayerAccountImplementation;
 import net.Indyuce.inventory.MMOInventory;
 import net.Indyuce.inventory.player.CustomInventoryData;
 import net.Indyuce.inventory.player.InventoryItem;
@@ -15,6 +17,7 @@ import net.Indyuce.mmocore.api.MMOCoreAPI;
 import net.Indyuce.mmocore.api.player.profess.PlayerClass;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bson.Document;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -26,6 +29,7 @@ import org.dople.guidance.dto.PlayerDto;
 import org.jetbrains.annotations.NotNull;
 import org.swlab.etcetera.Database.DatabaseRegister;
 import org.swlab.etcetera.EtCetera;
+import org.swlab.etcetera.Util.CommandUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -92,6 +96,7 @@ public class RestoreCommand implements CommandExecutor {
             player.sendMessage(ColorManager.format("#25A79D /복구 [전직] [차수(2/3/4/각성)] §f- 해당 전직의 서를 복구받습니다. §7§o(ex: /복구 전직 2 - 2차 전직의 서를 복구 받습니다.)"));
 //            player.sendMessage(ColorManager.format("#25A79D /복구 버닝 §f- 버닝 완료 아이템을 복구 받습니다. 메인 퀘스트 41을 클리어 하고, 레벨이 45 이상이어야 합니다."));
             player.sendMessage(ColorManager.format("#25A79D /복구 바벨탑 §f- 내가 클리어 한 모든 바벨탑의 공략증을 획득합니다."));
+            player.sendMessage(ColorManager.format("#25A79D /복구 [제피르/루인드] §f- 제피르나 루인드의 봉인석을 잃어 버린 경우 사용해주세요."));
             player.sendMessage(ColorManager.format("#25A79D /복구 길라잡이 §f- 일부 받지 못한 길라잡이 보상을 수령합니다."));
             player.sendMessage(ColorManager.format("#25A79D /복구 공략증 §f- 익스트림 황금의 미궁(Lv.10) 클리어 유저가 공략증을 복구받습니다."));
             player.sendMessage(ColorManager.format("#25A79D /복구 바벨탑122 §f- 7월 25일까지 바벨탑 122층을 클리어한 유저가 보상을 수령합니다. §7§o(1회 한정)"));
@@ -99,6 +104,30 @@ public class RestoreCommand implements CommandExecutor {
             return true;
         }
         switch (strings[0]) {
+            case "제피르":
+                Quest quest = BeautyQuests.getInstance().getAPI().getQuestsManager().getQuest(50001);
+                PlayerAccountImplementation account = BeautyQuests.getInstance().getPlayersManager().getAccount(player);
+                boolean finished = account.getQuestDatas(quest).isFinished();
+                if (finished) {
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + player.getName() + " permission set class.zephyr");
+                    player.sendMessage("§a 처리가 완료되었습니다!");
+                    return false;
+                } else {
+                    player.sendMessage("§c 아직 퀘스트를 클리어 하지 않으셨습니다.");
+                    return false;
+                }
+            case "루인드":
+                Quest quest2 = BeautyQuests.getInstance().getAPI().getQuestsManager().getQuest(50004);
+                PlayerAccountImplementation account2 = BeautyQuests.getInstance().getPlayersManager().getAccount(player);
+                boolean finished2 = account2.getQuestDatas(quest2).isFinished();
+                if (finished2) {
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + player.getName() + " permission set class.ruined");
+                    player.sendMessage("§a 처리가 완료되었습니다!");
+                    return false;
+                } else {
+                    player.sendMessage("§c 아직 퀘스트를 클리어 하지 않으셨습니다.");
+                    return false;
+                }
             case "바벨탑":
 
                 if (!EtCetera.getChannelType().equals("lobby")) {
@@ -282,33 +311,14 @@ public class RestoreCommand implements CommandExecutor {
                     player.getInventory().addItem(armor);
                 }
                 return true;
-//            case "123123ㄱㄴㄷ":
-//
-//                if(isRestored(player)){
-//                    player.sendMessage("§c 이미 복구가 완료되었습니다.");
-//                    return true;
-//                }
-//
-//
-//                PlayerData playerData1 = MMOInventory.plugin.getDataManager().get(player);
-//                List<InventoryItem> items = playerData1.getItems(InventoryLookupMode.IGNORE_RESTRICTIONS);
-//                List<ItemStack> itemStacks = new ArrayList<>();
-//                for (InventoryItem item : items) {
-//                    ItemStack itemStack = item.getItemStack();
-//                    itemStacks.add(itemStack);
-//                }
-//
-//                Mail mail = MMOMail.getInstance().getMailAPI().createMail("관리자", "기존 장비창 오류 아이템 복구입니다.", 0, itemStacks);
-//                MMOMail.getInstance().getMailAPI().sendMail(player.getName(), mail);
-//
-//                player.sendMessage("§a 기존 장비 데이터 복구가 완료되었습니다.");
-//
-//
-//                return true;
+
+
+
             default:
                 player.sendMessage("");
                 player.sendMessage(ColorManager.format("#25A79D /복구 [전직] [차수] §f- 해당 전직의 서를 복구받습니다. §7§o(ex: /복구 전직 2 - 2차 전직의 서를 복구 받습니다.)"));
                 player.sendMessage(ColorManager.format("#25A79D /복구 길라잡이 §f- 일부 받지 못한 길라잡이 보상을 수령합니다."));
+                player.sendMessage(ColorManager.format("#25A79D /복구 [제피르/루인드] §f- 제피르나 루인드의 봉인석을 잃어 버린 경우 사용해주세요."));
                 player.sendMessage(ColorManager.format("#25A79D /복구 공략증 §f- 익스트림 황금의 미궁(Lv.10) 클리어 유저가 공략증을 복구받습니다."));
                 player.sendMessage(ColorManager.format("#25A79D /복구 바벨탑122 §f- 7월 25일까지 바벨탑 122층을 클리어한 유저가 보상을 수령합니다. §7§o(1회 한정)"));
 //                player.sendMessage(ColorManager.format("#25A79D /복구 버닝 §f- 버닝 완료 아이템을 복구 받습니다. 메인 퀘스트 41을 클리어 하고, 레벨이 45 이상이어야 합니다. "));

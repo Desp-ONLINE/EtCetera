@@ -10,13 +10,15 @@ import org.jetbrains.annotations.NotNull;
 import org.swlab.etcetera.Training.TrainingManager;
 import org.swlab.etcetera.Training.ranking.DamageRankEntry;
 import org.swlab.etcetera.Training.ranking.DamageRankingManager;
+import org.swlab.etcetera.Util.JobWeaponUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RankingArgument implements CommandArgument {
 
-    public static final List<String> JOBS = List.of("파우스트", "크루세이더", "오베론", "제피르", "루인드", "인페르노", "판", "페이탈");
+    // 전 직업 공통 목록(JobWeaponUtil)과 동기화 - 드레드노트/퀘이사 포함
+    public static final List<String> JOBS = JobWeaponUtil.JOB_NAMES;
     public static final List<String> TAB_OPTIONS = new ArrayList<>();
 
     static {

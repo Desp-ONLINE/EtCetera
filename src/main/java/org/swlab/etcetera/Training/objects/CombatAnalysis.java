@@ -13,6 +13,8 @@ public class CombatAnalysis {
     @Getter
     public static class Record {
         private final String source;
+        /** 시전 아이템의 MMOItems ID (MMOItems 아이템이 아니면 null) */
+        private String itemId;
         private double totalDamage;
         private int hits;
         private double maxHit;
@@ -30,8 +32,12 @@ public class CombatAnalysis {
 
     private final Map<String, Record> records = new LinkedHashMap<>();
 
-    public void record(String source, double damage) {
-        records.computeIfAbsent(source, Record::new).add(damage);
+    public void record(String source, String itemId, double damage) {
+        Record record = records.computeIfAbsent(source, Record::new);
+        record.add(damage);
+        if (record.itemId == null && itemId != null) {
+            record.itemId = itemId;
+        }
     }
 
     public boolean isEmpty() {

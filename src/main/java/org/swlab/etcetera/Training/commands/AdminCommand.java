@@ -25,6 +25,8 @@ public class AdminCommand extends BetterCommand {
                 new SaveArgument(),
                 new LocationArgument(),
                 new EntityLocationArgument(),
-                new DeleteArgument());
+                new DeleteArgument(),
+                new InfoArgument(),
+                new StatsArgument());
     }
 }

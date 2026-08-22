@@ -14,6 +14,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Training.TrainingManager;
+import org.swlab.etcetera.Training.log.TrainingSessionLogger;
 import org.swlab.etcetera.Util.CommandUtil;
 
 import java.lang.reflect.Method;
@@ -46,6 +47,12 @@ public class TrainingController {
     private Entity entity;
 
     private int count;
+    // 훈련 시작 후 정확히 60초까지의 타격만 인정하기 위한 마감 시각 (밀리초)
+    private long endTimeMillis;
+
+    // 초당 데미지 기록 (인덱스 = 경과 초). 10초 단위 구간 분석과 세션 로그에 쓰인다
+    private final java.util.List<Double> perSecondDamage = new java.util.ArrayList<>();
+    private double damageThisSecond;
 
     public TrainingController(TrainingRoom room, Player player) {
         this.previousLocation = player.getLocation();
@@ -58,12 +65,17 @@ public class TrainingController {
      * 누적 데미지는 EtCetera 의 DamageListener 가 커스텀 보정까지 마친 최종 데미지를 그대로 받아 쌓는다.
      * (MythicLib 원본 패킷 합을 쓰면 보스데미지·포션·오라 보정이 빠져 실제 표기값과 어긋난다)
      */
-    public void addDamage(double damage, String source) {
+    public void addDamage(double damage, String source, String itemId) {
+        // 60초가 지난 뒤 들어온 타격(종료 틱 지연·투사체 등)은 인정하지 않는다
+        if (System.currentTimeMillis() > endTimeMillis) {
+            return;
+        }
         this.totalDamage += damage;
         this.dps += damage;
         this.peakDps = Math.max(peakDps, dps);
+        this.damageThisSecond += damage;
 
-        combatAnalysis.record(source, damage);
+        combatAnalysis.record(source, itemId, damage);
         hitCount += 1;
         actionbar();
     }
@@ -89,13 +101,9 @@ public class TrainingController {
             throw new RuntimeException(e);
         }
 
-        taskId = Bukkit.getScheduler().runTaskTimer(EtCetera.getInstance(), () -> {
-            if (count == MAX_COUNT) {
-                room.quit();
-                CommandUtil.runCommandAsOP(player, "spawn");
-                return;
-            }
+        endTimeMillis = System.currentTimeMillis() + MAX_COUNT * 1000L;
 
+        taskId = Bukkit.getScheduler().runTaskTimer(EtCetera.getInstance(), () -> {
             dps *= DECAY_RATE;
 
             if (dps < 0.01) {
@@ -103,6 +111,14 @@ public class TrainingController {
             }
 
             count++;
+            perSecondDamage.add(damageThisSecond);
+            damageThisSecond = 0;
+            // 60번째 틱(=60초 경과)에 즉시 종료해 61초째 타격이 집계되지 않도록 한다
+            if (count >= MAX_COUNT) {
+                room.quit();
+                CommandUtil.runCommandAsOP(player, "spawn");
+                return;
+            }
             actionbar();
         }, 20, 20).getTaskId();
     }
@@ -119,6 +135,17 @@ public class TrainingController {
                 .addRecord(player.getUniqueId(), player.getName(), job, totalDamage);
 
         double averageDps = totalDamage / Math.max(1, count);
+
+        // 관리자용 훈련 정보 GUI 열람 + 밸런스 분석용 세션 로그
+        TrainingSnapshot snapshot =
+                TrainingSnapshot.capture(player, job, totalDamage, hitCount, peakDps, averageDps,
+                        combatAnalysis, perSecondDamage);
+        TrainingManager.getInstance().addSnapshot(snapshot);
+        // 중도 이탈 세션은 밸런스 통계를 오염시키므로 60초 완주 기록만 DB 에 남긴다
+        if (count >= MAX_COUNT) {
+            TrainingSessionLogger.saveAsync(snapshot);
+        }
+
         StringBuilder result = new StringBuilder("""
 
                   #FFD700━━━━━ #FFA500훈련 결과 #FFD700━━━━━
@@ -140,6 +167,14 @@ public class TrainingController {
                 result.append("  #FFFFFF%d. %s #777777- #FF6347%s #777777(%.1f%% | %d타 | 최대 %s)\n"
                         .formatted(rank++, record.getSource(), NumberUtil.applyComma(record.getTotalDamage()),
                                 share, record.getHits(), NumberUtil.applyComma(record.getMaxHit())));
+            }
+        }
+        if (!snapshot.getIntervals().isEmpty()) {
+            result.append("\n  #FFD700━━━━━ #FFA500구간 분석 (10초) #FFD700━━━━━\n\n");
+            for (TrainingSnapshot.Interval interval : snapshot.getIntervals()) {
+                result.append("  #FFFFFF%d~%d초 #777777- #FF6347%s #777777(DPS %s)\n"
+                        .formatted(interval.startSec(), interval.endSec(),
+                                NumberUtil.applyComma(interval.damage()), NumberUtil.applyComma(interval.dps())));
             }
         }
         result.append("\n");
