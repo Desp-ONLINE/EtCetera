@@ -4,6 +4,7 @@ import com.binggre.binggreapi.utils.ColorManager;
 import com.binggre.mmodungeon.api.DungeonClearEvent;
 import com.binggre.mmodungeon.api.DungeonFailedEvent;
 import com.binggre.mmodungeon.api.DungeonJoinEvent;
+import com.binggre.mmodungeon.api.DungeonRewardRoomEnterEvent;
 import com.binggre.mmodungeon.api.DungeonQuitEvent;
 import com.binggre.mmodungeon.objects.PlayerClearLog;
 import com.binggre.mmodungeon.objects.PlayerDungeon;
@@ -45,7 +46,7 @@ public class DungeonListener implements Listener {
 
     private static final int WEEKLY_LIMIT_MIN_DUNGEON_ID = 100;
     private static final int WEEKLY_LIMIT_MAX_DUNGEON_ID = 300;
-    private static final List<Integer> WEEKLY_LIMIT_EXCLUDED_DUNGEON_IDS = Arrays.asList(117);
+    private static final List<Integer> WEEKLY_LIMIT_EXCLUDED_DUNGEON_IDS = Arrays.asList();
 
     private boolean isWeeklyLimitedRaid(int dungeonID) {
         if (WEEKLY_LIMIT_EXCLUDED_DUNGEON_IDS.contains(dungeonID)) {
@@ -86,40 +87,56 @@ public class DungeonListener implements Listener {
 //
 //    }
 
+    // 스킬 쿨타임 초기화는 실패로 끝난 레이드에서도 동작해야 하므로 던전 종료 이벤트 기준을 유지한다
     @EventHandler
     public void onDungeonClear(DungeonClearEvent e) {
-
-        List<PlayerDungeon> playerDungeons = e.getPlayerDungeons();
-        for (PlayerDungeon playerDungeon : playerDungeons) {
+        for (PlayerDungeon playerDungeon : e.getPlayerDungeons()) {
             Player player = playerDungeon.toPlayer();
+            if (player == null) {
+                continue;
+            }
             MMOPlayerData mmoPlayerData = MMOPlayerData.get(player.getUniqueId());
             mmoPlayerData.getCooldownMap().clearAllCooldowns();
-            if (!e.getDungeonRoom().getController().isClear()) {
-                return;
-            }
-            if (playerDungeons.size() > 1) {
-                return;
-            }
-            boolean a = RaidCoinRepository.getInstance().giveNormalReward(player, e.getDungeonRoom().getParent().getName());
-            boolean b = RaidCoinRepository.getInstance().giveSpecialReward(player, e.getDungeonRoom().getParent().getName());
-            boolean c = RaidCoinRepository.getInstance().givePremiumReward(player, e.getDungeonRoom().getParent().getName());
-            if (a || b || c) {
-                RaidCoinRepository.getInstance().updateUserRaidData(player, e.getDungeonRoom().getParent().getName());
-            }
         }
-
     }
 
+    // 레이드 코인 보상은 보상방 진입 이벤트 기준으로 지급한다 (상자 미수령/확률 보상 없음 케이스 포함)
     @EventHandler
-    public void onWeeklyRaidClear(DungeonClearEvent e) {
-        if (!isWeeklyLimitedRaid(e.getDungeonRoom().getParent().getId())) {
+    public void onRaidCoinReward(DungeonRewardRoomEnterEvent e) {
+        List<PlayerDungeon> playerDungeons = e.getPlayerDungeons();
+        if (playerDungeons.size() > 1) {
             return;
         }
-        if (!e.getDungeonRoom().getController().isClear()) {
+        String raidName = e.getDungeonRoom().getParent().getName();
+        for (PlayerDungeon playerDungeon : playerDungeons) {
+            Player player = playerDungeon.toPlayer();
+            if (player == null) {
+                continue;
+            }
+            boolean a = RaidCoinRepository.getInstance().giveNormalReward(player, raidName);
+            boolean b = RaidCoinRepository.getInstance().giveSpecialReward(player, raidName);
+            boolean c = RaidCoinRepository.getInstance().givePremiumReward(player, raidName);
+            if (a || b || c) {
+                RaidCoinRepository.getInstance().updateUserRaidData(player, raidName);
+            }
+        }
+    }
+
+    // 보상방 진입 이벤트 기준으로 집계한다. DungeonClearEvent 는 stop() 시점에 발생해서
+    // 상자 보상을 안 받고 먼저 나간 인원이 목록에서 빠지므로 카운트가 누락된다.
+    @EventHandler
+    public void onWeeklyRaidClear(DungeonRewardRoomEnterEvent e) {
+        if (!isWeeklyLimitedRaid(e.getDungeonRoom().getParent().getId())) {
             return;
         }
         for (PlayerDungeon playerDungeon : e.getPlayerDungeons()) {
             Player player = playerDungeon.toPlayer();
+            if (player == null) {
+                // 클리어 직후 접속 종료한 인원도 카운트는 누락되면 안 됨
+                int clearCount = WeeklyRaidLimitRepository.getInstance().incrementClearCount(playerDungeon.getId().toString(), playerDungeon.getNickname());
+                System.out.println("[주간레이드] 오프라인 카운트: " + playerDungeon.getNickname() + " -> " + clearCount + "회");
+                continue;
+            }
             int clearCount = WeeklyRaidLimitRepository.getInstance().incrementClearCount(player);
             player.sendMessage("§e    [ 주간 레이드 ]§f 금주 레이드 클리어 횟수: §6" + clearCount + "§f/" + WeeklyRaidLimitRepository.MAX_WEEKLY_CLEAR + " §7(매주 월요일 자정 초기화)");
         }
@@ -419,7 +436,8 @@ public class DungeonListener implements Listener {
 
     }
 
-    @EventHandler
+    // 아르카디엘(117) 클리어 전체 공지 비활성화 (주간 제한 레이드로 전환됨)
+    // @EventHandler
     public void onRaidFirstClear(DungeonClearEvent e) {
         if (e.getDungeonRoom().getParent().getId() == 117 && e.isClearCondition()) {
             String emptyMessage = "§3§n                                                                                 §r";

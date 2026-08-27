@@ -75,17 +75,22 @@ public class WeeklyRaidLimitRepository {
 
     // DB 기준으로 누적하여 즉시 기록. 스냅샷은 표시/입장 체크용으로만 갱신한다.
     public int incrementClearCount(Player player) {
+        return incrementClearCount(player.getUniqueId().toString(), player.getName());
+    }
+
+    // 클리어 직후 접속 종료한 인원도 카운트해야 하므로 Player 객체 없이도 누적 가능해야 한다.
+    public int incrementClearCount(String uuid, String nickname) {
         String currentWeekStart = getCurrentWeekStart();
-        Document document = weeklyRaidClearCollection.find(new Document("uuid", player.getUniqueId().toString())).first();
+        Document document = weeklyRaidClearCollection.find(new Document("uuid", uuid)).first();
 
         int clearCount = 0;
         if (document != null && currentWeekStart.equals(document.getString("weekStart"))) {
             clearCount = document.getInteger("clearCount", 0);
         }
         int newClearCount = clearCount + 1;
-        writeToDatabase(player, newClearCount, currentWeekStart);
+        writeToDatabase(uuid, nickname, newClearCount, currentWeekStart);
 
-        WeeklyRaidClearDTO dto = weeklyRaidClearCache.get(player.getUniqueId().toString());
+        WeeklyRaidClearDTO dto = weeklyRaidClearCache.get(uuid);
         if (dto != null) {
             dto.setWeekStart(currentWeekStart);
             dto.setClearCount(newClearCount);
@@ -115,13 +120,17 @@ public class WeeklyRaidLimitRepository {
     }
 
     private void writeToDatabase(Player player, int clearCount, String weekStart) {
+        writeToDatabase(player.getUniqueId().toString(), player.getName(), clearCount, weekStart);
+    }
+
+    private void writeToDatabase(String uuid, String nickname, int clearCount, String weekStart) {
         Document document = new Document()
-                .append("uuid", player.getUniqueId().toString())
-                .append("nickname", player.getName())
+                .append("uuid", uuid)
+                .append("nickname", nickname)
                 .append("clearCount", clearCount)
                 .append("weekStart", weekStart);
 
-        weeklyRaidClearCollection.replaceOne(new Document("uuid", player.getUniqueId().toString()), document, new ReplaceOptions().upsert(true));
+        weeklyRaidClearCollection.replaceOne(new Document("uuid", uuid), document, new ReplaceOptions().upsert(true));
     }
 
     public Document insertDefaultDocument(Player player) {

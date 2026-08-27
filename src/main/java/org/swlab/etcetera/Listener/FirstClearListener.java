@@ -1,7 +1,7 @@
 package org.swlab.etcetera.Listener;
 
 import com.binggre.binggreapi.utils.ColorManager;
-import com.binggre.mmodungeon.api.DungeonClearEvent;
+import com.binggre.mmodungeon.api.DungeonRewardRoomEnterEvent;
 import com.binggre.mmodungeon.objects.PlayerDungeon;
 import com.binggre.mmodungeon.objects.base.Dungeon;
 import com.binggre.mmodungeon.objects.base.DungeonRoom;
@@ -91,15 +91,16 @@ public class FirstClearListener implements Listener {
         }
     }
 
+    // 보상방 진입 이벤트 기준으로 처리한다. 클리어 시에만 발생하므로 별도 clear 체크가 필요 없고,
+    // 상자 보상을 안 받고 나가도 챌린지 처리가 누락되지 않는다.
     @EventHandler
-    public void onRaidClear(DungeonClearEvent e) {
+    public void onRaidClear(DungeonRewardRoomEnterEvent e) {
 
         Dungeon parent = e.getDungeonRoom().getParent();
         List<PlayerDungeon> playerDungeons = e.getPlayerDungeons();
 
-        System.out.println("[RaidChallenge] DungeonClearEvent 수신: raid=" + parent.getName()
+        System.out.println("[RaidChallenge] DungeonRewardRoomEnterEvent 수신: raid=" + parent.getName()
                 + ", players=" + playerDungeons.size()
-                + ", clear=" + e.getDungeonRoom().getController().isClear()
                 + ", life=" + e.getDungeonRoom().getController().getLife() + "/" + parent.getLife()
                 + ", replayDay=" + parent.getReplayDay());
 
@@ -110,11 +111,6 @@ public class FirstClearListener implements Listener {
                 System.out.println("[RaidChallenge] 스킵: 플레이어 객체 없음 (오프라인 추정, nickname=" + playerDungeon.getNickname()
                         + ", uuid=" + playerDungeon.getId() + ")");
                 continue;
-            }
-            boolean clear = e.getDungeonRoom().getController().isClear();
-            if (!clear) {
-                System.out.println("[RaidChallenge] 스킵: 클리어 상태 아님 (raid=" + parent.getName() + ")");
-                return;
             }
             if (playerDungeons.size() > 1 || parent.getReplayDay() == 1) {
                 System.out.println("[RaidChallenge] 스킵: 솔로가 아니거나 replayDay=1 (players=" + playerDungeons.size()
