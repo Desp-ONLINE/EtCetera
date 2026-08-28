@@ -10,6 +10,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.dople.dataSync.inventory.InventorySyncListener;
 import org.dople.petCollection.PetCollectionAPI;
 
 import java.util.ArrayList;
@@ -30,6 +31,12 @@ public class PetListener implements Listener {
             Player player = e.getPlayer();
             ItemStack feedItem = player.getInventory().getItemInMainHand();
             String id = MMOItems.getID(feedItem);
+
+            boolean isFeedItem = "사료_비독성이끼".equals(id) || "사료_가공육".equals(id) || "사료_황금달걀".equals(id);
+            if (isFeedItem && InventorySyncListener.isDataLoading(player)) {
+                player.sendMessage("§c 데이터가 로드중입니다.");
+                return;
+            }
 
             Pet activePet = null;
             String petID = null;

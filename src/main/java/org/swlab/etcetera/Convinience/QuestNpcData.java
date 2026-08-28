@@ -143,11 +143,34 @@ public class QuestNpcData {
         putNpcRange(123, 124, 363);
         putNpcRange(125, 127, 100);
 
-        // 수락 후 목적지가 시작 NPC와 다른 퀘스트 (수락 전에는 시작 NPC에게 이동)
+        // 수락 후 목적지가 시작 NPC와 다른 퀘스트 (수락 전에는 시작 NPC에게 이동, q/*.yml의 stage npcID 기준)
         QUEST_NPC_IN_PROGRESS.put(1, 8);   // 이리스와 대화
         QUEST_NPC_IN_PROGRESS.put(4, 7);   // 헤파이스토스에게 강화
         QUEST_NPC_IN_PROGRESS.put(5, 7);   // 헤파이스토스에게 강화
         QUEST_NPC_IN_PROGRESS.put(9, 6);   // 판도라에게 열쇠 구매
+        QUEST_NPC_IN_PROGRESS.put(12, 10001); // 알비스를 찾아라
+        QUEST_NPC_IN_PROGRESS.put(15, 10);    // 광산의 굴베이그와 대화
+        QUEST_NPC_IN_PROGRESS.put(22, 13);    // 엘븐하임의 드리아드와 대화
+        QUEST_NPC_IN_PROGRESS.put(27, 22);    // 길베르를 찾아가기
+        QUEST_NPC_IN_PROGRESS.put(32, 10002); // 메마른 숲의 시엘과 대화
+        QUEST_NPC_IN_PROGRESS.put(40, 32);    // 칼리마의 아크바르와 대화
+        QUEST_NPC_IN_PROGRESS.put(41, 33);    // 칼라인과 대화
+        QUEST_NPC_IN_PROGRESS.put(48, 34);    // 칼리마의 마틸다와 대화
+        QUEST_NPC_IN_PROGRESS.put(52, 68);    // 인페리움의 마틸다와 대화
+        QUEST_NPC_IN_PROGRESS.put(54, 69);    // 인페리움의 녹스를 찾아가기
+        QUEST_NPC_IN_PROGRESS.put(61, 99);    // 제크를 찾아가기
+        QUEST_NPC_IN_PROGRESS.put(66, 69);    // 녹스를 만나기
+        QUEST_NPC_IN_PROGRESS.put(70, 100);   // 스노르델을 만나기
+        QUEST_NPC_IN_PROGRESS.put(71, 109);   // 아르크티카의 녹스와 대화
+        QUEST_NPC_IN_PROGRESS.put(82, 69);    // 인페리움의 녹스와 대화
+        QUEST_NPC_IN_PROGRESS.put(83, 100);   // 스노르델에게 전달
+        QUEST_NPC_IN_PROGRESS.put(84, 69);    // 인페리움의 녹스에게 유리구슬 전달
+        QUEST_NPC_IN_PROGRESS.put(85, 100);   // 스노르델에게 전달
+        QUEST_NPC_IN_PROGRESS.put(86, 69);    // 녹스에게 스펙터의 눈 전달
+        QUEST_NPC_IN_PROGRESS.put(87, 100);   // 스노르델에게 물어보기
+        QUEST_NPC_IN_PROGRESS.put(88, 69);    // 녹스에게 암흑 심장 전달
+        QUEST_NPC_IN_PROGRESS.put(89, 100);   // 스노르델에게 전달
+        QUEST_NPC_IN_PROGRESS.put(91, 363);   // 엡실론의 데본을 찾아가기
         QUEST_NPC_IN_PROGRESS.put(120, 100); // 스노르델을 다시 찾아가기
     }
 }

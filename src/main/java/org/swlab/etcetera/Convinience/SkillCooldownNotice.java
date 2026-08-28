@@ -59,45 +59,84 @@ public class SkillCooldownNotice {
                 Map<String, TrackedSkill> tracked = trackedPerPlayer
                         .computeIfAbsent(player.getUniqueId(), k -> new HashMap<>());
 
-                Set<String> heldAbilities = refreshHeldWeaponAbilities(player, tracked);
-                ItemStack held = player.getInventory().getItemInMainHand();
-
-                Iterator<Map.Entry<String, TrackedSkill>> it = tracked.entrySet().iterator();
-                while (it.hasNext()) {
-                    Map.Entry<String, TrackedSkill> entry = it.next();
-                    String replacedName = entry.getKey();
-                    TrackedSkill ts = entry.getValue();
-
-                    String raw = PlaceholderAPI.setPlaceholders(
-                            player, "%mythiclib_cooldown_skill_" + replacedName + "%");
-                    double current;
-                    try {
-                        current = Double.parseDouble(raw);
-                    } catch (NumberFormatException e) {
-                        continue;
-                    }
-
-                    if (ts.previousCooldown <= 0.01 && current > 0.01
-                            && heldAbilities.contains(replacedName)
-                            && UserSettingRepository.getInstance().isShowSkillCooldownItem(player)) {
-                        int ticks = (int) Math.round(current * 20);
-                        if (ticks > 0) {
-                            player.setCooldown(held, ticks);
-                        }
-                    }
-
-                    if (ts.previousCooldown > 0.01 && current <= 0.01
-                            && ts.weaponDisplayName != null
-                            && matchesWeaponFilter(ts.weaponDisplayName)
-                            && UserSettingRepository.getInstance().isShowSkillCooldownNotice(player)) {
-                        player.sendMessage(ColorManager.format(
-                                "#FFC233[알림] &f" + ts.weaponDisplayName + " #10FF5D스킬이 준비되었습니다!"));
-                    }
-
-                    ts.previousCooldown = current;
+                // 한 명에서 예외가 나도(비정상 아이템 등) 나머지 플레이어 처리는 계속되도록 격리
+                try {
+                    processPlayer(player, tracked);
+                } catch (Exception e) {
+                    EtCetera.getInstance().getLogger().warning(
+                            "[SkillCooldownNotice] " + player.getName() + " 처리 중 예외: " + e);
                 }
             }
         }, 20L, 5L);
+    }
+
+    private static void processPlayer(Player player, Map<String, TrackedSkill> tracked) {
+        Set<String> heldAbilities = refreshHeldWeaponAbilities(player, tracked);
+        ItemStack held = player.getInventory().getItemInMainHand();
+
+        // 손에 든 무기 스킬들 중 가장 긴 남은 쿨 -> 아이콘 오버레이 기준값
+        double heldMaxCooldown = 0;
+        int heldParsed = 0;
+
+        Iterator<Map.Entry<String, TrackedSkill>> it = tracked.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<String, TrackedSkill> entry = it.next();
+            String replacedName = entry.getKey();
+            TrackedSkill ts = entry.getValue();
+
+            String raw = PlaceholderAPI.setPlaceholders(
+                    player, "%mythiclib_cooldown_skill_" + replacedName + "%");
+            double current;
+            try {
+                current = Double.parseDouble(raw);
+            } catch (NumberFormatException e) {
+                continue;
+            }
+
+            if (heldAbilities.contains(replacedName)) {
+                heldParsed++;
+                if (current > heldMaxCooldown) heldMaxCooldown = current;
+            }
+
+            if (ts.previousCooldown > 0.01 && current <= 0.01
+                    && ts.weaponDisplayName != null
+                    && matchesWeaponFilter(ts.weaponDisplayName)
+                    && UserSettingRepository.getInstance().isShowSkillCooldownNotice(player)) {
+                player.sendMessage(ColorManager.format(
+                        "#FFC233[알림] &f" + ts.weaponDisplayName + " #10FF5D스킬이 준비되었습니다!"));
+            }
+
+            ts.previousCooldown = current;
+        }
+
+        // 손에 든 무기 스킬 전부 정상적으로 읽혔을 때만 오버레이 동기화(플레이스홀더 실패 시 오작동 방지)
+        if (!heldAbilities.isEmpty() && heldParsed == heldAbilities.size()) {
+            applyItemCooldownOverlay(player, held, heldMaxCooldown);
+        }
+    }
+
+    // 폴링마다 "손에 든 무기 스킬 중 최대 남은 쿨"을 서버 쿨과 비교해 더 길 때만 갱신한다.
+    // - 스킬 여러 개 연타: 뒤에 쓴 짧은 쿨이 앞의 긴 쿨을 덮어쓰지 않음(최대값만 반영)
+    // - 스킬 직후 무기 스왑: 엣지를 놓쳐도 다시 들면 남은 쿨만큼 즉시 다시 칠해짐
+    // - 쿨 초기화/감소: 실제 쿨이 서버 쿨보다 눈에 띄게 짧아지면 줄여서 맞춘다
+    // 같은 값을 매 틱 다시 set 하면 클라 오버레이 게이지가 100% 로 튀므로 여유(THRESHOLD) 밖일 때만 set.
+    private static final int OVERLAY_EXTEND_THRESHOLD_TICKS = 3;
+    private static final int OVERLAY_SHRINK_THRESHOLD_TICKS = 20;
+
+    private static void applyItemCooldownOverlay(Player player, ItemStack held, double maxCooldownSeconds) {
+        if (held == null || held.getType() == Material.AIR) return;
+        if (!UserSettingRepository.getInstance().isShowSkillCooldownItem(player)) return;
+
+        int ticks = maxCooldownSeconds <= 0.01 ? 0 : (int) Math.round(maxCooldownSeconds * 20);
+        int serverTicks = player.getCooldown(held);
+
+        if (ticks > serverTicks + OVERLAY_EXTEND_THRESHOLD_TICKS) {
+            player.setCooldown(held, ticks);
+        } else if (ticks == 0 && serverTicks > 0) {
+            player.setCooldown(held, 0);
+        } else if (ticks + OVERLAY_SHRINK_THRESHOLD_TICKS < serverTicks) {
+            player.setCooldown(held, ticks);
+        }
     }
 
     private static Set<String> refreshHeldWeaponAbilities(Player player, Map<String, TrackedSkill> tracked) {

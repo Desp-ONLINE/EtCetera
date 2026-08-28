@@ -110,7 +110,9 @@ commands:
   길챗:
     aliases: [ "rlfcot", "g", "ㅎ" ]
   대결:
-    aliases: [ "eoruf", "영혼의대결", "dudghsdmleoruf", "대전", "eowjs" ]
+    aliases: [ "eoruf", "영혼의대결", "dudghsdmleoruf" ]
+  스케줄:
+    aliases: [ "tmzpwnf", "스케쥴", "오늘할일", "dhsmfgkfdlf", "일일컨텐츠" ]
   튜토리얼:
     aliases: [ "xbxhfldjf", "tutorial","tuto" ]
   튜토완료:

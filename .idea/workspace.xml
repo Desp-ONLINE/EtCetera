@@ -6,16 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="9de49959-ba55-4fdd-87fd-1e2a3cd47518" name="변경" comment="LATEST">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Commands/RestoreCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Commands/RestoreCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Commands/StatCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Commands/StatCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/TransactionLog-1.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/libs/TransactionLog-1.0.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Convinience/QuestNpcData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Convinience/QuestNpcData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Convinience/SkillCooldownNotice.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Convinience/SkillCooldownNotice.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/EtCetera.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/EtCetera.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Listener/DamageListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Listener/DamageListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Training/TrainingManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Training/TrainingManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Training/commands/AdminCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Training/commands/AdminCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Training/commands/arguments/user/RankingArgument.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Training/commands/arguments/user/RankingArgument.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Training/listeners/CombatListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Training/listeners/CombatListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Training/objects/CombatAnalysis.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Training/objects/CombatAnalysis.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Training/objects/TrainingController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Training/objects/TrainingController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Listener/PetListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Listener/PetListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

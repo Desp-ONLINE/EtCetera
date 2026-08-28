@@ -249,6 +249,7 @@ public final class EtCetera extends JavaPlugin {
         getCommand("레이드챌린지").setExecutor(new RaidChallengeCommand());
         getCommand("도플명령어").setExecutor(new AdminCommand());
         getCommand("대결").setExecutor(new VersusCommand());
+        getCommand("스케줄").setExecutor(new ScheduleCommand());
         getCommand("퀘스킵").setExecutor(new QuestSkipCommand());
         getCommand("메인퀘스트").setExecutor(new MainQuestCommand());
         getCommand("초월완료").setExecutor(new AscendCommand());
