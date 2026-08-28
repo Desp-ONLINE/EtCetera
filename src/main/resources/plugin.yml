@@ -179,3 +179,4 @@ commands:
     permission: training.admin
   메인퀘스트:
     aliases: [ "apdlsznptmxm", "메퀘", "apznp", "메인퀘", "apdlsznp" ]
+  랭킹위치설정:

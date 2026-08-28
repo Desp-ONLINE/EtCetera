@@ -28,6 +28,10 @@ import org.swlab.etcetera.Repositories.HiddenExchangeRepository;
 import org.swlab.etcetera.Repositories.TutorialRepository;
 import org.swlab.etcetera.Repositories.QuestAlertSettingRepository;
 import org.swlab.etcetera.Repositories.UserSettingRepository;
+import org.swlab.etcetera.Ranking.BabelTowerRankingProvider;
+import org.swlab.etcetera.Ranking.CombatPowerRankingProvider;
+import org.swlab.etcetera.Ranking.GuildRaidRankingProvider;
+import org.swlab.etcetera.Ranking.RankingHologramManager;
 import org.swlab.etcetera.Training.TrainingManager;
 import org.swlab.etcetera.Util.PetUtil;
 
@@ -81,6 +85,10 @@ public final class EtCetera extends JavaPlugin {
         registerCommands();
         registerRepositories();
         TrainingManager.enable(this);
+        RankingHologramManager.enable(this);
+        RankingHologramManager.getInstance().registerProvider(new CombatPowerRankingProvider());
+        RankingHologramManager.getInstance().registerProvider(new BabelTowerRankingProvider());
+        RankingHologramManager.getInstance().registerProvider(new GuildRaidRankingProvider());
         startDayChangeCheckScheduler();
 
         Set<OfflinePlayer> operators = Bukkit.getOperators();
@@ -150,6 +158,7 @@ public final class EtCetera extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        RankingHologramManager.disable();
         TrainingManager.disable();
         QuestBossBar.getInstance().removeAll();
         saveAllDatas();
@@ -317,5 +326,8 @@ public final class EtCetera extends JavaPlugin {
         DogamRegisterCommand dogamRegisterCommand = new DogamRegisterCommand();
         getCommand("도감등록증").setExecutor(dogamRegisterCommand);
         getCommand("도감등록증").setTabCompleter(dogamRegisterCommand);
+        RankingLocationCommand rankingLocationCommand = new RankingLocationCommand();
+        getCommand("랭킹위치설정").setExecutor(rankingLocationCommand);
+        getCommand("랭킹위치설정").setTabCompleter(rankingLocationCommand);
     }
 }
