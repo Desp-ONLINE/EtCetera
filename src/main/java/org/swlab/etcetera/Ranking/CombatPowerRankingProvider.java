@@ -36,11 +36,8 @@ public class CombatPowerRankingProvider implements RankingProvider {
     /* 빨간색 테마 */
     private static final String C_STAR = hex("#C41E3A");      // 헤더 장식 별 (진홍)
     private static final String C_TITLE = hex("#FF3B3B");     // 헤더 타이틀 (선명한 빨강)
-    private static final String C_RANK_1 = hex("#FFD700");    // 1위 금색
-    private static final String C_RANK_2 = hex("#C7D6E8");    // 2위 은색
-    private static final String C_RANK_3 = hex("#E8883A");    // 3위 동색
     private static final String C_RANK_ETC = hex("#E05252");  // 4위 이하 (붉은 회색)
-    private static final String C_NICKNAME = hex("#FFFFFF");  // 닉네임
+    private static final String C_NICKNAME = hex("#FFD1CC");  // 4위 이하 닉네임 (연한 빨강)
     private static final String C_SEP = hex("#5A5A6E");       // 구분 기호
     private static final String C_POWER = hex("#FF8C69");     // 전투력 수치 (연한 주홍)
     private static final String C_EMPTY = hex("#8A8A9A");     // 데이터 없음 안내
@@ -94,9 +91,13 @@ public class CombatPowerRankingProvider implements RankingProvider {
                     document, new ReplaceOptions().upsert(true));
         }
 
-        // 과거 사이클에 저장됐을 수 있는 제외 대상도 조회에서 걸러낸다
+        // 과거 사이클에 저장됐을 수 있는 제외 대상과 경고 누적(5회 이상) 유저를 조회에서 걸러낸다
+        WarnedPlayerFilter.Excluded warned = WarnedPlayerFilter.load();
+        List<String> excludedNicknames = new ArrayList<>(EXCLUDED_NICKNAMES);
+        excludedNicknames.addAll(warned.nicknames());
         List<Document> top = new ArrayList<>();
-        collection.find(new Document("nickname", new Document("$nin", new ArrayList<>(EXCLUDED_NICKNAMES))))
+        collection.find(new Document("nickname", new Document("$nin", excludedNicknames))
+                        .append("uuid", new Document("$nin", new ArrayList<>(warned.uuids()))))
                 .sort(new Document("combatPower", -1)).limit(RANK_SIZE).into(top);
 
         List<String> lines = new ArrayList<>();
@@ -108,24 +109,11 @@ public class CombatPowerRankingProvider implements RankingProvider {
             Document document = top.get(i);
             String nickname = document.getString("nickname");
             long combatPower = document.get("combatPower", Number.class).longValue();
-            lines.add(rankColor(i + 1) + (i + 1) + "위 "
-                    + C_NICKNAME + nickname
+            lines.add(RankingHologramManager.rankLabel(i + 1, C_RANK_ETC)
+                    + RankingHologramManager.nicknameColor(i + 1, C_NICKNAME) + nickname
                     + C_SEP + " : "
                     + C_POWER + CombatPowerUtil.toKoreanUnit(combatPower));
         }
         return lines;
-    }
-
-    private String rankColor(int rank) {
-        switch (rank) {
-            case 1:
-                return C_RANK_1;
-            case 2:
-                return C_RANK_2;
-            case 3:
-                return C_RANK_3;
-            default:
-                return C_RANK_ETC;
-        }
     }
 }

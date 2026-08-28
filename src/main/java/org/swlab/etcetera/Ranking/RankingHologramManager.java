@@ -60,6 +60,45 @@ public class RankingHologramManager {
         return net.md_5.bungee.api.ChatColor.of(color).toString();
     }
 
+    private static final String C_RANK_1 = hex("#FFD700");   // 1위 금색
+    private static final String C_RANK_2 = hex("#C7D6E8");   // 2위 은색
+    private static final String C_RANK_3 = hex("#E8883A");   // 3위 동색
+
+    private static final String C_NICK_1 = hex("#FFEBA8");   // 1위 닉네임 (연한 금색)
+    private static final String C_NICK_2 = hex("#E4EDF6");   // 2위 닉네임 (연한 은색)
+    private static final String C_NICK_3 = hex("#F4C9A4");   // 3위 닉네임 (연한 동색)
+
+    private static final String C_RANK_GRAY = hex("#8A8A9A"); // 6위 이하 순위 (회색, 테마 무관)
+    private static final String C_NICK_GRAY = hex("#C4C4CE"); // 6위 이하 닉네임 (연회색)
+
+    /** 순위 라벨. 1~3위는 금/은/동, 4~5위는 컨텐츠 테마 색, 6위 이하는 테마 무관 회색으로 "N위"를 표시한다. */
+    public static String rankLabel(int rank, String etcColor) {
+        switch (rank) {
+            case 1:
+                return C_RANK_1 + "1위 ";
+            case 2:
+                return C_RANK_2 + "2위 ";
+            case 3:
+                return C_RANK_3 + "3위 ";
+            default:
+                return (rank <= 5 ? etcColor : C_RANK_GRAY) + rank + "위 ";
+        }
+    }
+
+    /** 닉네임 색. 순위 색보다 연한 파스텔톤 — 1~3위 연한 금/은/동, 4~5위 컨텐츠별 연한 테마 색, 6위 이하 연회색. */
+    public static String nicknameColor(int rank, String etcColor) {
+        switch (rank) {
+            case 1:
+                return C_NICK_1;
+            case 2:
+                return C_NICK_2;
+            case 3:
+                return C_NICK_3;
+            default:
+                return rank <= 5 ? etcColor : C_NICK_GRAY;
+        }
+    }
+
     private final EtCetera plugin;
     private final File locationFile;
     private final Map<String, RankingProvider> providers = new LinkedHashMap<>();
@@ -252,7 +291,7 @@ public class RankingHologramManager {
                 return;
             }
             String text = String.join("\n", lines)
-                    + "\n" + C_FOOTER + "갱신: " + new SimpleDateFormat("MM/dd HH:mm").format(new Date());
+                    + "\n" + C_FOOTER + "갱신: " + new SimpleDateFormat("MM/dd HH:mm").format(new Date())+" (30분 주기)";
             Bukkit.getScheduler().runTask(plugin, () -> applyHologram(key, text));
         });
     }
@@ -283,10 +322,14 @@ public class RankingHologramManager {
                 entity.remove();
             }
         }
-        TextDisplay display = location.getWorld().spawn(location, TextDisplay.class, d -> {
+        // 설정 당시 바라본 방향으로 고정 배치. 텍스트가 설정자를 마주 보도록 yaw 반전, 기울어지지 않게 pitch 0
+        Location spawnLocation = location.clone();
+        spawnLocation.setYaw(location.getYaw() + 180f);
+        spawnLocation.setPitch(0f);
+        TextDisplay display = location.getWorld().spawn(spawnLocation, TextDisplay.class, d -> {
             d.addScoreboardTag(tag);
             d.setPersistent(false);
-            d.setBillboard(Display.Billboard.CENTER);
+            d.setBillboard(Display.Billboard.FIXED);
             d.setAlignment(TextDisplay.TextAlignment.CENTER);
             d.setLineWidth(300);
             d.setShadowed(true);

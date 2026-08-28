@@ -28,10 +28,12 @@ import org.swlab.etcetera.Repositories.HiddenExchangeRepository;
 import org.swlab.etcetera.Repositories.TutorialRepository;
 import org.swlab.etcetera.Repositories.QuestAlertSettingRepository;
 import org.swlab.etcetera.Repositories.UserSettingRepository;
+import org.swlab.etcetera.Ranking.AllianceLevelRankingProvider;
 import org.swlab.etcetera.Ranking.BabelTowerRankingProvider;
 import org.swlab.etcetera.Ranking.CombatPowerRankingProvider;
 import org.swlab.etcetera.Ranking.GuildRaidRankingProvider;
 import org.swlab.etcetera.Ranking.RankingHologramManager;
+import org.swlab.etcetera.Ranking.TVersusRankingProvider;
 import org.swlab.etcetera.Training.TrainingManager;
 import org.swlab.etcetera.Util.PetUtil;
 
@@ -89,6 +91,8 @@ public final class EtCetera extends JavaPlugin {
         RankingHologramManager.getInstance().registerProvider(new CombatPowerRankingProvider());
         RankingHologramManager.getInstance().registerProvider(new BabelTowerRankingProvider());
         RankingHologramManager.getInstance().registerProvider(new GuildRaidRankingProvider());
+        RankingHologramManager.getInstance().registerProvider(new AllianceLevelRankingProvider());
+        RankingHologramManager.getInstance().registerProvider(new TVersusRankingProvider());
         startDayChangeCheckScheduler();
 
         Set<OfflinePlayer> operators = Bukkit.getOperators();

@@ -27,11 +27,8 @@ public class GuildRaidRankingProvider implements RankingProvider {
     private static final String C_STAR = hex("#FFB300");      // 헤더 장식 별 (호박색)
     private static final String C_TITLE = hex("#FFD84D");     // 헤더 타이틀 (선명한 노랑)
     private static final String C_RAID = hex("#FFE082");      // 레이드 이름 (연노랑)
-    private static final String C_RANK_1 = hex("#FFD700");    // 1위 금색
-    private static final String C_RANK_2 = hex("#C7D6E8");    // 2위 은색
-    private static final String C_RANK_3 = hex("#E8883A");    // 3위 동색
     private static final String C_RANK_ETC = hex("#D9B84A");  // 4위 이하 (황토빛)
-    private static final String C_GUILD = hex("#FFFFFF");     // 길드 이름
+    private static final String C_GUILD = hex("#FFF3C2");     // 4위 이하 길드 이름 (연한 노랑)
     private static final String C_SEP = hex("#5A5A6E");       // 구분 기호
     private static final String C_DAMAGE = hex("#FFF176");    // 데미지 수치 (밝은 노랑)
     private static final String C_EMPTY = hex("#8A8A9A");     // 데이터 없음 안내
@@ -97,8 +94,8 @@ public class GuildRaidRankingProvider implements RankingProvider {
             section.add(C_RAID + "⚔ " + raidName);
             for (int i = 0; i < Math.min(RANK_SIZE, ranking.size()); i++) {
                 GuildDamage entry = ranking.get(i);
-                section.add(rankColor(i + 1) + (i + 1) + "위 "
-                        + C_GUILD + entry.guildName()
+                section.add(RankingHologramManager.rankLabel(i + 1, C_RANK_ETC)
+                        + RankingHologramManager.nicknameColor(i + 1, C_GUILD) + entry.guildName()
                         + C_SEP + " : "
                         + C_DAMAGE + CombatPowerUtil.toKoreanUnit(Math.round(entry.damage())));
             }
@@ -118,18 +115,5 @@ public class GuildRaidRankingProvider implements RankingProvider {
             }
         }
         return lines;
-    }
-
-    private String rankColor(int rank) {
-        switch (rank) {
-            case 1:
-                return C_RANK_1;
-            case 2:
-                return C_RANK_2;
-            case 3:
-                return C_RANK_3;
-            default:
-                return C_RANK_ETC;
-        }
     }
 }
