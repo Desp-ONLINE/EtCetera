@@ -270,7 +270,6 @@ public final class EtCetera extends JavaPlugin {
         getCommand("쿨초기화").setExecutor(new CoolResetCommand());
         getCommand("환던").setExecutor(new AdventureWarpCommand());
         getCommand("튜토완료").setExecutor(new TutorialCompleteCommand());
-        getCommand("일일퀘스트").setExecutor(new DailyQuestCommand());
         getCommand("양조").setExecutor(new BrewingCommand());
         getCommand("튜토리얼").setExecutor(new TutorialCommand());
         getCommand("텔레포트").setExecutor(new TeleportCommand());
