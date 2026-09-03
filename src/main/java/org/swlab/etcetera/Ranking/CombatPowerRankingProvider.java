@@ -10,6 +10,7 @@ import org.swlab.etcetera.Util.CombatPowerUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +47,9 @@ public class CombatPowerRankingProvider implements RankingProvider {
 
     private final Map<UUID, Long> snapshot = new LinkedHashMap<>();
     private final Map<UUID, String> names = new LinkedHashMap<>();
+
+    /** 마지막 집계의 전체 랭킹 (내림차순). 개인 순위 줄 계산에 사용 */
+    private volatile List<Document> lastRanking = List.of();
 
     public CombatPowerRankingProvider() {
         this.collection = DatabaseRegister.getInstance().getMongoDatabase().getCollection("CombatPowerRanking");
@@ -95,10 +99,11 @@ public class CombatPowerRankingProvider implements RankingProvider {
         WarnedPlayerFilter.Excluded warned = WarnedPlayerFilter.load();
         List<String> excludedNicknames = new ArrayList<>(EXCLUDED_NICKNAMES);
         excludedNicknames.addAll(warned.nicknames());
-        List<Document> top = new ArrayList<>();
-        collection.find(new Document("nickname", new Document("$nin", excludedNicknames))
+        List<Document> ranking = collection.find(new Document("nickname", new Document("$nin", excludedNicknames))
                         .append("uuid", new Document("$nin", new ArrayList<>(warned.uuids()))))
-                .sort(new Document("combatPower", -1)).limit(RANK_SIZE).into(top);
+                .sort(new Document("combatPower", -1)).into(new ArrayList<>());
+        lastRanking = ranking;
+        List<Document> top = ranking.subList(0, Math.min(RANK_SIZE, ranking.size()));
 
         List<String> lines = new ArrayList<>();
         lines.add(C_STAR + "✦ " + C_TITLE + "전투력 랭킹 TOP " + RANK_SIZE + C_STAR + " ✦");
@@ -112,6 +117,28 @@ public class CombatPowerRankingProvider implements RankingProvider {
             lines.add(RankingHologramManager.rankLabel(i + 1, C_RANK_ETC)
                     + RankingHologramManager.nicknameColor(i + 1, C_NICKNAME) + nickname
                     + C_SEP + " : "
+                    + C_POWER + CombatPowerUtil.toKoreanUnit(combatPower));
+        }
+        return lines;
+    }
+
+    @Override
+    public Map<UUID, String> buildViewerLines(Map<UUID, String> viewers) {
+        List<Document> ranking = lastRanking;
+        Map<String, Integer> indexByUuid = new HashMap<>();
+        for (int i = 0; i < ranking.size(); i++) {
+            indexByUuid.put(ranking.get(i).getString("uuid"), i);
+        }
+        Map<UUID, String> lines = new LinkedHashMap<>();
+        for (UUID uuid : viewers.keySet()) {
+            Integer index = indexByUuid.get(uuid.toString());
+            if (index == null) {
+                lines.put(uuid, RankingHologramManager.C_VIEWER + "▸ 내 순위" + C_SEP + " : " + C_EMPTY + "기록 없음");
+                continue;
+            }
+            long combatPower = ranking.get(index).get("combatPower", Number.class).longValue();
+            lines.put(uuid, RankingHologramManager.C_VIEWER + "▸ 내 순위" + C_SEP + " : "
+                    + RankingHologramManager.rankLabel(index + 1, C_RANK_ETC)
                     + C_POWER + CombatPowerUtil.toKoreanUnit(combatPower));
         }
         return lines;

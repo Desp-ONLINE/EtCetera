@@ -219,7 +219,6 @@ public final class EtCetera extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ClassChangeListener(), this);
         Bukkit.getPluginManager().registerEvents(new MiningAndFarmingListener(), this);
         Bukkit.getPluginManager().registerEvents(new DamageListener(), this);
-        Bukkit.getPluginManager().registerEvents(new DialogSendListener(), this);
         Bukkit.getPluginManager().registerEvents(new ChestExpansionListener(), this);
         Bukkit.getPluginManager().registerEvents(new ConsumableListener(), this);
         Bukkit.getPluginManager().registerEvents(new DataLoadListener(), this);
@@ -233,6 +232,9 @@ public final class EtCetera extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new FirstClearListener(), this);
         Bukkit.getPluginManager().registerEvents(new AFKListener(), this);
         Bukkit.getPluginManager().registerEvents(new QuestAnnounceListener(), this);
+        if (Bukkit.getPluginManager().getPlugin("IDEQuest") != null) {
+            Bukkit.getPluginManager().registerEvents(new IDEQuestListener(), this);
+        }
         Bukkit.getPluginManager().registerEvents(new ItemFrameProtectListener(), this);
         if (Bukkit.getPluginManager().getPlugin("ItemsAdder") != null) {
             Bukkit.getPluginManager().registerEvents(new FurnitureProtectListener(), this);
@@ -264,7 +266,6 @@ public final class EtCetera extends JavaPlugin {
         getCommand("대결").setExecutor(new VersusCommand());
         getCommand("스케줄").setExecutor(new ScheduleCommand());
         getCommand("퀘스킵").setExecutor(new QuestSkipCommand());
-        getCommand("메인퀘스트").setExecutor(new MainQuestCommand());
         getCommand("초월완료").setExecutor(new AscendCommand());
         getCommand("채").setExecutor(new ChannelCommand());
         getCommand("쿨초기화").setExecutor(new CoolResetCommand());
@@ -294,7 +295,6 @@ public final class EtCetera extends JavaPlugin {
         getCommand("타임던전첫클리어보상").setExecutor(new TimeDungeonFirstClearCommand());
         getCommand("낚시").setExecutor(new FishingCommand());
         getCommand("기본템").setExecutor(new BasicWeaponCommand());
-        getCommand("퀘스트").setExecutor(new QuestCommand());
         getCommand("퀘스트알림").setExecutor(new QuestAlertCommand());
         getCommand("g").setExecutor(new GuildChatCommand());
         getCommand("마을").setExecutor(new VillageCommand());

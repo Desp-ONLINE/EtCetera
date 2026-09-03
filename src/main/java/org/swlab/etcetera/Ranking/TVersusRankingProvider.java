@@ -6,8 +6,12 @@ import org.bson.Document;
 import org.swlab.etcetera.Database.DatabaseRegister;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import static org.swlab.etcetera.Ranking.RankingHologramManager.hex;
 
@@ -45,6 +49,9 @@ public class TVersusRankingProvider implements RankingProvider {
 
     private final MongoCollection<Document> collection;
 
+    /** 마지막 집계의 전체 랭킹 (내림차순). 개인 순위 줄 계산에 사용 */
+    private volatile List<Document> lastRanking = List.of();
+
     public TVersusRankingProvider() {
         this.collection = DatabaseRegister.getInstance().getMongoClient()
                 .getDatabase("TVersus").getCollection("VersusPlayer");
@@ -77,10 +84,11 @@ public class TVersusRankingProvider implements RankingProvider {
                         new Document("losses", new Document("$gt", 0)),
                         new Document("draws", new Document("$gt", 0))));
 
-        List<Document> top = collection.find(filter)
+        List<Document> ranking = collection.find(filter)
                 .sort(Sorts.orderBy(Sorts.descending("rating"), Sorts.ascending("playerName")))
-                .limit(RANK_SIZE)
                 .into(new ArrayList<>());
+        lastRanking = ranking;
+        List<Document> top = ranking.subList(0, Math.min(RANK_SIZE, ranking.size()));
 
         List<String> lines = new ArrayList<>();
         lines.add(C_STAR + "✦ " + C_TITLE + "대결 랭킹 TOP " + RANK_SIZE + C_STAR + " ✦");
@@ -94,6 +102,41 @@ public class TVersusRankingProvider implements RankingProvider {
             lines.add(RankingHologramManager.rankLabel(i + 1, C_RANK_ETC)
                     + RankingHologramManager.nicknameColor(i + 1, C_NICKNAME) + nickname
                     + C_SEP + " : "
+                    + C_SCORE + rating + "점 "
+                    + C_SEP + "(" + tierLabel(rating) + C_SEP + ")");
+        }
+        return lines;
+    }
+
+    @Override
+    public Map<UUID, String> buildViewerLines(Map<UUID, String> viewers) {
+        List<Document> ranking = lastRanking;
+        // playerId(uuid) 우선, 과거 문서에 playerId가 없을 수 있어 닉네임으로도 매칭한다
+        Map<String, Integer> indexByUuid = new HashMap<>();
+        Map<String, Integer> indexByNickname = new HashMap<>();
+        for (int i = 0; i < ranking.size(); i++) {
+            String playerId = ranking.get(i).getString("playerId");
+            if (playerId != null) {
+                indexByUuid.put(playerId, i);
+            }
+            String playerName = ranking.get(i).getString("playerName");
+            if (playerName != null) {
+                indexByNickname.putIfAbsent(playerName, i);
+            }
+        }
+        Map<UUID, String> lines = new LinkedHashMap<>();
+        for (Map.Entry<UUID, String> viewer : viewers.entrySet()) {
+            Integer index = indexByUuid.get(viewer.getKey().toString());
+            if (index == null) {
+                index = indexByNickname.get(viewer.getValue());
+            }
+            if (index == null) {
+                lines.put(viewer.getKey(), RankingHologramManager.C_VIEWER + "▸ 내 순위" + C_SEP + " : " + C_EMPTY + "기록 없음");
+                continue;
+            }
+            int rating = ranking.get(index).get("rating", Number.class).intValue();
+            lines.put(viewer.getKey(), RankingHologramManager.C_VIEWER + "▸ 내 순위" + C_SEP + " : "
+                    + RankingHologramManager.rankLabel(index + 1, C_RANK_ETC)
                     + C_SCORE + rating + "점 "
                     + C_SEP + "(" + tierLabel(rating) + C_SEP + ")");
         }

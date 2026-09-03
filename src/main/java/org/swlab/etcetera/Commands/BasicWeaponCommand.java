@@ -1,9 +1,5 @@
 package org.swlab.etcetera.Commands;
 
-import fr.skytasul.quests.BeautyQuests;
-import fr.skytasul.quests.api.quests.Quest;
-import fr.skytasul.quests.api.quests.QuestsManager;
-import fr.skytasul.quests.players.PlayerQuestDatasImplementation;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
 import net.Indyuce.mmocore.api.player.profess.PlayerClass;
 import net.Indyuce.mmoitems.MMOItems;
@@ -14,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.swlab.etcetera.EtCetera;
+import org.swlab.etcetera.Util.QuestCompat;
 
 import java.util.HashMap;
 
@@ -126,9 +123,6 @@ public class BasicWeaponCommand implements CommandExecutor {
     }
 
     public static boolean checkisFinished(Player player, int questID, int level, int levelCondition) {
-        QuestsManager questsManager = BeautyQuests.getInstance().getAPI().getQuestsManager();
-        Quest quest = questsManager.getQuest(questID);
-        PlayerQuestDatasImplementation questDatas = BeautyQuests.getInstance().getPlayersManager().getAccount(player).getQuestDatas(quest);
-        return questDatas.isFinished() && level >= levelCondition;
+        return QuestCompat.hasFinished(player, questID) && level >= levelCondition;
     }
 }

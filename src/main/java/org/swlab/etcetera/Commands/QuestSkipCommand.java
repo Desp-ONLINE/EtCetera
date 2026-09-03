@@ -17,8 +17,8 @@ public class QuestSkipCommand implements CommandExecutor {
         String name = strings[1];
         int i = Integer.parseInt(string);
         for(int j = 0; j < i; j++){
-            player.performCommand("bq start "+name+" "+j);
-            player.performCommand("bq finish "+name+" "+j);
+            player.performCommand("questadmin start "+name+" "+j);
+            player.performCommand("questadmin complete "+name+" "+j);
         }
         return false;
     }

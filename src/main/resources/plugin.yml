@@ -4,6 +4,7 @@ main: org.swlab.etcetera.EtCetera
 api-version: '1.21'
 depend: [  ]
 softdepend:
+  - IDEQuest
   - ItemsAdder
   - BetterHud
   - MythicMobs
@@ -46,8 +47,6 @@ commands:
     aliases: [ "skRtl", "skrtl", "낙시" ]
   기본템:
     aliases: [ "rlqhsxpa" ]
-  퀘스트:
-    aliases: [ "q", "ㅂ", "znptmxm" ]
   퀘스트알림:
   마을:
     aliases: [ "village", "akdmf", "빌리지", "ㅁㅇ", "ad" ]
@@ -175,6 +174,4 @@ commands:
     aliases: [ "훈련장", "gnsfuswkd", "gnsfus", "epalwlxptmxm", "데미지테스트" ]
   훈련관리:
     permission: training.admin
-  메인퀘스트:
-    aliases: [ "apdlsznptmxm", "메퀘", "apznp", "메인퀘", "apdlsznp" ]
   랭킹위치설정:

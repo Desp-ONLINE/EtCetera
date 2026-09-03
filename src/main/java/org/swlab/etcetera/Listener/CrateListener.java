@@ -1,8 +1,5 @@
 package org.swlab.etcetera.Listener;
 
-import fr.skytasul.quests.BeautyQuests;
-import fr.skytasul.quests.api.QuestsAPI;
-import fr.skytasul.quests.api.quests.Quest;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -10,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.dople.dataSync.inventory.InventorySyncListener;
 import org.swlab.etcetera.EtCetera;
+import org.swlab.etcetera.Util.QuestCompat;
 import su.nightexpress.excellentcrates.api.event.CrateOpenEvent;
 
 import java.util.ArrayList;
@@ -23,14 +21,12 @@ public class CrateListener implements Listener {
     @EventHandler
     public void onCrateOpen(CrateOpenEvent e){
         Player player = e.getPlayer();
-        QuestsAPI api = QuestsAPI.getAPI();
-        Quest quest = api.getQuestsManager().getQuest(10);
         if(InventorySyncListener.isDataLoading(player)){
             player.sendMessage("§c 데이터 로드중입니다.");
             e.setCancelled(true);
             return;
         }
-        if(!BeautyQuests.getInstance().getPlayersManager().getAccount(player).hasQuestDatas(quest)){
+        if(!QuestCompat.hasQuestData(player, 10)){
             player.sendMessage("§c  9번 메인 퀘스트를 먼저 클리어하세요!");
             e.setCancelled(true);
             return;

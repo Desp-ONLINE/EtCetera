@@ -1,7 +1,5 @@
 package org.swlab.etcetera.Commands;
 
-import fr.skytasul.quests.BeautyQuests;
-import fr.skytasul.quests.structure.QuestImplementation;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -10,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Util.CommandUtil;
+import org.swlab.etcetera.Util.QuestCompat;
 
 import java.util.Random;
 
@@ -17,8 +16,7 @@ public class MergeCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         Player player = (Player) sender;
-        QuestImplementation quest = BeautyQuests.getInstance().getQuestsManager().getQuest(32);
-        if(!BeautyQuests.getInstance().getPlayersManager().getAccount(player).hasQuestDatas(quest)){
+        if (!QuestCompat.hasQuestData(player, 32)) {
             player.sendMessage("§c  32번째 메인퀘스트를 완료해야합니다!");
             return true;
         }

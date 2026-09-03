@@ -1,15 +1,13 @@
 package org.swlab.etcetera.Convinience;
 
 import com.binggre.binggreapi.utils.ColorManager;
-import fr.skytasul.quests.BeautyQuests;
-import fr.skytasul.quests.api.quests.Quest;
-import fr.skytasul.quests.players.PlayerAccountImplementation;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.swlab.etcetera.Repositories.QuestAlertSettingRepository;
+import org.swlab.etcetera.Util.QuestCompat;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +30,17 @@ public class QuestBossBar {
         return instance;
     }
 
+    /** 메인 퀘스트 길 안내 보스바 사용 여부. */
+    public static final boolean ENABLED = true;
+
+    /** 메인 퀘스트 id 범위 상한 (이 미만이 메인 퀘스트). */
+    private static final int MAIN_QUEST_LIMIT = 1000;
+
     public void show(Player player) {
+        if (!ENABLED) {
+            remove(player);
+            return;
+        }
         if (!QuestAlertSettingRepository.getInstance().isEnabled(player.getUniqueId())) {
             return;
         }
@@ -71,28 +79,18 @@ public class QuestBossBar {
         bossBars.clear();
     }
 
+    /**
+     * 안내할 다음 메인 퀘스트: 완료한 메인 퀘스트(1000번 미만) 중 가장 높은 번호 + 1.
+     * 데이터가 아직 로드되지 않았거나(접속 직후), 다음 퀘스트가 없으면(전부 완료) -1.
+     */
     private int getNextQuestId(Player player) {
-        PlayerAccountImplementation account = BeautyQuests.getInstance().getPlayersManager().getAccount(player);
-        if (account == null) {
+        if (!QuestCompat.isIDEQuestEnabled() || !QuestCompat.isDataLoaded(player)) {
             return -1;
         }
-        for (int id = 1; id < 999; id++) {
-            if (!QuestNpcData.hasQuest(id)) {
-                continue;
-            }
-            Quest quest = BeautyQuests.getInstance().getAPI().getQuestsManager().getQuest(id);
-            if (quest == null || quest.hasFinished(account)) {
-                continue;
-            }
-            if (id == 1) {
-                return id;
-            }
-            Quest prevQuest = BeautyQuests.getInstance().getAPI().getQuestsManager().getQuest(id - 1);
-            if (prevQuest != null && prevQuest.hasFinished(account)) {
-                return id;
-            }
+        int next = QuestCompat.maxFinishedBelow(player, MAIN_QUEST_LIMIT) + 1;
+        if (next >= MAIN_QUEST_LIMIT || !QuestCompat.questExists(next) || !QuestNpcData.hasQuest(next)) {
             return -1;
         }
-        return -1;
+        return next;
     }
 }

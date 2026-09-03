@@ -1,8 +1,5 @@
 package org.swlab.etcetera.Util;
 
-import fr.skytasul.quests.BeautyQuests;
-import fr.skytasul.quests.api.quests.Quest;
-import fr.skytasul.quests.players.PlayerQuestDatasImplementation;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -91,12 +88,6 @@ public final class JobWeaponUtil {
         if (questId == null) {
             return false;
         }
-        Quest quest = BeautyQuests.getInstance().getAPI().getQuestsManager().getQuest(questId);
-        if (quest == null) {
-            return false;
-        }
-        PlayerQuestDatasImplementation questDatas =
-                BeautyQuests.getInstance().getPlayersManager().getAccount(player).getQuestDatas(quest);
-        return questDatas != null && questDatas.isFinished();
+        return QuestCompat.hasFinished(player, questId);
     }
 }

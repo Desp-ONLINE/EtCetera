@@ -7,35 +7,45 @@ import org.bukkit.Particle;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.TextDisplay;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.swlab.etcetera.EtCetera;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * 통합 랭킹 홀로그램 관리자.
  *
- * <p>등록된 모든 컨텐츠({@link RankingProvider})를 30분마다 갱신해
- * 컨텐츠별 홀로그램(TextDisplay)으로 표시한다.
+ * <p>등록된 모든 컨텐츠({@link RankingProvider})를 15분마다 갱신해
+ * 컨텐츠별 홀로그램(TextDisplay)으로 표시한다. 홀로그램 하단에는 보는 유저 본인에게만
+ * 보이는 "내 순위" 줄이 별도 TextDisplay로 표시된다.
  * 위치는 /랭킹위치설정 &lt;컨텐츠이름&gt; 으로 지정하며 plugins/EtCetera/rankings.yml에 저장된다.
  */
-public class RankingHologramManager {
+public class RankingHologramManager implements Listener {
 
-    /** 갱신 주기 (30분) */
-    private static final long REFRESH_PERIOD_TICKS = 20L * 60L * 30L;
+    /** 갱신 주기 (15분) */
+    private static final long REFRESH_PERIOD_TICKS = 20L * 60L * 15L;
     /** 등록 후 첫 갱신까지 대기. 수집 단계가 로드 안 된 플레이어를 건너뛰므로 다음 틱이면 충분하다 */
     private static final long FIRST_REFRESH_DELAY_TICKS = 1L;
 
     private static final String HOLOGRAM_TAG_PREFIX = "ranking_hologram_";
-    private static final String C_FOOTER = hex("#8A8A9A");
+    /** 개인 순위 줄이 메인 홀로그램 기준선에서 내려가는 높이 (블럭). 한 줄 높이(0.25) 바로 아래에 붙인다 */
+    private static final double VIEWER_LINE_OFFSET = 0.28;
+    /** 접속 후 개인 순위 줄 표시까지 대기 (5초, 데이터 로드 여유) */
+    private static final long VIEWER_JOIN_DELAY_TICKS = 100L;
 
     private static RankingHologramManager instance;
 
@@ -45,12 +55,16 @@ public class RankingHologramManager {
 
     public static void enable(EtCetera plugin) {
         instance = new RankingHologramManager(plugin);
+        Bukkit.getPluginManager().registerEvents(instance, plugin);
     }
 
     public static void disable() {
         if (instance != null) {
+            HandlerList.unregisterAll(instance);
             instance.holograms.values().forEach(Entity::remove);
             instance.holograms.clear();
+            instance.viewerDisplays.values().forEach(displays -> displays.values().forEach(Entity::remove));
+            instance.viewerDisplays.clear();
             instance = null;
         }
     }
@@ -70,6 +84,9 @@ public class RankingHologramManager {
 
     private static final String C_RANK_GRAY = hex("#8A8A9A"); // 6위 이하 순위 (회색, 테마 무관)
     private static final String C_NICK_GRAY = hex("#C4C4CE"); // 6위 이하 닉네임 (연회색)
+
+    /** 개인 순위 줄 라벨 색 (민트). 어떤 컨텐츠 테마와도 겹치지 않아 랭킹 줄과 구분된다. Provider들이 공용으로 사용 */
+    public static final String C_VIEWER = hex("#7CE8A4");
 
     /** 순위 라벨. 1~3위는 금/은/동, 4~5위는 컨텐츠 테마 색, 6위 이하는 테마 무관 회색으로 "N위"를 표시한다. */
     public static String rankLabel(int rank, String etcColor) {
@@ -104,6 +121,8 @@ public class RankingHologramManager {
     private final Map<String, RankingProvider> providers = new LinkedHashMap<>();
     private final Map<String, Location> locations = new HashMap<>();
     private final Map<String, TextDisplay> holograms = new HashMap<>();
+    /** 컨텐츠별 → 유저별 개인 순위 줄 홀로그램 (본인에게만 보임) */
+    private final Map<String, Map<UUID, TextDisplay>> viewerDisplays = new HashMap<>();
 
     private RankingHologramManager(EtCetera plugin) {
         this.plugin = plugin;
@@ -261,6 +280,11 @@ public class RankingHologramManager {
         if (old != null) {
             old.remove();
         }
+        // 개인 순위 줄도 새 위치에 다시 생성되도록 제거
+        Map<UUID, TextDisplay> oldViewers = viewerDisplays.remove(key);
+        if (oldViewers != null) {
+            oldViewers.values().forEach(Entity::remove);
+        }
         refresh(key);
         return true;
     }
@@ -275,6 +299,7 @@ public class RankingHologramManager {
 
     /**
      * 수집(메인 스레드) → 줄 생성(비동기, DB 조회 가능) → 홀로그램 반영(메인 스레드).
+     * 개인 순위 줄도 같은 사이클에서 접속자 스냅샷 기준으로 갱신된다.
      */
     public void refresh(String key) {
         RankingProvider provider = providers.get(key);
@@ -282,17 +307,25 @@ public class RankingHologramManager {
             return;
         }
         provider.collectSync();
+        Map<UUID, String> viewers = new LinkedHashMap<>();
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            viewers.put(player.getUniqueId(), player.getName());
+        }
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             List<String> lines;
+            Map<UUID, String> viewerLines;
             try {
                 lines = provider.buildLines();
+                viewerLines = provider.buildViewerLines(viewers);
             } catch (Exception e) {
                 plugin.getLogger().warning("랭킹 갱신 실패 (" + key + "): " + e.getMessage());
                 return;
             }
-            String text = String.join("\n", lines)
-                    + "\n" + C_FOOTER + "갱신: " + new SimpleDateFormat("MM/dd HH:mm").format(new Date())+" (30분 주기)";
-            Bukkit.getScheduler().runTask(plugin, () -> applyHologram(key, text));
+            String text = String.join("\n", lines);
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                applyHologram(key, text);
+                applyViewerHolograms(key, viewerLines);
+            });
         });
     }
 
@@ -315,10 +348,12 @@ public class RankingHologramManager {
         if (!location.getChunk().isLoaded()) {
             location.getChunk().load();
         }
-        // 리로드 등으로 남아있을 수 있는 이전 홀로그램 제거
+        // 리로드 등으로 남아있을 수 있는 이전 홀로그램(개인 순위 줄 포함) 제거
         String tag = HOLOGRAM_TAG_PREFIX + key;
+        String viewerTagPrefix = tag + "_viewer_";
         for (Entity entity : location.getChunk().getEntities()) {
-            if (entity instanceof TextDisplay && entity.getScoreboardTags().contains(tag)) {
+            if (entity instanceof TextDisplay && entity.getScoreboardTags().stream()
+                    .anyMatch(t -> t.equals(tag) || t.startsWith(viewerTagPrefix))) {
                 entity.remove();
             }
         }
@@ -340,5 +375,104 @@ public class RankingHologramManager {
         });
         holograms.put(key, display);
         return display;
+    }
+
+    /* ===== 개인 순위 줄 (본인에게만 보이는 TextDisplay) ===== */
+
+    /** 갱신 사이클의 개인 순위 줄을 반영한다. 오프라인이거나 줄이 없어진 유저의 표시는 제거한다. */
+    private void applyViewerHolograms(String key, Map<UUID, String> viewerLines) {
+        Map<UUID, TextDisplay> displays = viewerDisplays.computeIfAbsent(key, k -> new HashMap<>());
+        displays.entrySet().removeIf(entry -> {
+            if (Bukkit.getPlayer(entry.getKey()) == null || !viewerLines.containsKey(entry.getKey())) {
+                entry.getValue().remove();
+                return true;
+            }
+            return false;
+        });
+        viewerLines.forEach((uuid, line) -> applyViewerLine(key, uuid, line));
+    }
+
+    private void applyViewerLine(String key, UUID uuid, String line) {
+        Player player = Bukkit.getPlayer(uuid);
+        Location location = locations.get(key);
+        if (player == null || location == null || location.getWorld() == null) {
+            return;
+        }
+        Map<UUID, TextDisplay> displays = viewerDisplays.computeIfAbsent(key, k -> new HashMap<>());
+        TextDisplay display = displays.get(uuid);
+        if (display == null || !display.isValid()) {
+            display = spawnViewerDisplay(key, uuid, player, location);
+            displays.put(uuid, display);
+        }
+        display.setText(line);
+    }
+
+    /** 메인 홀로그램 바로 아래에, 해당 유저에게만 보이는 개인 순위 줄을 생성한다. */
+    private TextDisplay spawnViewerDisplay(String key, UUID uuid, Player player, Location location) {
+        Location spawnLocation = location.clone().subtract(0, VIEWER_LINE_OFFSET, 0);
+        spawnLocation.setYaw(location.getYaw() + 180f);
+        spawnLocation.setPitch(0f);
+        TextDisplay display = location.getWorld().spawn(spawnLocation, TextDisplay.class, d -> {
+            d.addScoreboardTag(HOLOGRAM_TAG_PREFIX + key + "_viewer_" + uuid);
+            d.setPersistent(false);
+            d.setVisibleByDefault(false);
+            d.setBillboard(Display.Billboard.FIXED);
+            d.setAlignment(TextDisplay.TextAlignment.CENTER);
+            d.setLineWidth(300);
+            d.setShadowed(true);
+            d.setBrightness(new Display.Brightness(15, 15));
+            d.setSeeThrough(false);
+            d.setViewRange(1.0f);
+        });
+        player.showEntity(plugin, display);
+        return display;
+    }
+
+    /** 접속 유저는 다음 정기 갱신을 기다리지 않고 마지막 집계 캐시로 개인 순위 줄을 바로 표시한다. */
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        UUID uuid = event.getPlayer().getUniqueId();
+        String name = event.getPlayer().getName();
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            Player player = Bukkit.getPlayer(uuid);
+            if (player == null) {
+                return;
+            }
+            List<RankingProvider> snapshot = new ArrayList<>(providers.values());
+            for (RankingProvider provider : snapshot) {
+                try {
+                    provider.collectViewerSync(player);
+                } catch (Exception e) {
+                    // 데이터 미로드 등은 다음 정기 갱신에서 채워진다
+                }
+            }
+            Map<UUID, String> viewer = Map.of(uuid, name);
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+                for (RankingProvider provider : snapshot) {
+                    String line;
+                    try {
+                        line = provider.buildViewerLines(viewer).get(uuid);
+                    } catch (Exception e) {
+                        continue;
+                    }
+                    if (line == null) {
+                        continue;
+                    }
+                    String key = provider.getContentKey();
+                    Bukkit.getScheduler().runTask(plugin, () -> applyViewerLine(key, uuid, line));
+                }
+            });
+        }, VIEWER_JOIN_DELAY_TICKS);
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        UUID uuid = event.getPlayer().getUniqueId();
+        for (Map<UUID, TextDisplay> displays : viewerDisplays.values()) {
+            TextDisplay display = displays.remove(uuid);
+            if (display != null) {
+                display.remove();
+            }
+        }
     }
 }

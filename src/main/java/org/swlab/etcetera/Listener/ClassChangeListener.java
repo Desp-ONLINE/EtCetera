@@ -1,11 +1,6 @@
 package org.swlab.etcetera.Listener;
 
 import com.binggre.binggreapi.utils.ColorManager;
-import fr.skytasul.quests.BeautyQuests;
-import fr.skytasul.quests.api.QuestsAPI;
-import fr.skytasul.quests.api.events.QuestFinishEvent;
-import fr.skytasul.quests.api.quests.Quest;
-import fr.skytasul.quests.players.PlayerAccountImplementation;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
 import net.Indyuce.mmocore.api.event.PlayerChangeClassEvent;
 import net.Indyuce.mmocore.api.player.profess.PlayerClass;
@@ -18,10 +13,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Util.CommandUtil;
-import org.swlab.etcetera.Util.NameTagUtil;
 
 
 public class ClassChangeListener implements Listener {
+
     @EventHandler
     public void onLevelUp(PlayerChangeClassEvent e) {
         Player player = e.getPlayer();
@@ -45,11 +40,9 @@ public class ClassChangeListener implements Listener {
 
     }
 
-    @EventHandler
-    public void onProfileCreate(QuestFinishEvent e) {
-        int id = e.getQuest().getId();
+    /** 퀘스트 완료 공통 처리. IDEQuestListener 가 호출한다. */
+    public static void handleQuestFinish(Player player, int id, String questName) {
         if (id == 1) {
-            Player player = e.getPlayer();
             MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
             PlayerClass profess = mmoCoreAPI.getPlayerData(player).getProfess();
             String className = profess.getName();
@@ -61,7 +54,6 @@ public class ClassChangeListener implements Listener {
         }
         // 전직 퀘스트 클리어 시 해당 차수 기본템 자동 지급 (90000~: 2차, 90010~: 3차, 90020~: 4차, 90030~: 각성)
         if (id >= 90000 && id < 90040) {
-            Player player = e.getPlayer();
             String tier = switch ((id - 90000) / 10) {
                 case 0 -> "2";
                 case 1 -> "3";
@@ -77,21 +69,15 @@ public class ClassChangeListener implements Listener {
             }, 20L);
         }
         if (id >= 30000 && id < 40000) {
-            Player player = e.getPlayer();
-            Quest quest = QuestsAPI.getAPI().getQuestsManager().getQuest(id);
-            PlayerAccountImplementation account = BeautyQuests.getInstance().getPlayersManager().getAccount(player);
-//            if(!account.hasQuestDatas(quest)){
-            player.sendMessage(ColorManager.format("§6 [편의성] #93FFA3 5초 뒤, 자동으로 서브퀘스트 §f" + quest.getName() + "#93FFA3 를 수령합니다. 수령 전 채널을 옮기거나 하는 경우 직접 수령이 필요합니다."));
+            player.sendMessage(ColorManager.format("§6 [편의성] #93FFA3 5초 뒤, 자동으로 서브퀘스트 §f" + questName + "#93FFA3 를 수령합니다. 수령 전 채널을 옮기거나 하는 경우 직접 수령이 필요합니다."));
+            // 다음 서브퀘스트를 수령시킨다.
+            String startCommand = "questadmin start " + player.getName() + " " + id;
             Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
                 @Override
                 public void run() {
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "bq start " + player.getName() + " " + id);
-
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), startCommand);
                 }
             }, 100L);
-//                CommandUtil.runCommandAsOP(player, );
-//            }
-//            System.out.println("true = " + true);
         }
 
     }

@@ -1,7 +1,7 @@
 package org.swlab.etcetera.Listener;
 
-import fr.skytasul.quests.api.events.QuestFinishEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -27,11 +27,10 @@ public class QuestAnnounceListener implements Listener {
         QuestAlertSettingRepository.getInstance().remove(e.getPlayer().getUniqueId());
     }
 
-    @EventHandler
-    public void onQuestFinish(QuestFinishEvent e) {
-        int questId = e.getQuest().getId();
+    /** 퀘스트 완료 공통 처리. IDEQuestListener 가 호출한다. */
+    public static void handleQuestFinish(Player player, int questId) {
         if (questId < 999) {
-            QuestBossBar.getInstance().show(e.getPlayer());
+            QuestBossBar.getInstance().show(player);
         }
     }
 }

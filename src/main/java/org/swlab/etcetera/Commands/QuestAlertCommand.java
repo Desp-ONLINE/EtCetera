@@ -16,6 +16,10 @@ public class QuestAlertCommand implements CommandExecutor {
         if (!(sender instanceof Player player)) {
             return true;
         }
+        if (!QuestBossBar.ENABLED) {
+            player.sendMessage(ColorManager.format("#78FF7C[퀘스트] §f퀘스트 알림 보스바는 더 이상 사용하지 않습니다. §7(/퀘스트 에서 우측 퀘스트 알림을 켜고 끌 수 있습니다)"));
+            return true;
+        }
         QuestAlertSettingRepository.getInstance().toggle(player.getUniqueId());
         boolean enabled = QuestAlertSettingRepository.getInstance().isEnabled(player.getUniqueId());
         if (enabled) {

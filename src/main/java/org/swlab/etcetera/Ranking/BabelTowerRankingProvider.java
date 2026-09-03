@@ -6,7 +6,11 @@ import org.bson.Document;
 import org.swlab.etcetera.Database.DatabaseRegister;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import static org.swlab.etcetera.Ranking.RankingHologramManager.hex;
 
@@ -33,6 +37,9 @@ public class BabelTowerRankingProvider implements RankingProvider {
 
     private final MongoCollection<Document> collection;
 
+    /** 마지막 집계의 전체 랭킹 (내림차순). 개인 순위 줄 계산에 사용 */
+    private volatile List<Document> lastRanking = List.of();
+
     public BabelTowerRankingProvider() {
         this.collection = DatabaseRegister.getInstance().getMongoClient()
                 .getDatabase("BabelTower").getCollection("PlayerData");
@@ -53,11 +60,12 @@ public class BabelTowerRankingProvider implements RankingProvider {
     public List<String> buildLines() {
         // 경고 누적(5회 이상) 유저 제외. 바벨탑 문서의 user_id는 닉네임이다
         WarnedPlayerFilter.Excluded warned = WarnedPlayerFilter.load();
-        List<Document> top = collection.find(
+        List<Document> ranking = collection.find(
                         new Document("user_id", new Document("$nin", new ArrayList<>(warned.nicknames()))))
                 .sort(Sorts.orderBy(Sorts.descending("clearFloor"), Sorts.ascending("latestClearedDate")))
-                .limit(RANK_SIZE)
                 .into(new ArrayList<>());
+        lastRanking = ranking;
+        List<Document> top = ranking.subList(0, Math.min(RANK_SIZE, ranking.size()));
 
         List<String> lines = new ArrayList<>();
         lines.add(C_STAR + "✦ " + C_TITLE + "바벨탑 랭킹 TOP " + RANK_SIZE + C_STAR + " ✦");
@@ -71,6 +79,29 @@ public class BabelTowerRankingProvider implements RankingProvider {
             lines.add(RankingHologramManager.rankLabel(i + 1, C_RANK_ETC)
                     + RankingHologramManager.nicknameColor(i + 1, C_NICKNAME) + nickname
                     + C_SEP + " : "
+                    + C_FLOOR + clearFloor + "층");
+        }
+        return lines;
+    }
+
+    @Override
+    public Map<UUID, String> buildViewerLines(Map<UUID, String> viewers) {
+        List<Document> ranking = lastRanking;
+        // 바벨탑 문서의 user_id는 닉네임이므로 닉네임으로 매칭한다
+        Map<String, Integer> indexByNickname = new HashMap<>();
+        for (int i = 0; i < ranking.size(); i++) {
+            indexByNickname.put(ranking.get(i).getString("user_id"), i);
+        }
+        Map<UUID, String> lines = new LinkedHashMap<>();
+        for (Map.Entry<UUID, String> viewer : viewers.entrySet()) {
+            Integer index = indexByNickname.get(viewer.getValue());
+            if (index == null) {
+                lines.put(viewer.getKey(), RankingHologramManager.C_VIEWER + "▸ 내 순위" + C_SEP + " : " + C_EMPTY + "기록 없음");
+                continue;
+            }
+            int clearFloor = ranking.get(index).get("clearFloor", Number.class).intValue();
+            lines.put(viewer.getKey(), RankingHologramManager.C_VIEWER + "▸ 내 순위" + C_SEP + " : "
+                    + RankingHologramManager.rankLabel(index + 1, C_RANK_ETC)
                     + C_FLOOR + clearFloor + "층");
         }
         return lines;

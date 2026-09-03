@@ -5,9 +5,6 @@ import com.binggre.mongolibraryplugin.MongoLibraryPlugin;
 import com.binggre.mmomail.MMOMail;
 import com.binggre.mmomail.objects.Mail;
 import com.mongodb.client.MongoCollection;
-import fr.skytasul.quests.BeautyQuests;
-import fr.skytasul.quests.api.quests.Quest;
-import fr.skytasul.quests.players.PlayerAccountImplementation;
 import net.Indyuce.inventory.MMOInventory;
 import net.Indyuce.inventory.player.CustomInventoryData;
 import net.Indyuce.inventory.player.InventoryItem;
@@ -30,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.swlab.etcetera.Database.DatabaseRegister;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Util.CommandUtil;
+import org.swlab.etcetera.Util.QuestCompat;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -105,9 +103,7 @@ public class RestoreCommand implements CommandExecutor {
         }
         switch (strings[0]) {
             case "제피르":
-                Quest quest = BeautyQuests.getInstance().getAPI().getQuestsManager().getQuest(50001);
-                PlayerAccountImplementation account = BeautyQuests.getInstance().getPlayersManager().getAccount(player);
-                boolean finished = account.getQuestDatas(quest).isFinished();
+                boolean finished = QuestCompat.hasFinished(player, 50001);
                 if (finished) {
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + player.getName() + " permission set class.zephyr");
                     player.sendMessage("§a 처리가 완료되었습니다!");
@@ -117,9 +113,7 @@ public class RestoreCommand implements CommandExecutor {
                     return false;
                 }
             case "루인드":
-                Quest quest2 = BeautyQuests.getInstance().getAPI().getQuestsManager().getQuest(50004);
-                PlayerAccountImplementation account2 = BeautyQuests.getInstance().getPlayersManager().getAccount(player);
-                boolean finished2 = account2.getQuestDatas(quest2).isFinished();
+                boolean finished2 = QuestCompat.hasFinished(player, 50004);
                 if (finished2) {
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + player.getName() + " permission set class.ruined");
                     player.sendMessage("§a 처리가 완료되었습니다!");
@@ -238,7 +232,7 @@ public class RestoreCommand implements CommandExecutor {
 //                }
 //                MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
 //                int level = mmoCoreAPI.getPlayerData(player).getLevel();
-//                if (!(BeautyQuests.getInstance().getPlayersManager().getAccount(player).getQuestDatas(BeautyQuests.getInstance().getAPI().getQuestsManager().getQuest(41)).isFinished()) && level < 45) {
+//                if (!QuestCompat.hasFinished(player, 41) && level < 45) {
 //                    player.sendMessage("§c 레벨이 45보다 낮거나, 메인 퀘스트 41을 아직 클리어 하지 않으셨습니다!");
 //                    return false;
 //                }

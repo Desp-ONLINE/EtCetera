@@ -53,6 +53,9 @@ public class AllianceLevelRankingProvider implements RankingProvider {
     private final Map<UUID, Integer> snapshot = new LinkedHashMap<>();
     private final Map<UUID, String> names = new LinkedHashMap<>();
 
+    /** 마지막 집계의 uuid → {공동 순위, 총 합 레벨}. 개인 순위 줄 계산에 사용 */
+    private volatile Map<String, int[]> lastRanking = Map.of();
+
     public AllianceLevelRankingProvider() {
         this.collection = DatabaseRegister.getInstance().getMongoDatabase().getCollection("AllianceLevelRanking");
         this.allianceDatabase = DatabaseRegister.getInstance().getMongoClient().getDatabase("MMO-Alliance");
@@ -172,18 +175,41 @@ public class AllianceLevelRankingProvider implements RankingProvider {
             lines.add(C_EMPTY + "집계된 데이터가 없습니다.");
         }
         // 동점자는 공동 순위(같은 "N위")로 표시하고, 다음 순위는 인원수만큼 건너뛴다 (1,1,3위 방식)
+        // 개인 순위 줄을 위해 전체 순위를 계산해 캐시하고, 홀로그램에는 상위 RANK_SIZE명만 표시한다
+        Map<String, int[]> rankByUuid = new LinkedHashMap<>();
         int rank = 0;
         int previousLevel = Integer.MIN_VALUE;
-        for (int i = 0; i < Math.min(RANK_SIZE, ranking.size()); i++) {
+        for (int i = 0; i < ranking.size(); i++) {
             Map.Entry<String, Integer> entry = ranking.get(i);
             if (entry.getValue() != previousLevel) {
                 rank = i + 1;
                 previousLevel = entry.getValue();
             }
-            lines.add(RankingHologramManager.rankLabel(rank, C_RANK_ETC)
-                    + RankingHologramManager.nicknameColor(rank, C_NICKNAME) + nicknameByUuid.get(entry.getKey())
-                    + C_SEP + " : "
-                    + C_LEVEL + "Lv." + entry.getValue());
+            rankByUuid.put(entry.getKey(), new int[]{rank, entry.getValue()});
+            if (i < RANK_SIZE) {
+                lines.add(RankingHologramManager.rankLabel(rank, C_RANK_ETC)
+                        + RankingHologramManager.nicknameColor(rank, C_NICKNAME) + nicknameByUuid.get(entry.getKey())
+                        + C_SEP + " : "
+                        + C_LEVEL + "Lv." + entry.getValue());
+            }
+        }
+        lastRanking = rankByUuid;
+        return lines;
+    }
+
+    @Override
+    public Map<UUID, String> buildViewerLines(Map<UUID, String> viewers) {
+        Map<String, int[]> ranking = lastRanking;
+        Map<UUID, String> lines = new LinkedHashMap<>();
+        for (UUID uuid : viewers.keySet()) {
+            int[] rankAndLevel = ranking.get(uuid.toString());
+            if (rankAndLevel == null) {
+                lines.put(uuid, RankingHologramManager.C_VIEWER + "▸ 내 순위" + C_SEP + " : " + C_EMPTY + "기록 없음");
+                continue;
+            }
+            lines.put(uuid, RankingHologramManager.C_VIEWER + "▸ 내 순위" + C_SEP + " : "
+                    + RankingHologramManager.rankLabel(rankAndLevel[0], C_RANK_ETC)
+                    + C_LEVEL + "Lv." + rankAndLevel[1]);
         }
         return lines;
     }
