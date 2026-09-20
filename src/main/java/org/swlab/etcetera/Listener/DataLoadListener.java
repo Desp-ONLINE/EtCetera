@@ -54,13 +54,13 @@ public class DataLoadListener implements Listener {
         Player player = event.getPlayer();
         isDataLoaded.put(player, false);
 
-        // 주간 레이드 횟수는 접속 5초 뒤 비동기로 DB에서 로드한다. 로드 전에는 레이드 입장이 차단된다.
+        // 주간 레이드 횟수는 접속 3초 뒤 비동기로 DB에서 로드한다. 로드 전에는 레이드 입장이 차단된다.
         Bukkit.getScheduler().runTaskLaterAsynchronously(EtCetera.getInstance(), () -> {
             if (!player.isOnline()) {
                 return;
             }
             WeeklyRaidLimitRepository.getInstance().loadUserData(player);
-        }, 100L);
+        }, 60L);
 
 //        ProfileListImpl playerData = MMOProfiles.plugin.getPlayerData(player.getUniqueId());
 //        if (!playerData.getProfiles().isEmpty()) {

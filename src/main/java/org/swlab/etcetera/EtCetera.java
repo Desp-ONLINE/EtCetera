@@ -11,6 +11,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.swlab.etcetera.Commands.*;
+import net.Indyuce.mmocore.api.player.PlayerData;
+import org.swlab.etcetera.Convinience.ClassSelectGui;
 import org.swlab.etcetera.Convinience.QuestBossBar;
 import org.swlab.etcetera.Convinience.SkillCooldownNotice;
 import org.swlab.etcetera.Convinience.TipNotice;
@@ -28,6 +30,7 @@ import org.swlab.etcetera.Repositories.HiddenExchangeRepository;
 import org.swlab.etcetera.Repositories.TutorialRepository;
 import org.swlab.etcetera.Repositories.QuestAlertSettingRepository;
 import org.swlab.etcetera.Repositories.UserSettingRepository;
+import org.swlab.etcetera.Repositories.WeeklyRaidLimitRepository;
 import org.swlab.etcetera.Ranking.AllianceLevelRankingProvider;
 import org.swlab.etcetera.Ranking.BabelTowerRankingProvider;
 import org.swlab.etcetera.Ranking.CombatPowerRankingProvider;
@@ -35,12 +38,14 @@ import org.swlab.etcetera.Ranking.GuildRaidRankingProvider;
 import org.swlab.etcetera.Ranking.RankingHologramManager;
 import org.swlab.etcetera.Ranking.TVersusRankingProvider;
 import org.swlab.etcetera.Training.TrainingManager;
+import org.swlab.etcetera.Util.CommandUtil;
 import org.swlab.etcetera.Util.PetUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 public final class EtCetera extends JavaPlugin {
@@ -103,6 +108,7 @@ public final class EtCetera extends JavaPlugin {
             }
         }
         startAutoNotice();
+        startClassSelectCheckScheduler();
         loadAllDatas();
         RaidCoinRepository.getInstance().loadCoinData();
         MimicRepository.getInstance().loadData();
@@ -142,6 +148,14 @@ public final class EtCetera extends JavaPlugin {
             RaidCoinRepository.getInstance().loadUserData(player);
             HiddenExchangeRepository.getInstance().loadUserData(player);
         }
+        // 주간 레이드 횟수는 접속 시에만 로드되므로, 리로드 시 접속 중인 유저는 여기서 다시 로드한다
+        List<Player> onlinePlayers = new ArrayList<>(Bukkit.getOnlinePlayers());
+        Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
+            for (Player player : onlinePlayers) {
+                if (!player.isOnline()) continue;
+                WeeklyRaidLimitRepository.getInstance().loadUserData(player);
+            }
+        });
 
     }
 
@@ -176,6 +190,36 @@ public final class EtCetera extends JavaPlugin {
                 onlinePlayer.sendMessage("");
             }
         }, 20L, 2400L);
+    }
+
+    /**
+     * 15초마다 직업이 없는(HUMAN) 유저를 스폰으로 이동시키고 직업 선택 GUI 를 띄운다.
+     * 직업 변경은 로비에서만 가능하므로 로비에서만 동작하며, 튜토리얼 진행 중이거나
+     * MMOCore 데이터가 아직 로드되지 않은(로드 전에는 기본 직업으로 보임) 유저는 제외한다.
+     */
+    public void startClassSelectCheckScheduler() {
+        if (!EtCetera.getChannelType().equals("lobby")) {
+            return;
+        }
+        Bukkit.getScheduler().runTaskTimer(this, () -> {
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                if (!PlayerData.has(player.getUniqueId())) continue;
+                PlayerData playerData = PlayerData.get(player.getUniqueId());
+                if (!playerData.isFullyLoaded()) continue;
+                if (!playerData.getProfess().getName().equalsIgnoreCase("HUMAN")) continue;
+                if (!TutorialRepository.getInstance().isTutorialCompleted(player)) continue;
+                // 이미 직업을 고르고 있는 중이면 다시 이동시키지 않는다
+                if (player.getOpenInventory().getTopInventory().getHolder() instanceof ClassSelectGui) continue;
+
+                CommandUtil.runCommandAsOP(player, "spawn");
+                player.sendMessage("§c직업을 선택해주세요!");
+                Bukkit.getScheduler().runTaskLater(this, () -> {
+                    if (player.isOnline()) {
+                        ClassSelectGui.open(player);
+                    }
+                }, 10L);
+            }
+        }, 300L, 300L);
     }
 
     public void startDayChangeCheckScheduler() {
@@ -228,6 +272,8 @@ public final class EtCetera extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new GoldItemListener(), this);
         Bukkit.getPluginManager().registerEvents(new TrashcanListener(), this);
         Bukkit.getPluginManager().registerEvents(new HiddenExchangeListener(), this);
+        Bukkit.getPluginManager().registerEvents(new ClassSelectListener(), this);
+        Bukkit.getPluginManager().registerEvents(new ItemSearchListener(), this);
         Bukkit.getPluginManager().registerEvents(new CataclysmMirrorListener(), this);
         Bukkit.getPluginManager().registerEvents(new FirstClearListener(), this);
         Bukkit.getPluginManager().registerEvents(new AFKListener(), this);
@@ -269,6 +315,8 @@ public final class EtCetera extends JavaPlugin {
         getCommand("초월완료").setExecutor(new AscendCommand());
         getCommand("채").setExecutor(new ChannelCommand());
         getCommand("쿨초기화").setExecutor(new CoolResetCommand());
+        getCommand("쿨타임감소").setExecutor(new CooldownReduceCommand());
+        getCommand("템").setExecutor(new ItemSearchCommand());
         getCommand("환던").setExecutor(new AdventureWarpCommand());
         getCommand("튜토완료").setExecutor(new TutorialCompleteCommand());
         getCommand("양조").setExecutor(new BrewingCommand());

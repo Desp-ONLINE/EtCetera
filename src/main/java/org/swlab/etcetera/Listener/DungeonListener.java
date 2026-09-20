@@ -146,8 +146,10 @@ public class DungeonListener implements Listener {
     public void onDungeonEnter(DungeonJoinEvent e) {
         Integer dungeonID = e.getDungeon().getId();
         boolean joinable = true;
+        // 챌린지 모드(보상 없음)는 입장 횟수/주간 제한 없이 입장할 수 있다
+        boolean challenge = e.isChallenge();
 
-        if (isWeeklyLimitedRaid(dungeonID)) {
+        if (!challenge && isWeeklyLimitedRaid(dungeonID)) {
             List<String> loadingPlayers = new ArrayList<>();
             List<String> limitedPlayers = new ArrayList<>();
             for (PlayerDungeon playerDungeon : e.getPlayerDungeons()) {
@@ -188,7 +190,7 @@ public class DungeonListener implements Listener {
 //                return;
 //            }
 //        }
-        if (dungeonID == 800 || dungeonID == 801) {
+        if (!challenge && (dungeonID == 800 || dungeonID == 801)) {
             for (PlayerDungeon playerDungeon : e.getPlayerDungeons()) {
                 PlayerClearLog exKanaloaClearLog = playerDungeon.getClearLog(800);
                 PlayerClearLog kanaloaClearLog = playerDungeon.getClearLog(801);
@@ -207,7 +209,7 @@ public class DungeonListener implements Listener {
             }
         }
 
-        if (jinRegionCommandersDungeonID.contains(dungeonID)) {
+        if (!challenge && jinRegionCommandersDungeonID.contains(dungeonID)) {
             for (PlayerDungeon playerDungeon : e.getPlayerDungeons()) {
                 for (Integer i : jinRegionCommandersDungeonID) {
                     PlayerClearLog clearLog = playerDungeon.getClearLog(i);

@@ -35,9 +35,16 @@ public class LeapListener implements Listener {
     }
 
 
+    /** IDEDungeons 가 던전 참여 중인 플레이어에게 붙이는 메타데이터 키 (DungeonSession.IN_DUNGEON_METADATA) */
+    private static final String IN_DUNGEON_METADATA = "idedungeons.in_session";
+
     @EventHandler
     public void onItemSwap(PlayerSwapHandItemsEvent e) {
         Player p = e.getPlayer();
+        // 환영 던전 안에서는 도약도 메뉴도 열지 않는다 (IDEDungeons 쪽에서 이벤트를 취소한다)
+        if (p.hasMetadata(IN_DUNGEON_METADATA)) {
+            return;
+        }
 
         e.setCancelled(true);
         if (p.isSneaking()) {

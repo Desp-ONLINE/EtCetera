@@ -17,7 +17,7 @@ public class WeeklyRaidLimitRepository {
     public static final int MAX_WEEKLY_CLEAR = 5;
 
     public static WeeklyRaidLimitRepository instance;
-    // 접속 5초 후 비동기 로드되는 조회 전용 스냅샷. 누적/초기화는 캐싱 없이 DB에 즉시 기록한다.
+    // 접속 3초 후 비동기 로드되는 조회 전용 스냅샷. 누적/초기화는 캐싱 없이 DB에 즉시 기록한다.
     public ConcurrentHashMap<String, WeeklyRaidClearDTO> weeklyRaidClearCache = new ConcurrentHashMap<>();
 
     public WeeklyRaidLimitRepository() {

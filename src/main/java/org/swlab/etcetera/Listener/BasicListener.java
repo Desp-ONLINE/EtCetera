@@ -303,20 +303,6 @@ public class BasicListener implements Listener {
                 return;
             }
         }
-
-        /* ---------------- 흉조 적용 / 갱신 ---------------- */
-        if (newEffect != null && newEffect.getType() == PotionEffectType.BAD_OMEN) {
-            cow.setGlowing(true);
-            return;
-        }
-
-        /* ---------------- 흉조 제거 / 만료 ---------------- */
-        if (oldEffect != null
-                && oldEffect.getType() == PotionEffectType.BAD_OMEN
-                && e.getAction() != EntityPotionEffectEvent.Action.ADDED) {
-
-            cow.setGlowing(false);
-        }
     }
 
 

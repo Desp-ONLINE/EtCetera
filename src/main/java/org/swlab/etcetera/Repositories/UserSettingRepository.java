@@ -29,6 +29,9 @@ public class UserSettingRepository {
     }
 
 
+    /** /쿨타임감소 기본 대상 슬롯 (핫바 2번). */
+    public static final int DEFAULT_COOLDOWN_REDUCE_SLOT = 2;
+
     public static final MongoCollection<Document> userSettingCollection = DatabaseRegister.getInstance().getMongoDatabase().getCollection("UserSetting");
 
     public void loadUserSetting(Player player) {
@@ -56,8 +59,12 @@ public class UserSettingRepository {
         if(playerTime == null){
             playerTime = -1;
         }
+        Integer cooldownReduceSlot = document.getInteger("cooldownReduceSlot");
+        if(cooldownReduceSlot == null || cooldownReduceSlot < 1 || cooldownReduceSlot > 9){
+            cooldownReduceSlot = DEFAULT_COOLDOWN_REDUCE_SLOT;
+        }
 
-        UserSettingDTO userSettingDTO = UserSettingDTO.builder().uuid(uuid).isVisibleInformation(isVisibleInformation).showDamageChat(showDamageChat).showSkillCooldownNotice(showSkillCooldownNotice).showSkillCooldownItem(showSkillCooldownItem).playerTime(playerTime).build();
+        UserSettingDTO userSettingDTO = UserSettingDTO.builder().uuid(uuid).isVisibleInformation(isVisibleInformation).showDamageChat(showDamageChat).showSkillCooldownNotice(showSkillCooldownNotice).showSkillCooldownItem(showSkillCooldownItem).playerTime(playerTime).cooldownReduceSlot(cooldownReduceSlot).build();
 
         userSettingCache.put(uuid, userSettingDTO);
 
@@ -140,6 +147,25 @@ public class UserSettingRepository {
         }
     }
 
+    public void setCooldownReduceSlot(Player player, int slot) {
+        UserSettingDTO userSettingDTO = userSettingCache.get(player.getUniqueId().toString());
+        if (userSettingDTO == null) {
+            return;
+        }
+        userSettingDTO.setCooldownReduceSlot(slot);
+        userSettingCache.put(player.getUniqueId().toString(), userSettingDTO);
+        player.sendMessage("§e 이제 쿨타임 감소 스킬이 §f" + slot + "번 §e슬롯의 무기에 적용됩니다.");
+    }
+
+    /** /쿨타임감소 가 적용될 핫바 슬롯 번호(1~9). 캐시가 없으면 기본 2. */
+    public int getCooldownReduceSlot(Player player) {
+        UserSettingDTO userSettingDTO = userSettingCache.get(player.getUniqueId().toString());
+        if (userSettingDTO == null) {
+            return DEFAULT_COOLDOWN_REDUCE_SLOT;
+        }
+        return userSettingDTO.getCooldownReduceSlot();
+    }
+
     public int getPlayerTime(Player player) {
         if (userSettingCache.get(player.getUniqueId().toString()) == null) {
             return -1;
@@ -182,6 +208,7 @@ public class UserSettingRepository {
         document.append("showSkillCooldownNotice", isShowSkillCooldownNotice(player));
         document.append("showSkillCooldownItem", isShowSkillCooldownItem(player));
         document.append("playerTime", getPlayerTime(player));
+        document.append("cooldownReduceSlot", getCooldownReduceSlot(player));
 
         userSettingCollection.replaceOne(new Document("uuid", player.getUniqueId().toString()), document, new ReplaceOptions().upsert(true));
     }
@@ -193,7 +220,8 @@ public class UserSettingRepository {
                 .append("showDamageChat", true)
                 .append("showSkillCooldownNotice", true)
                 .append("showSkillCooldownItem", true)
-                .append("playerTime", -1);
+                .append("playerTime", -1)
+                .append("cooldownReduceSlot", DEFAULT_COOLDOWN_REDUCE_SLOT);
         userSettingCollection.insertOne(document);
 
         return document;

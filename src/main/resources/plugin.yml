@@ -18,6 +18,7 @@ softdepend:
   - MMOTimeRaid
   - BinggreAPI
   - VelocitySocketClient
+  - Upgrade
 commands:
   nbt검사:
   spawn:
@@ -147,6 +148,10 @@ commands:
   퀘스킵:
   마나회복:
   쿨초기화:
+  쿨타임감소:
+    aliases: [ "znfxkdlarkath", "쿨감" ]
+  템:
+    aliases: [ "xpa" ]
   일괄판매:
     aliases: ["ㅇㄱㅍㅁ", "drva", "dlfrhkfvksao"]
   일괄분해:

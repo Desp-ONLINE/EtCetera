@@ -34,6 +34,24 @@ public class UserSettingCommand implements CommandExecutor {
             case "쿨타임표시":
                 userSettingRepository.toggleShowSkillCooldownItem(player);
                 return true;
+            case "쿨타임감소":
+                if (strings.length < 2) {
+                    showPlayerCommandUsage(player);
+                    return true;
+                }
+                int slot;
+                try {
+                    slot = Integer.parseInt(strings[1]);
+                } catch (NumberFormatException e) {
+                    player.sendMessage("§c슬롯 번호는 1~9 사이의 숫자여야 합니다: " + strings[1]);
+                    return true;
+                }
+                if (slot < 1 || slot > 9) {
+                    player.sendMessage("§c슬롯 번호는 1~9 사이여야 합니다.");
+                    return true;
+                }
+                userSettingRepository.setCooldownReduceSlot(player, slot);
+                return true;
             case "시간":
                 if (strings.length < 2) {
                     showPlayerCommandUsage(player);
@@ -70,6 +88,7 @@ public class UserSettingCommand implements CommandExecutor {
         player.sendMessage("§7  /설정 데미지 §f- 채팅에 데미지를 넣을 때 마다 출력합니다.");
         player.sendMessage("§7  /설정 쿨타임 §f- 특수무기/합성무기 스킬의 쿨타임 종료 알림을 켜고/끕니다.");
         player.sendMessage("§7  /설정 쿨타임표시 §f- 무기 아이템에 스킬 쿨타임 표시 여부를 켜고/끕니다.");
+        player.sendMessage("§7  /설정 쿨타임감소 <1~9> §f- /쿨타임감소 명령이 적용될 핫바 슬롯 번호를 정합니다. (기본: 2)");
         player.sendMessage("§7  /설정 시간 <낮/밤/새벽/기본> §f- 나에게만 보이는 하늘 시간을 고정합니다. (기본: 서버 시간)");
         player.sendMessage("");
 

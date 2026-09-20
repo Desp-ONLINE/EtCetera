@@ -6,6 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.swlab.etcetera.Convinience.ClassSelectGui;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Util.CommandUtil;
 
@@ -21,7 +22,9 @@ public class ClassSelectCommand implements CommandExecutor {
         Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), new Runnable() {
             @Override
             public void run() {
-                CommandUtil.runCommandAsOP(player, "gui open 전직");
+                if (player.isOnline()) {
+                    ClassSelectGui.open(player);
+                }
             }
         }, 10L);
         return true;
