@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.desp.IDEPass.api.IDEPassAPI;
 import org.desp.IDEPass.dto.IDEPassUserDataDto;
-import org.dople.dataSync.inventory.InventorySyncListener;
+import org.swlab.etcetera.Util.DataSyncCompat;
 import org.jetbrains.annotations.NotNull;
 import org.swlab.etcetera.EtCetera;
 
@@ -22,7 +22,7 @@ public class SellAllRewardCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         Player player = (Player) sender;
 
-        if (InventorySyncListener.isDataLoading(player)) {
+        if (DataSyncCompat.isDataLoading(player)) {
             player.sendMessage("§c데이터가 로드중입니다.");
             return false;
         }

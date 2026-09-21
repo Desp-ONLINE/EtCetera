@@ -24,11 +24,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.*;
-import org.dople.dataSync.DataSync;
-import org.dople.dataSync.event.DataLoadEvent;
-import org.dople.dataSync.inventory.InventorySyncListener;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Repositories.WeeklyRaidLimitRepository;
+import org.swlab.etcetera.Util.DataSyncCompat;
 import su.nightexpress.excellentcrates.api.event.CrateOpenEvent;
 
 import java.util.ArrayList;
@@ -72,7 +70,7 @@ public class DataLoadListener implements Listener {
     @EventHandler
     public void onInvClick(InventoryClickEvent e){
         Player player = (Player) e.getWhoClicked();
-        if(InventorySyncListener.isDataLoading(player)){
+        if(DataSyncCompat.isDataLoading(player)){
             if(e.getClickedInventory() != null && e.getClickedInventory().getType().equals(InventoryType.PLAYER)){
                 e.setCancelled(true);
                 player.sendMessage("§c 데이터가 로드중입니다.");
@@ -81,12 +79,6 @@ public class DataLoadListener implements Listener {
                 player.sendMessage("§c 데이터가 로드중입니다.");
             }
         }
-    }
-
-    @EventHandler
-    public void onPlayerJoin(DataLoadEvent event) {
-        Player player = event.getPlayer();
-        isDataLoaded.put(player, true);
     }
 
     public int getPlayerLevel(Player player) {

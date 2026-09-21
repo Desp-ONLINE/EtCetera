@@ -9,7 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.dople.dataSync.inventory.InventorySyncListener;
+import org.swlab.etcetera.Util.DataSyncCompat;
 import org.swlab.etcetera.EtCetera;
 
 import java.text.NumberFormat;
@@ -34,7 +34,7 @@ public class GoldItemListener implements Listener {
             player.sendMessage("§c 로비에서만 사용하실 수 있습니다.");
             return;
         }
-        if(InventorySyncListener.isDataLoading(player)){
+        if(DataSyncCompat.isDataLoading(player)){
             player.sendMessage("§c 데이터가 로드중입니다.");
             return;
         }

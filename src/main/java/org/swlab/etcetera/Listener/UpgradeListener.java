@@ -102,6 +102,10 @@ public class UpgradeListener implements Listener {
         String afterWeapon = upgradeData.getAfterWeapon();
         if (afterWeapon.startsWith("주간반지_")) {
             String substring = afterWeapon.substring(0, afterWeapon.length() - 1);
+            // 아르카디엘만 기본 반지 ID가 "주간반지_아르카디엘_연마1" 로 지어져 있음
+            if (afterWeapon.startsWith("주간반지_아르카디엘_")) {
+                substring = "주간반지_아르카디엘_연마1";
+            }
             ItemStack ringWeek = MMOItems.plugin.getItem("RING_WEEK", substring);
 
             Mail mail = MMOMail.getInstance().getMailAPI().createMail("시스템", "연마 파괴에 대한 반지 보상입니다.", 0, new ArrayList<>(Arrays.asList(ringWeek)));

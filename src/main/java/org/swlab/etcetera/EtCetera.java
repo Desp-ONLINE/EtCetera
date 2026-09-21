@@ -39,6 +39,7 @@ import org.swlab.etcetera.Ranking.RankingHologramManager;
 import org.swlab.etcetera.Ranking.TVersusRankingProvider;
 import org.swlab.etcetera.Training.TrainingManager;
 import org.swlab.etcetera.Util.CommandUtil;
+import org.swlab.etcetera.Util.DataSyncCompat;
 import org.swlab.etcetera.Util.PetUtil;
 
 import java.text.SimpleDateFormat;
@@ -95,7 +96,9 @@ public final class EtCetera extends JavaPlugin {
         RankingHologramManager.enable(this);
         RankingHologramManager.getInstance().registerProvider(new CombatPowerRankingProvider());
         RankingHologramManager.getInstance().registerProvider(new BabelTowerRankingProvider());
-        RankingHologramManager.getInstance().registerProvider(new GuildRaidRankingProvider());
+        if (isGuildEnabled()) {
+            RankingHologramManager.getInstance().registerProvider(new GuildRaidRankingProvider());
+        }
         RankingHologramManager.getInstance().registerProvider(new AllianceLevelRankingProvider());
         RankingHologramManager.getInstance().registerProvider(new TVersusRankingProvider());
         startDayChangeCheckScheduler();
@@ -132,6 +135,11 @@ public final class EtCetera extends JavaPlugin {
 
     public static String getChannelType() {
         return channelType;
+    }
+
+    /** 튜토리얼 채널에서는 길드(MMOGuild) 연동을 끈다. */
+    public static boolean isGuildEnabled() {
+        return !channelType.equals("tuto");
     }
 
     public static int getChannelNumber() {
@@ -266,6 +274,10 @@ public final class EtCetera extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ChestExpansionListener(), this);
         Bukkit.getPluginManager().registerEvents(new ConsumableListener(), this);
         Bukkit.getPluginManager().registerEvents(new DataLoadListener(), this);
+        // 튜토리얼 채널에서는 DataSync 연동을 끈다
+        if (DataSyncCompat.isEnabled()) {
+            Bukkit.getPluginManager().registerEvents(new DataSyncListener(), this);
+        }
         Bukkit.getPluginManager().registerEvents(new ModelEngineListener(), this);
         Bukkit.getPluginManager().registerEvents(new JumpMapListener(), this);
         Bukkit.getPluginManager().registerEvents(new UpgradeListener(), this);
@@ -275,7 +287,10 @@ public final class EtCetera extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ClassSelectListener(), this);
         Bukkit.getPluginManager().registerEvents(new ItemSearchListener(), this);
         Bukkit.getPluginManager().registerEvents(new CataclysmMirrorListener(), this);
-        Bukkit.getPluginManager().registerEvents(new FirstClearListener(), this);
+        // 첫 클리어 보상은 길드 경험치를 지급하므로 MMOGuild 에 의존한다
+        if (isGuildEnabled()) {
+            Bukkit.getPluginManager().registerEvents(new FirstClearListener(), this);
+        }
         Bukkit.getPluginManager().registerEvents(new AFKListener(), this);
         Bukkit.getPluginManager().registerEvents(new QuestAnnounceListener(), this);
         if (Bukkit.getPluginManager().getPlugin("IDEQuest") != null) {
@@ -300,14 +315,19 @@ public final class EtCetera extends JavaPlugin {
         getCommand("일괄분해").setExecutor(new DecompositeCommand());
         getCommand("일괄판매").setExecutor(new SellAllRewardCommand());
         getCommand("UI").setExecutor(new UICommand());
-        getCommand("길드레이드").setExecutor(new GuildRaidCommand());
+        if (isGuildEnabled()) {
+            getCommand("길드레이드").setExecutor(new GuildRaidCommand());
+            getCommand("g").setExecutor(new GuildChatCommand());
+            // FirstClearListener 가 초기화한 컬렉션을 사용하는 명령어
+            getCommand("레이드챌린지").setExecutor(new RaidChallengeCommand());
+            getCommand("타임던전첫클리어보상").setExecutor(new TimeDungeonFirstClearCommand());
+        }
         getCommand("보스장비").setExecutor(new RaidEquipmentCommand());
         getCommand("공헌의탑").setExecutor(new ContributeTowerCommand());
         getCommand("마나회복").setExecutor(new ManaCommand());
         getCommand("장비2").setExecutor(new AccCommand());
         getCommand("강화").setExecutor(new ReinforceCommand());
         getCommand("보스코인").setExecutor(new RaidCoinCommand());
-        getCommand("레이드챌린지").setExecutor(new RaidChallengeCommand());
         getCommand("도플명령어").setExecutor(new AdminCommand());
         getCommand("대결").setExecutor(new VersusCommand());
         getCommand("스케줄").setExecutor(new ScheduleCommand());
@@ -340,11 +360,9 @@ public final class EtCetera extends JavaPlugin {
         getCommand("환던티켓지급").setExecutor(new AdventureCommand());
         getCommand("베스페라").setExecutor(new VesperaCommand());
         getCommand("펫").setExecutor(new PetCommand());
-        getCommand("타임던전첫클리어보상").setExecutor(new TimeDungeonFirstClearCommand());
         getCommand("낚시").setExecutor(new FishingCommand());
         getCommand("기본템").setExecutor(new BasicWeaponCommand());
         getCommand("퀘스트알림").setExecutor(new QuestAlertCommand());
-        getCommand("g").setExecutor(new GuildChatCommand());
         getCommand("마을").setExecutor(new VillageCommand());
         getCommand("마을").setTabCompleter(new VillageCommand());
         getCommand("메뉴").setExecutor(new MenuCommand());

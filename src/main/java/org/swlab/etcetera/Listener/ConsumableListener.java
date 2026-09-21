@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.potion.PotionEffectType;
-import org.dople.dataSync.inventory.InventorySyncListener;
+import org.swlab.etcetera.Util.DataSyncCompat;
 import org.swlab.etcetera.EtCetera;
 
 public class ConsumableListener implements Listener{
@@ -23,7 +23,7 @@ public class ConsumableListener implements Listener{
                 e.setCancelled(true);
                 e.getPlayer().sendMessage("§c 로비에서만 사용 가능합니다.");
             }
-            if(InventorySyncListener.isDataLoading(player)){
+            if(DataSyncCompat.isDataLoading(player)){
                 player.sendMessage("§c 데이터가 로드중입니다.");
                 return;
             }

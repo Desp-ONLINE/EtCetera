@@ -27,7 +27,6 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.dople.dataSync.event.DataLoadEvent;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Repositories.RaidCoinRepository;
 import org.swlab.etcetera.Repositories.HiddenExchangeRepository;
@@ -309,22 +308,6 @@ public class BasicListener implements Listener {
     @EventHandler
     public void onFireTick(BlockIgniteEvent e) {
         e.setCancelled(true);
-    }
-
-    @EventHandler
-    public void onProfileLoad(DataLoadEvent e) {
-        Player player = e.getPlayer();
-        player.setHealth(player.getMaxHealth());
-//        NameTagUtil.setPlayerNameTag(player);
-
-        if (EtCetera.getChannelType().equals("lobby")) {
-            if (!TutorialRepository.getInstance().isTutorialCompleted(player)) {
-                Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), () -> {
-                    CommandUtil.runCommandAsOP(player, "튜토리얼");
-                    player.sendMessage("§a 튜토리얼을 진행해주세요!");
-                }, 100L);
-            }
-        }
     }
 
     @EventHandler
