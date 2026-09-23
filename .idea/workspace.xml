@@ -6,16 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="9de49959-ba55-4fdd-87fd-1e2a3cd47518" name="변경" comment="LATEST">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Commands/SellAllRewardCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Commands/SellAllRewardCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/MMOItems-6.10.1-20250905.105255-30.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/MythicLib-dist-1.7.1-20250916.170846-40.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/MythicMobs-5.7.2 (1).jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Commands/TutorialCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Commands/TutorialCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Commands/TutorialCompleteCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Commands/TutorialCompleteCommand.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/EtCetera.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/EtCetera.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Listener/BasicListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Listener/BasicListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Listener/ChestExpansionListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Listener/ChestExpansionListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Listener/ConsumableListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Listener/ConsumableListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Listener/CrateListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Listener/CrateListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Listener/DataLoadListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Listener/DataLoadListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Listener/GoldItemListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Listener/GoldItemListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Listener/PetListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Listener/PetListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Listener/UpgradeListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/swlab/etcetera/Listener/UpgradeListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -188,8 +185,8 @@
     <recent_temporary>
       <list>
         <item itemvalue="Gradle.EtCetera [jar]" />
-        <item itemvalue="Gradle.EtCetera [clean]" />
         <item itemvalue="Gradle.EtCetera [testClasses]" />
+        <item itemvalue="Gradle.EtCetera [clean]" />
       </list>
     </recent_temporary>
   </component>

@@ -27,6 +27,7 @@ import org.swlab.etcetera.Repositories.DogamRegisterRepository;
 import org.swlab.etcetera.Repositories.MimicRepository;
 import org.swlab.etcetera.Repositories.RaidCoinRepository;
 import org.swlab.etcetera.Repositories.HiddenExchangeRepository;
+import org.swlab.etcetera.Repositories.SkillSequenceRepository;
 import org.swlab.etcetera.Repositories.TutorialRepository;
 import org.swlab.etcetera.Repositories.QuestAlertSettingRepository;
 import org.swlab.etcetera.Repositories.UserSettingRepository;
@@ -84,6 +85,9 @@ public final class EtCetera extends JavaPlugin {
         config.addDefault("tradeHighlightColor.recruit", "#556E6D");
         // 훈련 세션 로그에 기록되는 밸런스 패치 버전. 밸런스 패치 시마다 올려서 전후 비교에 쓴다
         config.addDefault("training.balanceVersion", "v1");
+        // 자동 연계 시스템: 우클릭 시 등록한 합성무기 스킬을 순서대로 자동 시전하는 트리거 아이템(MMOItems ID)과 시전 간격(틱)
+        config.addDefault("skillSequence.triggerItemId", "기타_자동연계");
+        config.addDefault("skillSequence.tickInterval", 3);
         config.options().copyDefaults(true);
         saveConfig();
         channelType = config.getString("channelType");
@@ -131,6 +135,7 @@ public final class EtCetera extends JavaPlugin {
         new MimicRepository();
         new DogamRegisterRepository();
         new QuestAlertSettingRepository();
+        new SkillSequenceRepository();
     }
 
     public static String getChannelType() {
@@ -155,6 +160,7 @@ public final class EtCetera extends JavaPlugin {
             DataLoadListener.getInstance().putPlayerData(player);
             RaidCoinRepository.getInstance().loadUserData(player);
             HiddenExchangeRepository.getInstance().loadUserData(player);
+            SkillSequenceRepository.getInstance().loadUserData(player);
         }
         // 주간 레이드 횟수는 접속 시에만 로드되므로, 리로드 시 접속 중인 유저는 여기서 다시 로드한다
         List<Player> onlinePlayers = new ArrayList<>(Bukkit.getOnlinePlayers());
@@ -178,6 +184,7 @@ public final class EtCetera extends JavaPlugin {
             UserSettingRepository.getInstance().saveUserSetting(player);
             RaidCoinRepository.getInstance().saveUserData(player);
             HiddenExchangeRepository.getInstance().saveUserData(player);
+            SkillSequenceRepository.getInstance().saveUserData(player);
         }
     }
 
@@ -287,6 +294,7 @@ public final class EtCetera extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ClassSelectListener(), this);
         Bukkit.getPluginManager().registerEvents(new ItemSearchListener(), this);
         Bukkit.getPluginManager().registerEvents(new CataclysmMirrorListener(), this);
+        Bukkit.getPluginManager().registerEvents(new SkillSequenceListener(), this);
         // 첫 클리어 보상은 길드 경험치를 지급하므로 MMOGuild 에 의존한다
         if (isGuildEnabled()) {
             Bukkit.getPluginManager().registerEvents(new FirstClearListener(), this);
@@ -337,8 +345,12 @@ public final class EtCetera extends JavaPlugin {
         getCommand("쿨초기화").setExecutor(new CoolResetCommand());
         getCommand("쿨타임감소").setExecutor(new CooldownReduceCommand());
         getCommand("템").setExecutor(new ItemSearchCommand());
+        SkillSequenceCommand skillSequenceCommand = new SkillSequenceCommand();
+        getCommand("스킬").setExecutor(skillSequenceCommand);
+        getCommand("스킬").setTabCompleter(skillSequenceCommand);
         getCommand("환던").setExecutor(new AdventureWarpCommand());
         getCommand("튜토완료").setExecutor(new TutorialCompleteCommand());
+        getCommand("튜토메시지").setExecutor(new TutorialMessageCommand());
         getCommand("양조").setExecutor(new BrewingCommand());
         getCommand("튜토리얼").setExecutor(new TutorialCommand());
         getCommand("텔레포트").setExecutor(new TeleportCommand());

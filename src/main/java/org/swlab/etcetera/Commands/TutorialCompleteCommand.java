@@ -1,4 +1,3 @@
-
 package org.swlab.etcetera.Commands;
 
 import com.binggre.binggreapi.utils.ColorManager;
@@ -17,8 +16,24 @@ public class TutorialCompleteCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         Player player = (Player) sender;
-        if(!TutorialRepository.getInstance().isTutorialCompleted(player)){
-            String format = ColorManager.format("§e[!] §f"+player.getName()+"#FDFF85님#F8FD89께#F3FB8E서 #E9F796튜#E4F59B토#DFF39F리#DAF1A4얼#D5EFA8을 #CBEBB1완#C6E9B5료#C1E7B9하#BCE5BE셨#B8E3C2습#B3E0C6니#AEDECB다#A9DCCF! #9FD8D8모#9AD6DC두 #90D2E5환#8BD0E9영#86CEEE해#81CCF2주#7CCAF6세#77C8FB요#72C6FF!");
+        markTutorialCleared(player);
+        CommandUtil.runCommandAsOP(player, "spawn");
+        player.sendTitle("§6알림", "§f앞의 메인 퀘스트 NPC, §e제미나이§f에게 말을 걸어주세요!");
+        CommandUtil.runCommandAsOP(player, "직업");
+
+
+        return true;
+    }
+
+    /**
+     * 튜토리얼 클리어 공통 처리.
+     * 최초 클리어라면 전체 서버에 축하 메시지를 방송하고,
+     * Tutorial 컬렉션에 완료 플래그를 저장한 뒤 tutorial 권한을 부여한다.
+     * (/튜토완료, /튜토메시지 공용)
+     */
+    public static void markTutorialCleared(Player player) {
+        if (!TutorialRepository.getInstance().isTutorialCompleted(player)) {
+            String format = ColorManager.format("§e[!] §f" + player.getName() + "#FDFF85님#F8FD89께#F3FB8E서 #E9F796튜#E4F59B토#DFF39F리#DAF1A4얼#D5EFA8을 #CBEBB1완#C6E9B5료#C1E7B9하#BCE5BE셨#B8E3C2습#B3E0C6니#AEDECB다#A9DCCF! #9FD8D8모#9AD6DC두 #90D2E5환#8BD0E9영#86CEEE해#81CCF2주#7CCAF6세#77C8FB요#72C6FF!");
             VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, "");
             VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, format);
             VelocityClient.getInstance().getConnectClient().send(BroadcastStringVelocityListener.class, "");
@@ -28,11 +43,5 @@ public class TutorialCompleteCommand implements CommandExecutor {
         }
         TutorialRepository.getInstance().completeTutorial(player);
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + player.getName() + " permission set tutorial");
-        CommandUtil.runCommandAsOP(player, "spawn");
-        player.sendTitle("§6알림", "§f앞의 메인 퀘스트 NPC, §e제미나이§f에게 말을 걸어주세요!");
-        CommandUtil.runCommandAsOP(player, "직업");
-
-
-        return true;
     }
 }

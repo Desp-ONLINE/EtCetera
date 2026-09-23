@@ -12,7 +12,11 @@ public class TutorialCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         Player player = (Player) sender;
-        CommandUtil.runCommandAsOP(player, "워프 이동 튜토리얼");
+//        if(player.hasPermission("user_staff")){
+            CommandUtil.runCommandAsOP(player, "채널 이동 tutorial");
+//            return true;
+//        }
+//        CommandUtil.runCommandAsOP(player, "워프 이동 튜토리얼");
         return true;
     }
 }

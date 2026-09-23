@@ -117,6 +117,8 @@ commands:
     aliases: [ "xbxhfldjf", "tutorial","tuto" ]
   튜토완료:
     aliases: [ "xbxhdhksfy" ]
+  튜토메시지:
+    aliases: [ "xbxhaptlwl" ]
   텔레포트:
     aliases: [ "xpffpvhxm" ]
   타임던전:
@@ -152,6 +154,8 @@ commands:
     aliases: [ "znfxkdlarkath", "쿨감" ]
   템:
     aliases: [ "xpa" ]
+  스킬:
+    aliases: [ "tmzlf", "자동연계", "연계", "wkehddusrP", "dusrP" ]
   일괄판매:
     aliases: ["ㅇㄱㅍㅁ", "drva", "dlfrhkfvksao"]
   일괄분해:
