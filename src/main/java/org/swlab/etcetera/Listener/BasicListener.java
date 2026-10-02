@@ -11,6 +11,7 @@ import io.lumine.mythic.bukkit.adapters.BukkitPlayer;
 import io.lumine.mythic.bukkit.events.MythicProjectileHitEvent;
 import io.lumine.mythic.lib.api.event.skill.PlayerCastSkillEvent;
 import net.Indyuce.mmocore.api.MMOCoreAPI;
+import org.example.dople.iDEParty.api.IDEPartyAPI;
 import net.Indyuce.mmocore.api.event.PlayerLevelUpEvent;
 import net.Indyuce.mmoitems.MMOItems;
 import org.bukkit.*;
@@ -81,8 +82,8 @@ public class BasicListener implements Listener {
         }
         if (entity.isPlayer()) {
             if (e.getEntity().isPlayer()) {
-                MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
-                if (mmoCoreAPI.isInSameParty((Player) e.getProjectile().getData().getCaster().getEntity().asPlayer().getBukkitEntity(), (Player) e.getEntity().asPlayer().getBukkitEntity())) {
+                // IDEParty 파티 (프록시 전체) 기준 아군 판정
+                if (IDEPartyAPI.isInSameParty((Player) e.getProjectile().getData().getCaster().getEntity().asPlayer().getBukkitEntity(), (Player) e.getEntity().asPlayer().getBukkitEntity())) {
                     e.setCancelled(true);
                 }
             }

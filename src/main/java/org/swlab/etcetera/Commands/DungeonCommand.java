@@ -5,6 +5,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.swlab.etcetera.DungeonChannel.DungeonChannelGui;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Util.CommandUtil;
 
@@ -16,7 +17,7 @@ public class DungeonCommand implements CommandExecutor {
             CommandUtil.runCommandAsOP(player, "워프 이동 던전_입구");
             return true;
         }
-        CommandUtil.runCommandAsOP(player, "gui open 던전");
+        DungeonChannelGui.open(player, DungeonChannelGui.Mode.MOVE);
         return false;
     }
 }

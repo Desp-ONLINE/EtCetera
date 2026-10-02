@@ -40,8 +40,6 @@ import java.util.Map;
 public class DamageListener implements Listener {
 
 
-    //    HashMap<String, Double> damageMultipliers = new HashMap<>(Map.of("adamas_genesis", 0.08, "adamas_dominance", 0.15));
-    ArrayList<String> damageMultipliers = new ArrayList<>(Arrays.asList("adamas", "oberon_mythic", "quesar_ult"));
 
     @EventHandler
     public void cancelInstantAttack(EntityDamageEvent e) {
@@ -79,182 +77,12 @@ public class DamageListener implements Listener {
                 e.setCancelled(true);
             }
         }
-        MMOCoreAPI mmoCoreAPI = new MMOCoreAPI(EtCetera.getInstance());
-        double damage = e.getDamage().getDamage();
-
-
         if (EtCetera.getChannelType().equals("dungeon")) {
             if (eAttacker instanceof Player && eVictim instanceof Player) {
                 e.setCancelled(true);
             }
         }
-
-
-        Player attacker = e.getAttacker().getPlayer();
-        String profess = mmoCoreAPI.getPlayerData(attacker).getProfess().getId();
-        LivingEntity victim = e.getEntity();
-
-
-        // 보스데미지 연산 ( 우선 1순위 )
-        MMOPlayerData mmoPlayerData = MMOPlayerData.get(attacker);
-
-        if (victim.getType().equals(EntityType.COW)) {
-            double customBossdamage = mmoPlayerData.getStatMap().getStat("CUSTOM_BOSSDAMAGE");
-            damage += damage * applyBossDamageSoftCap(customBossdamage) / 100;
-        }
-
-
-        // 나약함 연산 ( 유저가 가하는 ㅔㄷ미지랑 관련 x )
-        if (victim instanceof Player player && e.getAttacker() instanceof Cow boss) {
-            if (boss.hasPotionEffect(PotionEffectType.WEAKNESS)) {
-                PotionEffect potionEffect1 = boss.getPotionEffect(PotionEffectType.WEAKNESS);
-                damage -= damage * (potionEffect1.getAmplifier() + 1) * 10 / 100;
-            }
-        }
-        // 포션효과 ( 흉조/힘 :: 우선 공식 2순위. 흉조가 먼저 연산됨. )
-        PotionEffect potionEffect = victim.getPotionEffect(PotionEffectType.BAD_OMEN);
-        if (potionEffect != null) {
-            if (profess.equals("페이탈")) {
-                if (PlaceholderAPI.setPlaceholders(attacker, "%MASTERY_FATAL_MYTHIC_1%").equals("true")) {
-                    damage += damage * (potionEffect.getAmplifier() + 1) * 22 / 100;
-                } else {
-                    damage += damage * (potionEffect.getAmplifier() + 1) * 20 / 100;
-                }
-            } else {
-                damage += damage * (potionEffect.getAmplifier() + 1) * 15 / 100;
-            }
-        }
-        if (e.getEntity() instanceof Zombie) {
-            if (profess.equals("파우스트")) {
-                damage += damage * 11 / 100;
-            }
-            if (profess.equals("제피르")) {
-                damage += damage * 8 / 100;
-            }
-        }
-        if (e.getEntity() instanceof Cow) {
-            if (e.getEntity().getFireTicks() > 0) {
-                if (profess.equals("인페르노")) {
-                    if (PlaceholderAPI.setPlaceholders(attacker, "%MASTERY_INFERNO_MYTHIC_1%").equals("true")) {
-                        damage += damage * 21 / 100;
-                    } else {
-                        damage += damage * 15 / 100;
-                    }
-                } else {
-                    damage += damage * 3 / 100;
-
-                }
-            } else if (profess.equals("판")) {
-                damage += damage * 5 / 100;
-            }
-        }
-        if (attacker.hasPotionEffect(PotionEffectType.STRENGTH)) {
-            damage += damage * ((attacker.getPotionEffect(PotionEffectType.STRENGTH).getAmplifier() + 1) * 10) / 100;
-        }
-        ActiveMob mythicMobInstance = MythicBukkit.inst().getMobManager().getMythicMobInstance(e.getEntity());
-        if (mythicMobInstance != null) {
-            AuraRegistry auraRegistry = mythicMobInstance.getAuraRegistry();
-
-            double multiply = 1;
-
-
-            for (String auraKey : damageMultipliers) {
-                for (String auraKeys : auraRegistry.getAuras().keySet()) {
-                    if (auraKeys.startsWith(auraKey)) {
-                        String replace = auraKeys.replace(auraKey + "_", "");
-                        // 접두사만 같고 수치가 아닌 오라(ex. adamas_genesis)가 있으면
-                        // 파싱 예외로 데미지 처리 전체가 죽으므로 건너뛴다
-                        double i;
-                        try {
-                            i = Double.parseDouble(replace);
-                        } catch (NumberFormatException ignored) {
-                            continue;
-                        }
-                        multiply += (i / 100);
-                    }
-                }
-            }
-            damage *= multiply;
-        }
-
-        // 최종데미지 증가
-
-
-        DamageMetadata dmgMeta = e.getAttack().getDamage();
-        boolean skillCriticalStrike = dmgMeta.isSkillCriticalStrike()
-                || dmgMeta.isWeaponCriticalStrike();
-
-
-        double originalDamage = e.getDamage().getDamage();
-        DamageMetadata damageMetadata = e.getDamage().add(damage - originalDamage);
-        double fixedDamage = Math.round(damageMetadata.getDamage());
-
-        // 훈련장 누적 데미지는 표기값과 동일한 이 최종 데미지를 그대로 사용한다
-        TrainingController trainingController = TrainingController.get(attacker);
-        if (trainingController != null) {
-            CombatListener.SourceItem source = CombatListener.sourceOf(eAttacker, damageMetadata);
-            trainingController.addDamage(fixedDamage, source.name(), source.itemId());
-        }
-
-        // 데미지 5 이하는 표기하지 않음
-        if (fixedDamage <= 5) {
-            return;
-        }
-
-        if (skillCriticalStrike) {
-
-            if (UserSettingRepository.getInstance().isShowDamageChat(attacker)) {
-                if (victim instanceof Cow || victim instanceof Player) {
-                    Bukkit.getScheduler().runTaskLaterAsynchronously(EtCetera.getInstance(), new Runnable() {
-                        @Override
-                        public void run() {
-                            attacker.sendMessage("    " + victim.getName() + "§f : ᎌ §6" + NumberUtil.applyComma(fixedDamage) + " §cDamage §7(남은 체력: " + NumberUtil.applyComma(BigDecimal.valueOf(victim.getHealth())) + " | " + String.format("%.2f", victim.getHealth() / victim.getMaxHealth() * 100) + "%)");
-                        }
-                    }, 1L);
-                }
-
-            }
-            e.getAttacker().getPlayer().sendTitle("", criticalDamageString(fixedDamage), 5, 10, 5);
-            return;
-        }
-        if (UserSettingRepository.getInstance().isShowDamageChat(attacker)) {
-            if (UserSettingRepository.getInstance().isShowDamageChat(attacker)) {
-                if (victim instanceof Cow || victim instanceof Player) {
-                    Bukkit.getScheduler().runTaskLaterAsynchronously(EtCetera.getInstance(), new Runnable() {
-                        @Override
-                        public void run() {
-                            attacker.sendMessage("    " + victim.getName() + "§f : ᎈ §c" + NumberUtil.applyComma(fixedDamage) + " §cDamage §7(남은 체력: " + NumberUtil.applyComma(BigDecimal.valueOf(victim.getHealth())) + " | " + String.format("%.2f", victim.getHealth() / victim.getMaxHealth() * 100) + "%)");
-                        }
-                    }, 1L);
-                }
-            }
-        }
-        attacker.sendTitle("", damageString(fixedDamage), 5, 10, 5);
-
     }
-
-    // 보스데미지 소프트캡: 70까지는 100% 적용, 초과분은 80을 상한으로 수렴하는 곡선으로 감쇠
-    private static final double BOSS_DAMAGE_SOFT_CAP = 70.0;
-    private static final double BOSS_DAMAGE_LIMIT = 80.0;
-
-    private double applyBossDamageSoftCap(double stat) {
-        if (stat <= BOSS_DAMAGE_SOFT_CAP) {
-            return stat;
-        }
-        double range = BOSS_DAMAGE_LIMIT - BOSS_DAMAGE_SOFT_CAP;
-        double excess = stat - BOSS_DAMAGE_SOFT_CAP;
-        // 70 지점에서 기울기 1로 매끄럽게 이어지고, 스탯이 높아질수록 80에 점근
-        return BOSS_DAMAGE_SOFT_CAP + range * (1 - Math.exp(-excess / range));
-    }
-
-    public String criticalDamageString(double fixedDamage) {
-        return "§f                                                                   ᎌ §6" + fixedDamage;
-    }
-
-    public String damageString(double fixedDamage) {
-        return "§f                                                                   ᎈ §c" + fixedDamage;
-    }
-
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void cancelInstantAttack(EntityDamageByEntityEvent e) {

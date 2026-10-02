@@ -9,6 +9,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.desp.IDEPass.api.IDEPassAPI;
 import org.jetbrains.annotations.NotNull;
+import org.swlab.etcetera.DungeonChannel.DungeonChannelGui;
+import org.swlab.etcetera.DungeonChannel.DungeonChannelManager;
+import org.swlab.etcetera.DungeonChannel.DungeonTeleportGui;
 import org.swlab.etcetera.Database.DatabaseRegister;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Util.CommandUtil;
@@ -60,7 +63,18 @@ public class TeleportCommand implements CommandExecutor {
             insertDocument(player);
             int level = mmoCoreAPI.getPlayerData(player).getLevel();
             if(strings.length == 0){
-                CommandUtil.runCommandAsOP(player, "gui open 텔레포트");
+                DungeonChannelGui.open(player, DungeonChannelGui.Mode.TELEPORT);
+                return false;
+            }
+            // /텔레포트 <채널> : 해당 채널의 사냥터 목록
+            if(strings.length == 1){
+                try {
+                    int channel = Integer.parseInt(strings[0]);
+                    if (channel >= 1 && channel <= DungeonChannelManager.CHANNEL_COUNT) {
+                        DungeonTeleportGui.open(player, channel);
+                    }
+                } catch (NumberFormatException ignored) {
+                }
                 return false;
             }
             if(!player.isOp()){

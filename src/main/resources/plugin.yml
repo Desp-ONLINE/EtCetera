@@ -4,6 +4,7 @@ main: org.swlab.etcetera.EtCetera
 api-version: '1.21'
 depend: [  ]
 softdepend:
+  - IDEParty
   - IDEQuest
   - ItemsAdder
   - BetterHud
@@ -19,6 +20,9 @@ softdepend:
   - BinggreAPI
   - VelocitySocketClient
   - Upgrade
+  - CustomEffect
+  - IDEDamageSystem
+  - Area
 commands:
   nbt검사:
   spawn:
@@ -65,8 +69,6 @@ commands:
     aliases: [ "dpsejtkdwk" ]
   창고:
     aliases: [ "ckdrh", "ㅊㄱ", "cr" ]
-  파티:
-    aliases: [ "vkxl" ]
   루비:
     aliases: [ "zotl", "fnql" ]
   잠수:

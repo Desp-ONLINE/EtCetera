@@ -13,6 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.swlab.etcetera.Commands.*;
 import net.Indyuce.mmocore.api.player.PlayerData;
 import org.swlab.etcetera.Convinience.ClassSelectGui;
+import org.swlab.etcetera.DungeonChannel.DungeonChannelManager;
 import org.swlab.etcetera.Convinience.QuestBossBar;
 import org.swlab.etcetera.Convinience.SkillCooldownNotice;
 import org.swlab.etcetera.Convinience.TipNotice;
@@ -88,6 +89,9 @@ public final class EtCetera extends JavaPlugin {
         // 자동 연계 시스템: 우클릭 시 등록한 합성무기 스킬을 순서대로 자동 시전하는 트리거 아이템(MMOItems ID)과 시전 간격(틱)
         config.addDefault("skillSequence.triggerItemId", "기타_자동연계");
         config.addDefault("skillSequence.tickInterval", 3);
+        // 던전 채널별로 입장을 막을 사냥터 번호 (기존 텔레포트6/8 메뉴에서 19~21 던전이 막혀 있던 것을 유지)
+        config.addDefault("dungeonChannel.disabledDungeons.6", List.of(19, 20, 21));
+        config.addDefault("dungeonChannel.disabledDungeons.8", List.of(19, 20, 21));
         config.options().copyDefaults(true);
         saveConfig();
         channelType = config.getString("channelType");
@@ -98,6 +102,7 @@ public final class EtCetera extends JavaPlugin {
         registerRepositories();
         TrainingManager.enable(this);
         RankingHologramManager.enable(this);
+        DungeonChannelManager.enable(this);
         RankingHologramManager.getInstance().registerProvider(new CombatPowerRankingProvider());
         RankingHologramManager.getInstance().registerProvider(new BabelTowerRankingProvider());
         if (isGuildEnabled()) {
@@ -192,6 +197,7 @@ public final class EtCetera extends JavaPlugin {
     public void onDisable() {
         // Plugin shutdown logic
         RankingHologramManager.disable();
+        DungeonChannelManager.disable();
         TrainingManager.disable();
         QuestBossBar.getInstance().removeAll();
         saveAllDatas();
@@ -278,6 +284,14 @@ public final class EtCetera extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ClassChangeListener(), this);
         Bukkit.getPluginManager().registerEvents(new MiningAndFarmingListener(), this);
         Bukkit.getPluginManager().registerEvents(new DamageListener(), this);
+        // idedamage 연산은 IDEDamageSystem 플러그인 담당, EtCetera 는 표기/훈련장 누적만
+        // 활성화 순서와 무관하게 등록되도록 enabled 가 아닌 로드 여부로 판단 (클래스는 로드 시점에 이미 사용 가능)
+        if (Bukkit.getPluginManager().getPlugin("IDEDamageSystem") != null) {
+            Bukkit.getPluginManager().registerEvents(new IDEDamageDisplayListener(), this);
+            getLogger().info("IDEDamageSystem 연동: 데미지 표기 리스너 등록");
+        } else {
+            getLogger().warning("IDEDamageSystem 플러그인이 없어 idedamage 데미지 표기를 끕니다.");
+        }
         Bukkit.getPluginManager().registerEvents(new ChestExpansionListener(), this);
         Bukkit.getPluginManager().registerEvents(new ConsumableListener(), this);
         Bukkit.getPluginManager().registerEvents(new DataLoadListener(), this);
@@ -292,6 +306,7 @@ public final class EtCetera extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new TrashcanListener(), this);
         Bukkit.getPluginManager().registerEvents(new HiddenExchangeListener(), this);
         Bukkit.getPluginManager().registerEvents(new ClassSelectListener(), this);
+        Bukkit.getPluginManager().registerEvents(new DungeonChannelListener(), this);
         Bukkit.getPluginManager().registerEvents(new ItemSearchListener(), this);
         Bukkit.getPluginManager().registerEvents(new CataclysmMirrorListener(), this);
         Bukkit.getPluginManager().registerEvents(new SkillSequenceListener(), this);
@@ -386,7 +401,6 @@ public final class EtCetera extends JavaPlugin {
         getCommand("디스코드").setExecutor(new DiscordCommand());
         getCommand("엔더상자").setExecutor(new EnderChestCommand());
         getCommand("창고").setExecutor(new ChestCommand());
-        getCommand("파티").setExecutor(new PartyCommand());
         getCommand("루비").setExecutor(new CashCommand());
         getCommand("잠수").setExecutor(new AFKCommand());
         getCommand("잠수포인트").setExecutor(new AFKPointCommand());

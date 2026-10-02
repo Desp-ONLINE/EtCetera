@@ -20,7 +20,7 @@ import io.lumine.mythic.bukkit.events.MythicDamageEvent;
 import io.lumine.mythic.core.mobs.ActiveMob;
 import io.lumine.mythic.core.skills.auras.AuraRegistry;
 import io.lumine.mythic.lib.api.player.MMOPlayerData;
-import net.Indyuce.mmocore.api.player.PlayerData;
+import org.example.dople.iDEParty.object.PartyMember;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -449,16 +449,16 @@ public class DungeonListener implements Listener {
             if(e.getParty() == null){
 
             } else {
-                List<PlayerData> members = e.getParty().getMembers();
+                List<PartyMember> members = e.getParty().getMembers();
                 int size = members.size();
                 int i = 0;
 
-                for (PlayerData member : members) {
+                for (PartyMember member : members) {
                     i++;
                     if (i != size) {
-                        parties += member.getPlayer().getName() + ", ";
+                        parties += member.getName() + ", ";
                     } else {
-                        parties += member.getPlayer().getName();
+                        parties += member.getName();
                     }
 
                 }
