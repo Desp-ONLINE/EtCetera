@@ -76,6 +76,11 @@ public class HiddenExchangeRepository {
         return dto == null ? 0 : dto.getUsedCount();
     }
 
+    /** 다음 교환에 소모되는 원초의핵 개수. */
+    public int getNextCost(Player player) {
+        return HiddenMaterialConfig.costFor(getUsedCount(player));
+    }
+
     public int getRemaining(Player player) {
         return Math.max(0, HiddenMaterialConfig.WEEKLY_LIMIT - getUsedCount(player));
     }

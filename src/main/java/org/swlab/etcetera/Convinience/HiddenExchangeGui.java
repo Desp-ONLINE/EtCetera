@@ -10,6 +10,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import org.swlab.etcetera.Repositories.HiddenExchangeRepository;
 import org.swlab.etcetera.Util.HiddenMaterialConfig;
 
 import java.util.ArrayList;
@@ -41,20 +42,22 @@ public class HiddenExchangeGui implements InventoryHolder {
 
     private final Stage stage;
     private final String sourceId;
+    private final int costAmount;
     private final Map<Integer, String> slotToMaterial = new HashMap<>();
     private Inventory inventory;
 
-    private HiddenExchangeGui(Stage stage, String sourceId) {
+    private HiddenExchangeGui(Stage stage, String sourceId, int costAmount) {
         this.stage = stage;
         this.sourceId = sourceId;
+        this.costAmount = costAmount;
     }
 
     public static void openSourceSelect(Player player) {
-        new HiddenExchangeGui(Stage.SELECT_SOURCE, null).open(player);
+        new HiddenExchangeGui(Stage.SELECT_SOURCE, null, HiddenExchangeRepository.getInstance().getNextCost(player)).open(player);
     }
 
     public static void openTargetSelect(Player player, String sourceId) {
-        new HiddenExchangeGui(Stage.SELECT_TARGET, sourceId).open(player);
+        new HiddenExchangeGui(Stage.SELECT_TARGET, sourceId, HiddenExchangeRepository.getInstance().getNextCost(player)).open(player);
     }
 
     private void open(Player player) {
@@ -121,7 +124,7 @@ public class HiddenExchangeGui implements InventoryHolder {
         if (item == null) {
             return null;
         }
-        item.setAmount(HiddenMaterialConfig.COST_AMOUNT);
+        item.setAmount(costAmount);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
             List<String> lore = meta.hasLore() && meta.getLore() != null
@@ -129,7 +132,7 @@ public class HiddenExchangeGui implements InventoryHolder {
                     : new ArrayList<>();
             lore.add("");
             lore.add(ColorManager.format(PASTEL_GOLD + "▶ §f교환에 필요한 소모 재료 §f"
-                    + HiddenMaterialConfig.COST_AMOUNT + "개"));
+                    + costAmount + "개"));
             meta.setLore(lore);
             item.setItemMeta(meta);
         }

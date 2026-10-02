@@ -83,11 +83,12 @@ public class HiddenExchangeListener implements Listener {
             return;
         }
 
+        int cost = repository.getNextCost(player);
         int coreCount = countMMOItem(player, HiddenMaterialConfig.COST_ITEM_TYPE, HiddenMaterialConfig.COST_ITEM_ID);
-        if (coreCount < HiddenMaterialConfig.COST_AMOUNT) {
+        if (coreCount < cost) {
             String costName = HiddenExchangeGui.itemName(HiddenMaterialConfig.COST_ITEM_TYPE, HiddenMaterialConfig.COST_ITEM_ID);
             player.sendMessage(ColorManager.format(PASTEL_RED + "[ 어둠의 연금술사 ] §f") + costName
-                    + ColorManager.format(PASTEL_RED + " §f이(가) 부족합니다. (§c" + coreCount + "§f / " + HiddenMaterialConfig.COST_AMOUNT + "개)"));
+                    + ColorManager.format(PASTEL_RED + " §f이(가) 부족합니다. (§c" + coreCount + "§f / " + cost + "개)"));
             return;
         }
 
@@ -97,8 +98,8 @@ public class HiddenExchangeListener implements Listener {
             return;
         }
 
-        // 소모 : 원초의핵 15개 + 원본 재료 1개
-        removeMMOItem(player, HiddenMaterialConfig.COST_ITEM_TYPE, HiddenMaterialConfig.COST_ITEM_ID, HiddenMaterialConfig.COST_AMOUNT);
+        // 소모 : 원초의핵(이번 주 1번째 15개, 2번째 25개) + 원본 재료 1개
+        removeMMOItem(player, HiddenMaterialConfig.COST_ITEM_TYPE, HiddenMaterialConfig.COST_ITEM_ID, cost);
         removeMMOItem(player, HiddenMaterialConfig.HIDDEN_MATERIAL_TYPE, source, 1);
 
         reward.setAmount(1);
