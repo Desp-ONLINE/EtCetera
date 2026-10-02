@@ -24,9 +24,11 @@ import org.swlab.etcetera.Placeholder.EntityPotionHudPlaceholder;
 import org.swlab.etcetera.Placeholder.CombatPowerPlaceholder;
 import org.swlab.etcetera.Placeholder.CooldownPlaceholder;
 import org.swlab.etcetera.Placeholder.LevelPlaceholder;
+import org.swlab.etcetera.Placeholder.StarEnergyPlaceholder;
 import org.swlab.etcetera.Repositories.DogamRegisterRepository;
 import org.swlab.etcetera.Repositories.MimicRepository;
 import org.swlab.etcetera.Repositories.RaidCoinRepository;
+import org.swlab.etcetera.Repositories.StarEnergyRepository;
 import org.swlab.etcetera.Repositories.HiddenExchangeRepository;
 import org.swlab.etcetera.Repositories.SkillSequenceRepository;
 import org.swlab.etcetera.Repositories.TutorialRepository;
@@ -71,6 +73,7 @@ public final class EtCetera extends JavaPlugin {
             new CooldownPlaceholder(this).register();
             new LevelPlaceholder(this).register();
             new CombatPowerPlaceholder(this).register();
+            new StarEnergyPlaceholder().register();
         }
         if (Bukkit.getPluginManager().isPluginEnabled("BetterHud")) {
             new EntityPotionHudPlaceholder().register();
@@ -173,6 +176,7 @@ public final class EtCetera extends JavaPlugin {
             for (Player player : onlinePlayers) {
                 if (!player.isOnline()) continue;
                 WeeklyRaidLimitRepository.getInstance().loadUserData(player);
+                StarEnergyRepository.getInstance().loadUserData(player);
             }
         });
 
@@ -305,6 +309,7 @@ public final class EtCetera extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new GoldItemListener(), this);
         Bukkit.getPluginManager().registerEvents(new TrashcanListener(), this);
         Bukkit.getPluginManager().registerEvents(new HiddenExchangeListener(), this);
+        Bukkit.getPluginManager().registerEvents(new StarEnergyListener(), this);
         Bukkit.getPluginManager().registerEvents(new ClassSelectListener(), this);
         Bukkit.getPluginManager().registerEvents(new DungeonChannelListener(), this);
         Bukkit.getPluginManager().registerEvents(new ItemSearchListener(), this);
@@ -351,6 +356,7 @@ public final class EtCetera extends JavaPlugin {
         getCommand("장비2").setExecutor(new AccCommand());
         getCommand("강화").setExecutor(new ReinforceCommand());
         getCommand("보스코인").setExecutor(new RaidCoinCommand());
+        getCommand("별의기운").setExecutor(new StarEnergyCommand());
         getCommand("도플명령어").setExecutor(new AdminCommand());
         getCommand("대결").setExecutor(new VersusCommand());
         getCommand("스케줄").setExecutor(new ScheduleCommand());

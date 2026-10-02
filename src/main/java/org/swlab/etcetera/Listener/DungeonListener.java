@@ -28,6 +28,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.swlab.etcetera.EtCetera;
 import org.swlab.etcetera.Repositories.RaidCoinRepository;
+import org.swlab.etcetera.Repositories.StarEnergyRepository;
 import org.swlab.etcetera.Repositories.WeeklyRaidLimitRepository;
 import org.swlab.etcetera.Util.CommandUtil;
 
@@ -120,6 +121,40 @@ public class DungeonListener implements Listener {
                 RaidCoinRepository.getInstance().updateUserRaidData(player, raidName);
             }
         }
+    }
+
+    // 별의 기운: 레이드별 설정 수치를 보상방에 진입한 파티원 수로 나누어 지급한다.
+    // 클리어 직후 접속 종료한 인원도 받아야 하므로 Player 객체 없이 DB에 바로 적립한다.
+    @EventHandler
+    public void onStarEnergyReward(DungeonRewardRoomEnterEvent e) {
+        if (!StarEnergyRepository.isEarnable()) {
+            return;
+        }
+        List<PlayerDungeon> playerDungeons = new ArrayList<>(e.getPlayerDungeons());
+        int share = StarEnergyRepository.getInstance().getShareAmount(e.getDungeonRoom().getParent().getId(), playerDungeons.size());
+        if (share <= 0) {
+            return;
+        }
+        Bukkit.getScheduler().runTaskAsynchronously(EtCetera.getInstance(), () -> {
+            for (PlayerDungeon playerDungeon : playerDungeons) {
+                String uuid = playerDungeon.getId().toString();
+                int added = StarEnergyRepository.getInstance().addAmount(uuid, playerDungeon.getNickname(), share);
+                int total = StarEnergyRepository.getInstance().getAmount(uuid);
+                Bukkit.getScheduler().runTask(EtCetera.getInstance(), () -> {
+                    Player player = Bukkit.getPlayer(playerDungeon.getId());
+                    if (player == null) {
+                        return;
+                    }
+                    if (added <= 0) {
+                        player.sendMessage("§b    [ 별의 기운 ]§c 최대 보유량(" + StarEnergyRepository.MAX_AMOUNT + ")에 도달하여 별의 기운을 획득하지 못했습니다.");
+                    } else if (added < share) {
+                        player.sendMessage("§b    [ 별의 기운 ]§f 별의 기운 §b" + added + "§f 획득 §7(최대 보유량 초과로 " + (share - added) + " 소멸) §f보유: §b" + total + "§f/" + StarEnergyRepository.MAX_AMOUNT);
+                    } else {
+                        player.sendMessage("§b    [ 별의 기운 ]§f 별의 기운 §b" + added + "§f 획득 §7(" + playerDungeons.size() + "인 분배) §f보유: §b" + total + "§f/" + StarEnergyRepository.MAX_AMOUNT);
+                    }
+                });
+            }
+        });
     }
 
     // 보상방 진입 이벤트 기준으로 집계한다. DungeonClearEvent 는 stop() 시점에 발생해서

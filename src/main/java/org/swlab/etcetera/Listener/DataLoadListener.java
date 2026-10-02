@@ -25,6 +25,7 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.*;
 import org.swlab.etcetera.EtCetera;
+import org.swlab.etcetera.Repositories.StarEnergyRepository;
 import org.swlab.etcetera.Repositories.WeeklyRaidLimitRepository;
 import org.swlab.etcetera.Util.DataSyncCompat;
 import su.nightexpress.excellentcrates.api.event.CrateOpenEvent;
@@ -58,6 +59,7 @@ public class DataLoadListener implements Listener {
                 return;
             }
             WeeklyRaidLimitRepository.getInstance().loadUserData(player);
+            StarEnergyRepository.getInstance().loadUserData(player);
         }, 60L);
 
 //        ProfileListImpl playerData = MMOProfiles.plugin.getPlayerData(player.getUniqueId());
@@ -182,6 +184,7 @@ public class DataLoadListener implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         isDataLoaded.remove(event.getPlayer());
         WeeklyRaidLimitRepository.getInstance().unloadUserData(event.getPlayer());
+        StarEnergyRepository.getInstance().unloadUserData(event.getPlayer());
     }
 
 
