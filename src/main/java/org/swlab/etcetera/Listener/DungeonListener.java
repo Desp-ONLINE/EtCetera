@@ -104,6 +104,14 @@ public class DungeonListener implements Listener {
     // 레이드 코인 보상은 보상방 진입 이벤트 기준으로 지급한다 (상자 미수령/확률 보상 없음 케이스 포함)
     @EventHandler
     public void onRaidCoinReward(DungeonRewardRoomEnterEvent e) {
+        // 챌린지 모드 클리어는 레이드 챌린지 판정용으로만 이벤트가 온다 (보상·집계 대상 아님)
+        if (e.isChallenge()) {
+            return;
+        }
+        // 이지 난이도는 레이드 코인 미지급 (노멀 이상만)
+        if (!e.isNormalOrAbove()) {
+            return;
+        }
         List<PlayerDungeon> playerDungeons = e.getPlayerDungeons();
         if (playerDungeons.size() > 1) {
             return;
@@ -127,7 +135,15 @@ public class DungeonListener implements Listener {
     // 클리어 직후 접속 종료한 인원도 받아야 하므로 Player 객체 없이 DB에 바로 적립한다.
     @EventHandler
     public void onStarEnergyReward(DungeonRewardRoomEnterEvent e) {
+        // 챌린지 모드 클리어는 레이드 챌린지 판정용으로만 이벤트가 온다 (보상·집계 대상 아님)
+        if (e.isChallenge()) {
+            return;
+        }
         if (!StarEnergyRepository.isEarnable()) {
+            return;
+        }
+        // 이지 난이도는 별의 기운 미지급 (노멀 이상만)
+        if (!e.isNormalOrAbove()) {
             return;
         }
         List<PlayerDungeon> playerDungeons = new ArrayList<>(e.getPlayerDungeons());
@@ -157,10 +173,15 @@ public class DungeonListener implements Listener {
         });
     }
 
+    // 주간 클리어 횟수는 난이도(이지 포함)와 무관하게 집계한다.
     // 보상방 진입 이벤트 기준으로 집계한다. DungeonClearEvent 는 stop() 시점에 발생해서
     // 상자 보상을 안 받고 먼저 나간 인원이 목록에서 빠지므로 카운트가 누락된다.
     @EventHandler
     public void onWeeklyRaidClear(DungeonRewardRoomEnterEvent e) {
+        // 챌린지 모드 클리어는 레이드 챌린지 판정용으로만 이벤트가 온다 (보상·집계 대상 아님)
+        if (e.isChallenge()) {
+            return;
+        }
         if (!isWeeklyLimitedRaid(e.getDungeonRoom().getParent().getId())) {
             return;
         }

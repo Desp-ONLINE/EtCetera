@@ -93,13 +93,21 @@ public class FirstClearListener implements Listener {
 
     // 보상방 진입 이벤트 기준으로 처리한다. 클리어 시에만 발생하므로 별도 clear 체크가 필요 없고,
     // 상자 보상을 안 받고 나가도 챌린지 처리가 누락되지 않는다.
+    // 챌린지 모드(MMODungeon) 클리어도 이 이벤트가 오며(isChallenge) 레이드 챌린지로 인정한다.
     @EventHandler
     public void onRaidClear(DungeonRewardRoomEnterEvent e) {
 
         Dungeon parent = e.getDungeonRoom().getParent();
         List<PlayerDungeon> playerDungeons = e.getPlayerDungeons();
 
+        // 레이드 챌린지는 노멀 이상 난이도에서만 처리
+        if (!e.isNormalOrAbove()) {
+            System.out.println("[RaidChallenge] 스킵: 노멀 미만 난이도 (raid=" + parent.getName() + ", difficulty=" + e.getDifficulty().getName() + ")");
+            return;
+        }
+
         System.out.println("[RaidChallenge] DungeonRewardRoomEnterEvent 수신: raid=" + parent.getName()
+                + ", challengeMode=" + e.isChallenge()
                 + ", players=" + playerDungeons.size()
                 + ", life=" + e.getDungeonRoom().getController().getLife() + "/" + parent.getLife()
                 + ", replayDay=" + parent.getReplayDay());
