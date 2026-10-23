@@ -3,6 +3,7 @@ package org.swlab.etcetera.Listener;
 import com.binggre.binggreapi.utils.ColorManager;
 import com.binggre.mmotimereset.api.DailyResetEvent;
 import com.binggre.mmotimereset.api.WeeklyResetEvent;
+import com.binggre.velocitysocketclient.VelocityClient;
 import de.kinglol12345.GUIPlus.events.GUIClickEvent;
 import fr.nocsy.mcpets.api.MCPetsAPI;
 import fr.nocsy.mcpets.data.Pet;
@@ -169,7 +170,9 @@ public class BasicListener implements Listener {
         CommandUtil.runCommandAsOP(player, "ml tempstat remove "+player.getName()+" SKILL_DAMAGE Valkyrie");
         CommandUtil.runCommandAsOP(player, "ml tempstat remove "+player.getName()+" CUSTOM_BOSSDAMAGE Valkyrie");
 
-        TutorialRepository.getInstance().loadTutorialData(player);
+        if (TutorialRepository.getInstance().loadTutorialData(player)) {
+            broadcastFirstJoin(player);
+        }
 
         Bukkit.getScheduler().runTaskLater(EtCetera.getInstance(), () -> {
             {
@@ -205,6 +208,18 @@ public class BasicListener implements Listener {
         RaidCoinRepository.getInstance().loadUserData(player);
         HiddenExchangeRepository.getInstance().loadUserData(player);
 
+    }
+
+    /**
+     * 최초 접속(Tutorial 문서가 없던 유저) 시 전체 서버에 환영 공지.
+     * 현재 서버는 직접 방송하고, 다른 서버는 FirstJoinVelocityListener 로 전달한다.
+     */
+    private void broadcastFirstJoin(Player player) {
+        String message = ColorManager.format("§e[!] §f" + player.getName() + "#FDFF85님께서 처음 접속하셨습니다! #81CCF2모두 환영해주세요!");
+        for (String line : new String[]{"", message, ""}) {
+            Bukkit.broadcastMessage(line);
+            VelocityClient.getInstance().getConnectClient().send(FirstJoinVelocityListener.class, line);
+        }
     }
 
     @EventHandler

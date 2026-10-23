@@ -28,9 +28,13 @@ public class TutorialRepository {
         return instance;
     }
 
-    public void loadTutorialData(Player player) {
+    /**
+     * @return Tutorial 문서가 없어서 새로 만든 경우(= 최초 접속) true
+     */
+    public boolean loadTutorialData(Player player) {
         Document document = tutorialCollection.find(new Document("uuid", player.getUniqueId().toString())).first();
-        if (document == null) {
+        boolean firstJoin = document == null;
+        if (firstJoin) {
             document = insertDefaultDocument(player);
         }
 
@@ -46,6 +50,7 @@ public class TutorialRepository {
                 .build();
 
         tutorialCache.put(uuid, tutorialDTO);
+        return firstJoin;
     }
 
     public boolean isTutorialCompleted(Player player) {
